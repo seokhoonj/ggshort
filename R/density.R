@@ -65,7 +65,7 @@ ggdensity <- function(data, x, facet, kernel = "gaussian", probs = .95,
     cutoff_ds <- ds[, list(
       prob = probs,
       cutoff = unlist(lapply(.SD, function(x) quantile(x, probs = probs)))
-    ), .SDcols = .x]
+    ), .SDcols = "x"]
     cutoff_dt <- dt[, list(
       prob = probs,
       cutoff = unlist(lapply(.SD, function(x) quantile(x, probs = probs)))
@@ -77,7 +77,7 @@ ggdensity <- function(data, x, facet, kernel = "gaussian", probs = .95,
     cutoff_ds <- ds[, list(
       prob = probs,
       cutoff = unlist(lapply(.SD, function(x) quantile(x, probs = probs)))
-    ), keyby = .facet, .SDcols = .x]
+    ), keyby = .facet, .SDcols = "x"]
     cutoff_dt <- dt[, list(
       prob = probs,
       cutoff = unlist(lapply(.SD, function(x) quantile(x, probs = probs)))

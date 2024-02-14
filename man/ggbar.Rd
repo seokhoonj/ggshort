@@ -2,7 +2,7 @@
 % Please edit documentation in R/short.R
 \name{ggbar}
 \alias{ggbar}
-\title{ggplot functions only with frequently used arguments}
+\title{ggplot bar functions only with frequently used arguments}
 \usage{
 ggbar(
   data,

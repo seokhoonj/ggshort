@@ -7,5 +7,6 @@
 #' @import ggplot2
 #' @importFrom data.table `:=` `.SD` as.data.table data.table set setDT
 #' @importFrom stats density formula quantile
+#' @importFrom utils head tail
 ## usethis namespace: end
 "_PACKAGE"

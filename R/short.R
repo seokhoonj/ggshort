@@ -1,4 +1,4 @@
-#' ggplot functions only with frequently used arguments
+#' ggplot bar functions only with frequently used arguments
 #'
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
 #' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
@@ -203,7 +203,7 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
                   text = NULL, label, label_family = "Comic Sans MS",
                   label_size = 4, label_angle = 0, label_hjust = .5,
                   label_vjust = .5, label_color = c("#000000", "#FAF9F6"),
-                  reverse = TRUE) {
+                  reverse = FALSE) {
   ggplot(data = data, aes(x = {{x}}, y = {{y}}, ymin = {{ymin}},
                           ymax = {{ymax}}, group = {{group}}, color = {{color}},
                           fill = {{fill}}, text = {{text}})) +
@@ -254,7 +254,7 @@ ggpie <- function(data, y, group, text, label, label_family = "Comic Sans MS",
                 family = label_family, size = label_size, angle = label_angle,
                 hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
     }) +
-    theme_void()
+    theme_void(base_family = label_family)
 }
 
 #' ggplot table functions only with frequently used arguments

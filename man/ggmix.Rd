@@ -22,7 +22,7 @@ ggmix(
   label_hjust = 0.5,
   label_vjust = 0.5,
   label_color = c("#000000", "#FAF9F6"),
-  reverse = TRUE
+  reverse = FALSE
 )
 }
 \arguments{

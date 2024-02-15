@@ -20,9 +20,9 @@ get_legend <- function(plot) {
   return(gtable$grobs[[guide]])
 }
 
-#' Create pair color scales
+#' Create pair fill scales
 #'
-#' Create consistent pair color scales
+#' Create consistent pair fill scales
 #'
 #' @param pair A vector contains data of pair values
 #' @param pair_levels Two element vector expressing pair values (default, c("1", "2"))
@@ -38,14 +38,14 @@ get_legend <- function(plot) {
 #' data$n <- c(1:10, 2:11)
 #' ggline(data, x = agecat, y = n, color = gender) +
 #'   scale_pair_color_manual(data$gender) +
-#'   theme_view()}
+#'   theme_view(family = NULL)}
 #'
 #' # pair values with `ggbar()`
 #' \donttest{data <- expand.grid(agecat = c(1:10), gender = c("1", "2"))
 #' data$n <- c(1:10, 2:11)
 #' ggbar(data, x = agecat, y = n, fill = gender) +
 #'   scale_pair_fill_manual(data$gender, color_type = "deep") +
-#'   theme_view()}
+#'   theme_view(family = NULL)}
 #'
 #' @export
 scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
@@ -53,9 +53,9 @@ scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
                                     guide = "legend") {
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
-  list(if (unilen(pair) == 2L) {
+  list(if (jaid::unilen(pair) == 2L) {
     scale_color_manual(values = values, guide = guide)
-  } else if (unique(pair) == gender_levels[1L]) {
+  } else if (unique(pair) == pair_levels[1L]) {
     scale_color_manual(values = values[1L], guide = guide)
   } else if (unique(pair) == pair_levels[2L]) {
     scale_color_manual(values = values[2L], guide = guide)
@@ -66,12 +66,12 @@ scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
 
 #' @rdname scale_pair_color_manual
 #' @export
-scale_pair_fill_manual <- function(pair, value_levels = c("1", "2"),
+scale_pair_fill_manual <- function(pair, pair_levels = c("1", "2"),
                                    color_type = c("base", "deep"),
                                    guide = "legend") {
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
-  list(if (unilen(pair) == 2L) {
+  list(if (jaid::unilen(pair) == 2L) {
     scale_fill_manual(values = values, guide = guide)
   } else if (unique(pair) == pair_levels[1L]) {
     scale_fill_manual(values = values[1L], guide = guide)
@@ -81,7 +81,6 @@ scale_pair_fill_manual <- function(pair, value_levels = c("1", "2"),
     scale_fill_manual(values = "grey50", guide = guide)
   })
 }
-
 
 get_two_colors <- function(choice = c("base", "deep")) {
   choice <- match.arg(choice)

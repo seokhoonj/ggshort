@@ -3,7 +3,7 @@
 \name{scale_pair_color_manual}
 \alias{scale_pair_color_manual}
 \alias{scale_pair_fill_manual}
-\title{Create pair color scales}
+\title{Create pair fill scales}
 \usage{
 scale_pair_color_manual(
   pair,
@@ -14,7 +14,7 @@ scale_pair_color_manual(
 
 scale_pair_fill_manual(
   pair,
-  value_levels = c("1", "2"),
+  pair_levels = c("1", "2"),
   color_type = c("base", "deep"),
   guide = "legend"
 )
@@ -32,7 +32,7 @@ scale_pair_fill_manual(
 A ggplot object
 }
 \description{
-Create consistent pair color scales
+Create consistent pair fill scales
 }
 \examples{
 # pair values with `ggline()`
@@ -40,14 +40,14 @@ Create consistent pair color scales
 data$n <- c(1:10, 2:11)
 ggline(data, x = agecat, y = n, color = gender) +
   scale_pair_color_manual(data$gender) +
-  theme_view()}
+  theme_view(family = NULL)}
 
 # pair values with `ggbar()`
 \donttest{data <- expand.grid(agecat = c(1:10), gender = c("1", "2"))
 data$n <- c(1:10, 2:11)
 ggbar(data, x = agecat, y = n, fill = gender) +
   scale_pair_fill_manual(data$gender, color_type = "deep") +
-  theme_view()}
+  theme_view(family = NULL)}
 
 }
 \seealso{

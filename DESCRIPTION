@@ -9,9 +9,12 @@ Description: Shortly simplify the grammar of ggplot to the functions only with
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
+Remotes:
+  github::jaid
 Imports:
   data.table (>= 1.13.0),
-  ggplot2 (>= 3.3.3)
+  ggplot2 (>= 3.3.3),
+  jaid (>= 0.0.0.9000)
 Suggests:
   insuranceData (>= 1.0)
 Roxygen: list(markdown = TRUE)

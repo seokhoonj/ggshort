@@ -10,7 +10,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Remotes:
-  github::jaid
+  github::seokhoonj/jaid
 Imports:
   data.table (>= 1.13.0),
   ggplot2 (>= 3.3.3),

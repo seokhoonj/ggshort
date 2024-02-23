@@ -50,7 +50,8 @@ A ggplot object
 Show a simple density plot.
 }
 \examples{
-\donttest{x <- sample(1:10, size = 1000, replace = TRUE)
+\donttest{set.seed(123)
+x <- sample(1:10, size = 1000, replace = TRUE)
 facet1 <- sample(c("A", "B", "C"), size = 1000, replace = TRUE)
 facet2 <- sample(c("X", "Y", "Z"), size = 1000, replace = TRUE)
 data <- data.frame(x, facet1, facet2)

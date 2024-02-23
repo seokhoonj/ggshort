@@ -7,7 +7,8 @@
 #'
 #' @examples
 #' # get a legend.
-#' \donttest{data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
+#' \donttest{set.seed(123)
+#' data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
 #' data$y <- sample(x = 1:10, size = 9, replace = TRUE)
 #' g <- ggbar(data = data, x = x, y = y, fill = fill, label = y, label_vjust = -.25) +
 #'   theme_view(family = NULL)
@@ -19,6 +20,15 @@ get_legend <- function(plot) {
   guide <- which(sapply(gtable$grobs, function(x) x$name) == "guide-box")
   return(gtable$grobs[[guide]])
 }
+
+#' Add commas to x-axis tick labels
+#'
+#' Add commas to x-axis tick labels.
+#'
+#' @return an ggproto object
+#'
+#' @export
+scale_y_comma <- function() scale_y_continuous(labels = scales::comma)
 
 #' Create pair fill scales
 #'
@@ -85,9 +95,13 @@ scale_pair_fill_manual <- function(pair, pair_levels = c("1", "2"),
 get_two_colors <- function(choice = c("base", "deep")) {
   choice <- match.arg(choice)
   colors <- switch(choice,
-                   "base" = ".TWO_COLORS_1",
-                   "deep" = ".TWO_COLORS_2")
+                   base = ".TWO_COLORS_BASE",
+                   deep = ".TWO_COLORS_DEEP")
   return(get(colors, envir = .GGSHORT_COLORS_ENV))
+}
+
+get_twelve_colors <- function() {
+  return(local(.TWELVE_COLORS, envir = .GGSHORT_COLORS_ENV))
 }
 
 match_cols <- function(df, cols) names(df)[match(cols, names(df), 0L)]

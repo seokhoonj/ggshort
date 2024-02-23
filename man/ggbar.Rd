@@ -13,7 +13,6 @@ ggbar(
   ymin_err,
   ymax_err,
   group = NULL,
-  color = NULL,
   fill = NULL,
   text = NULL,
   bar_color = "transparent",
@@ -35,7 +34,7 @@ ggbar(
 
 \item{ymin_err, ymax_err}{\code{min} and \code{max} values of y errors for the error bar}
 
-\item{group, color, fill}{A name of variable you want to group, color and fill}
+\item{group, fill}{A name of variable you want to group and fill}
 
 \item{text}{A name of variable or expression for ggplotly hover text}
 
@@ -59,7 +58,8 @@ used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \
 }
 \examples{
 # bar
-\donttest{data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
+\donttest{set.seed(123)
+data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
 data$y <- sample(x = 1:10, size = 9, replace = TRUE)
 ggbar(data = data, x = x, y = y, fill = fill, label = y, label_vjust = -.25,
       label_family = NA) +

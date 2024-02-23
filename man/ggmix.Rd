@@ -11,7 +11,6 @@ ggmix(
   ymin = NULL,
   ymax = NULL,
   group = NULL,
-  color = NULL,
   fill = NULL,
   bar_color = "transparent",
   text = NULL,
@@ -32,7 +31,7 @@ ggmix(
 
 \item{ymin, ymax}{\code{min} and \code{max} values of y for the height}
 
-\item{group, color, fill}{A name of variable you want to group, color and fill}
+\item{group, fill}{A name of variable you want to group and fill}
 
 \item{bar_color}{A string specifying bar color}
 
@@ -58,9 +57,11 @@ used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \
 }
 \examples{
 # mix
-\donttest{data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
+\donttest{set.seed(123)
+data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
 data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-ggmix(data = data, x = x, y = y, fill = fill, label = y, label_family = NA) +
+ggmix(data = data, x = x, y = y, fill = fill, label = y, label_family = NA,
+  reverse = TRUE) +
   theme_view(family = NULL)}
 
 }

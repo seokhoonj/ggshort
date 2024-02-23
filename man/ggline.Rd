@@ -58,7 +58,8 @@ used arguments.
 }
 \examples{
 # line
-\donttest{data <- expand.grid(x = 1:20, color = c("X", "Y", "Z"))
+\donttest{set.seed(123)
+data <- expand.grid(x = 1:20, color = c("X", "Y", "Z"))
 data$y <- sample(1:10, size = nrow(data), replace = TRUE)
 ggline(data = data, x = x, y = y, color = color) +
   theme_view(family = NULL)}

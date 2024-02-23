@@ -22,7 +22,8 @@
 #' @return A ggplot object
 #'
 #' @examples
-#' \donttest{x <- sample(1:10, size = 1000, replace = TRUE)
+#' \donttest{set.seed(123)
+#' x <- sample(1:10, size = 1000, replace = TRUE)
 #' facet1 <- sample(c("A", "B", "C"), size = 1000, replace = TRUE)
 #' facet2 <- sample(c("X", "Y", "Z"), size = 1000, replace = TRUE)
 #' data <- data.frame(x, facet1, facet2)
@@ -37,7 +38,7 @@ ggdensity <- function(data, x, facet, kernel = "gaussian", probs = .95,
     dt <- data.table::data.table(x = data)
     .x <- "x"
   } else {
-    .x <- deparse(substitute(x))
+    .x <- rlang::as_name(rlang::enquo(x))
     if (missing(facet)) {
       if (!inherits(data, "data.table")) {
         dt <- data.table::as.data.table(data[, .x, drop = FALSE])

@@ -46,7 +46,8 @@ used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \
 }
 \examples{
 # table
-\donttest{data <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
+\donttest{set.seed(123)
+data <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
 data$label <- sample(x = 1:10, size = 9, replace = TRUE)
 ggtable(data = data, x = x, y = y, label = label, label_family = NA) +
   theme_view(family = NULL)}

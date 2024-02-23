@@ -7,7 +7,7 @@
 #' @param x,y A name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
 #' @param ymin_err,ymax_err `min` and `max` values of y errors for the error bar
-#' @param group,color,fill A name of variable you want to group, color and fill
+#' @param group,fill A name of variable you want to group and fill
 #' @param text A name of variable or expression for ggplotly hover text
 #' @param bar_color A string specifying bar color
 #' @param label A name of variable or expression you want to label
@@ -21,7 +21,8 @@
 #'
 #' @examples
 #' # bar
-#' \donttest{data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
+#' \donttest{set.seed(123)
+#' data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
 #' data$y <- sample(x = 1:10, size = 9, replace = TRUE)
 #' ggbar(data = data, x = x, y = y, fill = fill, label = y, label_vjust = -.25,
 #'       label_family = NA) +
@@ -29,22 +30,25 @@
 #'
 #' @export
 ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
-                  group = NULL, color = NULL, fill = NULL, text = NULL,
-                  bar_color = "transparent", label,
-                  label_family = "Comic Sans MS", label_size = 4,
+                  group = NULL, fill = NULL, text = NULL, bar_color = "transparent",
+                  label, label_family = "Comic Sans MS", label_size = 4,
                   label_angle = 0, label_hjust = .5, label_vjust = .5,
                   label_color = c("#000000", "#FAF9F6")) {
-  ggplot(data = data, aes(x = {{x}}, y = {{y}}, group = {{group}},
-                          color = {{color}}, fill = {{fill}}, text = {{text}})) +
+  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
+                            group = group, fill = fill, text = text)
+  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  ggplot(data = data, aes(!!!quo_maps)) +
     geom_bar(stat = "identity", position = position_dodge2(preserve = "single"),
              color = bar_color) +
     list(if (!(missing(ymin_err) & missing(ymax_err))) {
-      geom_errorbar(aes(x = {{x}}, ymin = {{ymin_err}}, ymax = {{ymax_err}}),
+      quo_errs <- rlang::enquos(x = x, ymin_err = ymin_err, ymax_err = ymax_err)
+      geom_errorbar(aes(!!!quo_errs),
                     position = position_dodge2(preserve = "single"),
                     alpha = .5)
     }) +
     list(if (!missing(label)) {
-      geom_text(aes(label = {{label}}),
+      quo_lbl <- rlang::enquos(label = label)
+      geom_text(aes(!!!quo_lbl),
                 position = position_dodge2(width = .9, preserve = "single"),
                 family = label_family, size = label_size, angle = label_angle,
                 hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
@@ -73,7 +77,8 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #'
 #' @examples
 #' # line
-#' \donttest{data <- expand.grid(x = 1:20, color = c("X", "Y", "Z"))
+#' \donttest{set.seed(123)
+#' data <- expand.grid(x = 1:20, color = c("X", "Y", "Z"))
 #' data$y <- sample(1:10, size = nrow(data), replace = TRUE)
 #' ggline(data = data, x = x, y = y, color = color) +
 #'   theme_view(family = NULL)}
@@ -84,17 +89,21 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
                    text = NULL, label, label_family = "Comic Sans MS",
                    label_size = 4, label_angle = 0, label_hjust = .5,
                    label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  ggplot(data = data, aes(x = {{x}}, y = {{y}}, group = {{group}},
-                          color = {{color}}, linetype = {{linetype}},
-                          text = {{text}})) +
+  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
+                            group = group, color = color, lintype = linetype,
+                            text = text)
+  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  ggplot(data = data, aes(!!!quo_maps)) +
     geom_line() +
     list(if (!(missing(ymin_err) & missing(ymax_err))) {
-      geom_errorbar(aes(x = {{x}}, ymin = {{ymin_err}}, ymax = {{ymax_err}}),
+      quo_errs <- rlang::enquos(x = x, ymin_err = ymin_err, ymax_err = ymax_err)
+      geom_errorbar(aes(!!!quo_errs),
                     position = position_dodge2(preserve = "single"),
                     alpha = .5)
     }) +
     list(if (!missing(label)) {
-      geom_text(aes(label = {{label}}),
+      quo_lbl <- rlang::enquos(label = label)
+      geom_text(aes(!!!quo_lbl),
                 position = position_dodge2(width = .9, preserve = "single"),
                 family = label_family, size = label_size, angle = label_angle,
                 hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
@@ -109,7 +118,8 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' @param data A data.frame
 #' @param x,y A name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
-#' @param group,color,fill A name of variable you want to group, color and fill
+#' @param group,color A name of variable you want to group and color
+#' @param alpha A name of variable you want to make transparent
 #' @param shape A name of point shape variable
 #' @param size A name of point size variable
 #' @param text A name of variable or expression for ggplotly hover text
@@ -123,7 +133,8 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #'
 #' @examples
 #' # point
-#' \donttest{data <- expand.grid(x = 1:10, y = 1:10)
+#' \donttest{set.seed(123)
+#' data <- expand.grid(x = 1:10, y = 1:10)
 #' data$shape <- sample(x = c("A", "B", "C"), size = 10, replace = TRUE)
 #' ggpoint(data = data, x = x, y = y, shape = shape, label = y, label_family = NA) +
 #'   theme_view(family = NA)
@@ -134,16 +145,19 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #'
 #' @export
 ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
-                    color = NULL, fill = NULL, shape = NULL, size = NULL,
-                    text = NULL, label, label_family = "Comic Sans MS", label_size = 4,
-                    label_angle = 0, label_hjust = .5, label_vjust = .5,
-                    label_color = c("#000000", "#FAF9F6")) {
-  ggplot(data = data, aes(x = {{x}}, y = {{y}}, ymin = {{ymin}},
-                          ymax = {{ymax}}, group = {{group}}, color = {{color}},
-                          shape = {{shape}}, size = {{size}}, text = {{text}})) +
-    geom_point(position = position_fill(vjust = .5)) +
+                    color = NULL, shape = NULL, size = NULL, alpha = NULL,
+                    text = NULL, label, label_family = "Comic Sans MS",
+                    label_size = 4, label_angle = 0, label_hjust = .5,
+                    label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
+  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
+                            group = group, color = color, shape = shape,
+                            size = size, alpha = alpha, text = text)
+  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  ggplot(data = data, aes(!!!quo_maps)) +
+    geom_point() +
     list(if (!missing(label)) {
-      geom_text(aes(label = {{label}}),
+      quo_lbl <- rlang::enquos(label = label)
+      geom_text(aes(!!!quo_lbl),
                 position = position_fill(vjust = .5),
                 family = label_family, size = label_size, angle = label_angle,
                 hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
@@ -153,16 +167,19 @@ ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' @rdname ggpoint
 #' @export
 ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
-                    color = NULL, shape = NULL, size = NULL, text = NULL,
-                    label, label_family = "Comic Sans MS", label_size = 4,
-                    label_angle = 0, label_hjust = .5, label_vjust = .5,
-                    label_color = c("#000000", "#FAF9F6")) {
-  ggplot(data = data, aes(x = {{x}}, y = {{y}}, ymin = {{ymin}},
-                          ymax = {{ymax}}, group = {{group}}, color = {{color}},
-                          shape = {{shape}}, size = {{size}}, text = {{text}})) +
+                     color = NULL, shape = NULL, size = NULL, alpha = NULL,
+                     text = NULL, label, label_family = "Comic Sans MS",
+                     label_size = 4, label_angle = 0, label_hjust = .5,
+                     label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
+  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
+                            group = group, color = color, shape = shape,
+                            size = size, alpha = alpha, text = text)
+  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  ggplot(data = data, aes(!!!quo_maps)) +
     geom_jitter(position = position_jitter()) +
     list(if (!missing(label)) {
-      geom_text(aes(label = {{label}}),
+      quo_lbl <- rlang::enquos(label = label)
+      geom_text(aes(!!!quo_lbl),
                 position = position_jitter(),
                 family = label_family, size = label_size, angle = label_angle,
                 hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
@@ -178,7 +195,7 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' @param data A data.frame
 #' @param x,y A name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
-#' @param group,color,fill A name of variable you want to group, color and fill
+#' @param group,fill A name of variable you want to group and fill
 #' @param bar_color A string specifying bar color
 #' @param text A name of variable or expression for ggplotly hover text
 #' @param label A name of variable or expression you want to label
@@ -192,26 +209,29 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #'
 #' @examples
 #' # mix
-#' \donttest{data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
+#' \donttest{set.seed(123)
+#' data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
 #' data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-#' ggmix(data = data, x = x, y = y, fill = fill, label = y, label_family = NA) +
+#' ggmix(data = data, x = x, y = y, fill = fill, label = y, label_family = NA,
+#'   reverse = TRUE) +
 #'   theme_view(family = NULL)}
 #'
 #' @export
 ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
-                  color = NULL, fill = NULL, bar_color = "transparent",
-                  text = NULL, label, label_family = "Comic Sans MS",
-                  label_size = 4, label_angle = 0, label_hjust = .5,
-                  label_vjust = .5, label_color = c("#000000", "#FAF9F6"),
-                  reverse = FALSE) {
-  ggplot(data = data, aes(x = {{x}}, y = {{y}}, ymin = {{ymin}},
-                          ymax = {{ymax}}, group = {{group}}, color = {{color}},
-                          fill = {{fill}}, text = {{text}})) +
+                  fill = NULL, bar_color = "transparent", text = NULL,
+                  label, label_family = "Comic Sans MS", label_size = 4,
+                  label_angle = 0, label_hjust = .5, label_vjust = .5,
+                  label_color = c("#000000", "#FAF9F6"), reverse = FALSE) {
+  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
+                            group = group, fill = fill, text = text)
+  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  ggplot(data = data, aes(!!!quo_maps)) +
     geom_bar(stat = "identity",
              position = position_fill(vjust = .5, reverse = reverse),
              color = bar_color) +
     list(if (!missing(label)) {
-      geom_text(aes(label = {{label}}),
+      quo_lbl <- rlang::enquos(label = label)
+      geom_text(aes(!!!quo_lbl),
                 position = position_fill(vjust = .5, reverse = reverse),
                 family = label_family, size = label_size, angle = label_angle,
                 hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
@@ -237,7 +257,8 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #'
 #' @examples
 #' # pie
-#' \donttest{data <- data.frame(y = c(60, 30, 10), group = c("A", "B", "C"))
+#' \donttest{set.seed(123)
+#' data <- data.frame(y = c(60, 30, 10), group = c("A", "B", "C"))
 #' ggpie(data = data, y = y, group = group, label = sprintf("%s%%", y),
 #'       label_family = NA)}
 #'
@@ -245,16 +266,20 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 ggpie <- function(data, y, group, text, label, label_family = "Comic Sans MS",
                   label_size = 4, label_angle = 0, label_hjust = .5,
                   label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  ggplot(data, aes(x = 0, y = {{y}}, group = {{group}}, fill = {{group}},
-                   text = {{text}}))+
+  quo_maps <- rlang::enquos(y = y, group = group, fill = group, text = text)
+  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  ggplot(data, aes(x = 0, !!!quo_maps))+
     geom_bar(stat = "identity")+
     coord_polar("y", start = 0) +
     list(if (!missing(label)) {
-      geom_text(aes(label = {{label}}), position = position_stack(vjust = .5),
+      quo_lbl <- rlang::enquos(label = label)
+      geom_text(aes(!!!quo_lbl), position = position_stack(vjust = .5),
                 family = label_family, size = label_size, angle = label_angle,
                 hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
     }) +
-    theme_void(base_family = label_family)
+    theme_void(base_family = label_family) +
+    theme(plot.title = element_text(hjust = .5),
+          plot.subtitle = element_text(hjust = .5))
 }
 
 #' ggplot table functions only with frequently used arguments
@@ -276,7 +301,8 @@ ggpie <- function(data, y, group, text, label, label_family = "Comic Sans MS",
 #'
 #' @examples
 #' # table
-#' \donttest{data <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
+#' \donttest{set.seed(123)
+#' data <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
 #' data$label <- sample(x = 1:10, size = 9, replace = TRUE)
 #' ggtable(data = data, x = x, y = y, label = label, label_family = NA) +
 #'   theme_view(family = NULL)}
@@ -286,17 +312,18 @@ ggtable <- function(data, x, y, linetype = "dashed", text = NULL, label,
                     label_family = "Comic Sans MS", label_size = 4,
                     label_angle = 0, label_hjust = .5, label_vjust = .5,
                     label_color = c("#000000", "#FAF9F6")) {
-  if (typeof(substitute(x)) == "symbol")
-    dx <- deparse(substitute(x))
-  if (typeof(substitute(y)) == "symbol")
-    dy <- deparse(substitute(y))
+  dx <- rlang::as_name(rlang::enquo(x))
+  dy <- rlang::as_name(rlang::enquo(y))
 
   if (is.character(data[[dx]]))
     data[[dx]] <- as.factor(data[[dx]])
   if (is.character(data[[dy]]))
     data[[dy]] <- as.factor(data[[dy]])
 
-  stopifnot(is.factor(data[[dx]]), is.factor(data[[dy]]))
+  if (!is.factor(data[[dx]]))
+    stop(dx, " is not an object of type: factor")
+  if (!is.factor(data[[dy]]))
+    stop(dy, " is not an object of type: factor")
 
   xlvl <- levels(data[[dx]])
   ylvl <- levels(data[[dy]])
@@ -304,8 +331,12 @@ ggtable <- function(data, x, y, linetype = "dashed", text = NULL, label,
   ylen <- length(ylvl)
   data[[dx]] <- as.numeric(data[[dx]])
   data[[dy]] <- as.numeric(data[[dy]])
-  ggplot(data, aes(x = {{x}}, y = {{y}}, text = {{text}})) +
-    geom_text(aes(label = {{label}}), size = label_size, family = label_family,
+
+  quo_maps <- rlang::enquos(x = x, y = y, text = text)
+  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  quo_lbl  <- rlang::enquos(label = label)
+  ggplot(data, aes(!!!quo_maps)) +
+    geom_text(aes(!!!quo_lbl), size = label_size, family = label_family,
               angle = label_angle, hjust = label_hjust, vjust = label_vjust,
               color = label_color[1L]) +
     geom_vline(xintercept = seq(1, 1+xlen) - .5, linetype = linetype) +

@@ -13,9 +13,9 @@ ggpoint(
   ymax = NULL,
   group = NULL,
   color = NULL,
-  fill = NULL,
   shape = NULL,
   size = NULL,
+  alpha = NULL,
   text = NULL,
   label,
   label_family = "Comic Sans MS",
@@ -36,6 +36,7 @@ ggjitter(
   color = NULL,
   shape = NULL,
   size = NULL,
+  alpha = NULL,
   text = NULL,
   label,
   label_family = "Comic Sans MS",
@@ -53,11 +54,13 @@ ggjitter(
 
 \item{ymin, ymax}{\code{min} and \code{max} values of y for the height}
 
-\item{group, color, fill}{A name of variable you want to group, color and fill}
+\item{group, color}{A name of variable you want to group and color}
 
 \item{shape}{A name of point shape variable}
 
 \item{size}{A name of point size variable}
+
+\item{alpha}{A name of variable you want to make transparent}
 
 \item{text}{A name of variable or expression for ggplotly hover text}
 
@@ -79,7 +82,8 @@ used arguments.
 }
 \examples{
 # point
-\donttest{data <- expand.grid(x = 1:10, y = 1:10)
+\donttest{set.seed(123)
+data <- expand.grid(x = 1:10, y = 1:10)
 data$shape <- sample(x = c("A", "B", "C"), size = 10, replace = TRUE)
 ggpoint(data = data, x = x, y = y, shape = shape, label = y, label_family = NA) +
   theme_view(family = NA)

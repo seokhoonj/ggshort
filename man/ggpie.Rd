@@ -45,7 +45,8 @@ used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \
 }
 \examples{
 # pie
-\donttest{data <- data.frame(y = c(60, 30, 10), group = c("A", "B", "C"))
+\donttest{set.seed(123)
+data <- data.frame(y = c(60, 30, 10), group = c("A", "B", "C"))
 ggpie(data = data, y = y, group = group, label = sprintf("\%s\%\%", y),
       label_family = NA)}
 

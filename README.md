@@ -80,6 +80,30 @@ ggline(IndustryAuto, x = Development.Year, y = Claim, group = Incurral.Year,
 
 <img src="man/figures/ggline-industry-auto-claims.png"/>
 
+### `ggpoint()`
+
+``` r
+if (!require("insuranceData")) install.packages("insuranceData")
+
+library(insuranceData)
+
+data("AutoCollision")
+head(AutoCollision)
+#>   Age Vehicle_Use Severity Claim_Count
+#> 1   A    Pleasure   250.48          21
+#> 2   A  DriveShort   274.78          40
+#> 3   A   DriveLong   244.52          23
+#> 4   A    Business   797.80           5
+#> 5   B    Pleasure   213.71          63
+#> 6   B  DriveShort   298.60         171
+
+ggpoint(AutoCollision, x = Age, y = Claim_Count, color = Vehicle_Use, 
+        size = Severity) + scale_y_comma() + labs(title = "Auto Collision") + 
+        theme_view()
+```
+
+<img src="man/figures/ggpoint-auto-collision.png"/>
+
 ### `ggmix()`
 
 ``` r
@@ -133,6 +157,7 @@ IndustryAuto$Development.Year <- factor(IndustryAuto$Development.Year, levels = 
 
 ggmix(IndustryAuto, x = Incurral.Year, y = Claim, fill = Development.Year, 
       reverse = TRUE) +
+  coord_flip() +
   labs(title = "Industry Auto Claims", subtitle = "Reversed group order") +
   theme_view()
 ```
@@ -179,7 +204,11 @@ head(IndustryAuto)
 #> 5          1999                1 20649
 #> 6          2000                1 22327
 
-ggtable(IndustryAuto, x = Development.Year, y = Incurral.Year, label = Claim) + 
+IndustryAuto$Incurral.Year <- as.factor(IndustryAuto$Incurral.Year)
+IndustryAuto$Development.Year <- as.factor(IndustryAuto$Development.Year)
+
+ggtable(IndustryAuto, x = Development.Year, y = Incurral.Year, label = Claim) +
+  scale_y_comma() +
   theme_view()
 ```
 
@@ -206,3 +235,25 @@ ggdensity(data = warpbreaks, x = breaks, facet = .(wool, tension),
 ```
 
 <img src="man/figures/ggdensity-warpbreaks.png"/>
+
+### `plotly_treemap()`
+
+``` r
+if (!require("insuranceData")) install.packages("insuranceData")
+
+library(insuranceData)
+
+data("AutoCollision")
+head(AutoCollision)
+#>   Age Vehicle_Use Severity Claim_Count
+#> 1   A    Pleasure   250.48          21
+#> 2   A  DriveShort   274.78          40
+#> 3   A   DriveLong   244.52          23
+#> 4   A    Business   797.80           5
+#> 5   B    Pleasure   213.71          63
+#> 6   B  DriveShort   298.60         171
+
+plotly_treemap(AutoCollision, list(Age, Vehicle_Use), value_var = Claim_Count)
+```
+
+<img src="man/figures/plotly_treemap-auto-collision.png"/>

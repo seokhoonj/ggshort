@@ -1,8 +1,8 @@
 Package: ggshort
 Title: ggplot shortly
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
-    person(given = "Seokhoon", family = "Last", role = c("aut", "cre"),
+    person(given = "Seokhoon", family = "Joo", role = c("aut", "cre"),
            email = "seokhoonj@gmail.com")
 Description: Shortly simplify the grammar of ggplot to the functions only with 
              frequently used arguments.
@@ -14,7 +14,10 @@ Remotes:
 Imports:
   data.table (>= 1.13.0),
   ggplot2 (>= 3.3.3),
-  jaid (>= 0.0.0.9000)
+  jaid (>= 0.0.0.9000),
+  plotly (>= 4.10.1),
+  rlang (>= 1.1.1),
+  scales (>= 1.2.1)
 Suggests:
   insuranceData (>= 1.0)
 Roxygen: list(markdown = TRUE)

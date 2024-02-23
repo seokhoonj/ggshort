@@ -11,7 +11,7 @@ frequently used arguments. Despite its limited flexibility, it helps people
 draw ggplot easily.
 }
 \author{
-\strong{Maintainer}: Seokhoon Last \email{seokhoonj@gmail.com}
+\strong{Maintainer}: Seokhoon Joo \email{seokhoonj@gmail.com}
 
 }
 \keyword{internal}

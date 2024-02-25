@@ -20,16 +20,16 @@ scale_pair_fill_manual(
 )
 }
 \arguments{
-\item{pair}{A vector contains data of pair values}
+\item{pair}{a vector contains data of pair values}
 
 \item{pair_levels}{Two element vector expressing pair values (default, c("1", "2"))}
 
-\item{color_type}{A string of color type, \code{base} and \code{deep}}
+\item{color_type}{a string of color type, \code{base} and \code{deep}}
 
-\item{guide}{A function used to create a guide or its name. See \code{\link[=guides]{guides()}} for more information.}
+\item{guide}{a function used to create a guide or its name. See \code{\link[=guides]{guides()}} for more information.}
 }
 \value{
-A ggplot object
+a ggplot object
 }
 \description{
 Create consistent pair fill scales

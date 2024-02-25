@@ -6,8 +6,8 @@
 \usage{
 ggpie(
   data,
-  y,
   group,
+  value,
   text,
   label,
   label_family = "Comic Sans MS",
@@ -19,25 +19,25 @@ ggpie(
 )
 }
 \arguments{
-\item{data}{A data.frame}
+\item{data}{a data.frame}
 
-\item{y}{A name of axis \code{y}}
+\item{group}{a name of variable you want to group}
 
-\item{group}{A name of variable you want to group}
+\item{value}{a name of variable specifying values}
 
-\item{text}{A name of variable or expression for ggplotly hover text}
+\item{text}{a name of variable or expression for ggplotly hover text}
 
-\item{label}{A name of variable or expression you want to label}
+\item{label}{a name of variable or expression you want to label}
 
-\item{label_family, label_size, label_angle}{A string specifying label font-family, size and angle}
+\item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
 
-\item{label_hjust, label_vjust}{A numeric specifying label horizontal and vertical
+\item{label_hjust, label_vjust}{a numeric specifying label horizontal and vertical
 adjustment}
 
-\item{label_color}{A string specifying label color}
+\item{label_color}{a string specifying label color}
 }
 \value{
-A ggplot object
+a ggplot object
 }
 \description{
 Shortly simplify the grammar of ggplot to the functions only with frequently
@@ -46,8 +46,8 @@ used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \
 \examples{
 # pie
 \donttest{set.seed(123)
-data <- data.frame(y = c(60, 30, 10), group = c("A", "B", "C"))
-ggpie(data = data, y = y, group = group, label = sprintf("\%s\%\%", y),
+data <- data.frame(group = c("A", "B", "C"), value = c(60, 30, 10))
+ggpie(data = data, group = group, value = value, label = sprintf("\%s\%\%", value),
       label_family = NA)}
 
 }

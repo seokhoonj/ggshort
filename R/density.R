@@ -2,9 +2,9 @@
 #'
 #' Show a simple density plot.
 #'
-#' @param data A data frame
-#' @param x A name specifying numeric column.
-#' @param facet A name of columns for applying `facet_wrap()` function.
+#' @param data a data frame
+#' @param x a name specifying numeric column.
+#' @param facet a name of columns for applying `facet_wrap()` function.
 #' @param kernel a character string giving the smoothing kernel to be used.
 #' This must partially match one of "gaussian", "rectangular", "triangular",
 #' "epanechnikov", "biweight", "cosine" or "optcosine", with default "gaussian",
@@ -13,7 +13,7 @@
 #' the literature and almost MSE-efficient. However, "cosine" is the version
 #' used by S.
 #' @param probs probability for a density function.
-#' @param logscale A boolean value that determines whether or not to make the x
+#' @param logscale a boolean value that determines whether or not to make the x
 #' variable logscale.
 #' @param round_digits rounding digits
 #' @param scales Should scales be fixed ("fixed", the default), free ("free"),

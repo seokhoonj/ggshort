@@ -17,11 +17,11 @@ ggdensity(
 )
 }
 \arguments{
-\item{data}{A data frame}
+\item{data}{a data frame}
 
-\item{x}{A name specifying numeric column.}
+\item{x}{a name specifying numeric column.}
 
-\item{facet}{A name of columns for applying \code{facet_wrap()} function.}
+\item{facet}{a name of columns for applying \code{facet_wrap()} function.}
 
 \item{kernel}{a character string giving the smoothing kernel to be used.
 This must partially match one of "gaussian", "rectangular", "triangular",
@@ -33,7 +33,7 @@ used by S.}
 
 \item{probs}{probability for a density function.}
 
-\item{logscale}{A boolean value that determines whether or not to make the x
+\item{logscale}{a boolean value that determines whether or not to make the x
 variable logscale.}
 
 \item{round_digits}{rounding digits}

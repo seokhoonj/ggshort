@@ -3,19 +3,19 @@
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
 #' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
 #'
-#' @param data A data.frame
-#' @param x,y A name of axis `x` and `y`
+#' @param data a data.frame
+#' @param x,y  a name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
 #' @param ymin_err,ymax_err `min` and `max` values of y errors for the error bar
-#' @param group,fill A name of variable you want to group and fill
-#' @param text A name of variable or expression for ggplotly hover text
-#' @param bar_color A string specifying bar color
-#' @param label A name of variable or expression you want to label
-#' @param label_family,label_size,label_angle A string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust A numeric specifying label horizontal and vertical
+#' @param group,fill a name of variable you want to group and fill
+#' @param text a name of variable or expression for ggplotly hover text
+#' @param bar_color a string specifying bar color
+#' @param label a name of variable or expression you want to label
+#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
+#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
-#' @param label_color A string specifying label color
-#' @return A ggplot object
+#' @param label_color a string specifying label color
+#' @return a ggplot object
 #'
 #' @seealso [ggline()], [ggpoint()], [ggjitter()], [ggmix()], [ggpie()], [ggtable()]
 #'
@@ -60,19 +60,19 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
 #' used arguments.
 #'
-#' @param data A data.frame
-#' @param x,y A name of axis `x` and `y`
+#' @param data a data.frame
+#' @param x,y a name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
 #' @param ymin_err,ymax_err `min` and `max` values of y errors for the error bar
-#' @param group,color A name of variable you want to group and color
-#' @param linetype A name of linetype variable
-#' @param text A name of variable or expression for ggplotly hover text
-#' @param label A name of variable or expression you want to label
-#' @param label_family,label_size,label_angle A string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust A numeric specifying label horizontal and vertical
+#' @param group,color a name of variable you want to group and color
+#' @param linetype a name of linetype variable
+#' @param text a name of variable or expression for ggplotly hover text
+#' @param label a name of variable or expression you want to label
+#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
+#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
-#' @param label_color A string specifying label color
-#' @return A ggplot object
+#' @param label_color a string specifying label color
+#' @return a ggplot object
 #' @seealso [ggbar()], [ggpoint()], [ggjitter()], [ggmix()], [ggpie()], [ggtable()]
 #'
 #' @examples
@@ -115,20 +115,20 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
 #' used arguments.
 #'
-#' @param data A data.frame
-#' @param x,y A name of axis `x` and `y`
+#' @param data a data.frame
+#' @param x,y a name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
-#' @param group,color A name of variable you want to group and color
-#' @param alpha A name of variable you want to make transparent
-#' @param shape A name of point shape variable
-#' @param size A name of point size variable
-#' @param text A name of variable or expression for ggplotly hover text
-#' @param label A name of variable or expression you want to label
-#' @param label_family,label_size,label_angle A string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust A numeric specifying label horizontal and vertical
+#' @param group,color a name of variable you want to group and color
+#' @param alpha a name of variable you want to make transparent
+#' @param shape a name of point shape variable
+#' @param size a name of point size variable
+#' @param text a name of variable or expression for ggplotly hover text
+#' @param label a name of variable or expression you want to label
+#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
+#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
-#' @param label_color A string specifying label color
-#' @return A ggplot object
+#' @param label_color a string specifying label color
+#' @return a ggplot object
 #' @seealso [ggbar()], [ggline()], [ggjitter()], [ggmix()], [ggpie()], [ggtable()]
 #'
 #' @examples
@@ -192,19 +192,19 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
 #' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
 #'
-#' @param data A data.frame
-#' @param x,y A name of axis `x` and `y`
+#' @param data a data.frame
+#' @param x,y a name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
-#' @param group,fill A name of variable you want to group and fill
-#' @param bar_color A string specifying bar color
-#' @param text A name of variable or expression for ggplotly hover text
-#' @param label A name of variable or expression you want to label
-#' @param label_family,label_size,label_angle A string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust A numeric specifying label horizontal and vertical
+#' @param group,fill a name of variable you want to group and fill
+#' @param bar_color a string specifying bar color
+#' @param text a name of variable or expression for ggplotly hover text
+#' @param label a name of variable or expression you want to label
+#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
+#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
-#' @param label_color A string specifying label color
-#' @param reverse A boolean whether to reverse the order of the `y` variable
-#' @return A ggplot object
+#' @param label_color a string specifying label color
+#' @param reverse a boolean whether to reverse the order of the `y` variable
+#' @return a ggplot object
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggpie()], [ggtable()]
 #'
 #' @examples
@@ -243,30 +243,30 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
 #' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
 #'
-#' @param data A data.frame
-#' @param y A name of axis `y`
-#' @param group A name of variable you want to group
-#' @param text A name of variable or expression for ggplotly hover text
-#' @param label A name of variable or expression you want to label
-#' @param label_family,label_size,label_angle A string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust A numeric specifying label horizontal and vertical
+#' @param data a data.frame
+#' @param group a name of variable you want to group
+#' @param value a name of variable specifying values
+#' @param text a name of variable or expression for ggplotly hover text
+#' @param label a name of variable or expression you want to label
+#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
+#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
-#' @param label_color A string specifying label color
-#' @return A ggplot object
+#' @param label_color a string specifying label color
+#' @return a ggplot object
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggmix()], [ggtable()]
 #'
 #' @examples
 #' # pie
 #' \donttest{set.seed(123)
-#' data <- data.frame(y = c(60, 30, 10), group = c("A", "B", "C"))
-#' ggpie(data = data, y = y, group = group, label = sprintf("%s%%", y),
+#' data <- data.frame(group = c("A", "B", "C"), value = c(60, 30, 10))
+#' ggpie(data = data, group = group, value = value, label = sprintf("%s%%", value),
 #'       label_family = NA)}
 #'
 #' @export
-ggpie <- function(data, y, group, text, label, label_family = "Comic Sans MS",
+ggpie <- function(data, group, value, text, label, label_family = "Comic Sans MS",
                   label_size = 4, label_angle = 0, label_hjust = .5,
                   label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  quo_maps <- rlang::enquos(y = y, group = group, fill = group, text = text)
+  quo_maps <- rlang::enquos(y = value, group = group, fill = group, text = text)
   quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
   ggplot(data, aes(x = 0, !!!quo_maps))+
     geom_bar(stat = "identity")+
@@ -287,16 +287,16 @@ ggpie <- function(data, y, group, text, label, label_family = "Comic Sans MS",
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
 #' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
 #'
-#' @param data A data.frame
-#' @param x,y A name of axis `x` and `y`
-#' @param linetype A string specifying a linetype
-#' @param text A name of variable or expression for ggplotly hover text
-#' @param label A name of variable or expression you want to label
-#' @param label_family,label_size,label_angle A string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust A numeric specifying label horizontal and vertical
+#' @param data a data.frame
+#' @param x,y a name of axis `x` and `y`
+#' @param linetype a string specifying a linetype
+#' @param text a name of variable or expression for ggplotly hover text
+#' @param label a name of variable or expression you want to label
+#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
+#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
-#' @param label_color A string specifying label color
-#' @return A ggplot object
+#' @param label_color a string specifying label color
+#' @return a ggplot object
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggmix()], [ggpie()]
 #'
 #' @examples

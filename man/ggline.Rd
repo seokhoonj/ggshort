@@ -26,31 +26,31 @@ ggline(
 )
 }
 \arguments{
-\item{data}{A data.frame}
+\item{data}{a data.frame}
 
-\item{x, y}{A name of axis \code{x} and \code{y}}
+\item{x, y}{a name of axis \code{x} and \code{y}}
 
 \item{ymin, ymax}{\code{min} and \code{max} values of y for the height}
 
 \item{ymin_err, ymax_err}{\code{min} and \code{max} values of y errors for the error bar}
 
-\item{group, color}{A name of variable you want to group and color}
+\item{group, color}{a name of variable you want to group and color}
 
-\item{linetype}{A name of linetype variable}
+\item{linetype}{a name of linetype variable}
 
-\item{text}{A name of variable or expression for ggplotly hover text}
+\item{text}{a name of variable or expression for ggplotly hover text}
 
-\item{label}{A name of variable or expression you want to label}
+\item{label}{a name of variable or expression you want to label}
 
-\item{label_family, label_size, label_angle}{A string specifying label font-family, size and angle}
+\item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
 
-\item{label_hjust, label_vjust}{A numeric specifying label horizontal and vertical
+\item{label_hjust, label_vjust}{a numeric specifying label horizontal and vertical
 adjustment}
 
-\item{label_color}{A string specifying label color}
+\item{label_color}{a string specifying label color}
 }
 \value{
-A ggplot object
+a ggplot object
 }
 \description{
 Shortly simplify the grammar of ggplot to the functions only with frequently

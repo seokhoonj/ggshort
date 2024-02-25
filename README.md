@@ -181,11 +181,34 @@ head(data)
 #> 32   H    Business   342.58          96
 
 # No theme_view, it already contains `theme_void()`
-ggpie(data, y = Claim_Count, group = Vehicle_Use, label = Claim_Count) + 
+ggpie(data, group = Vehicle_Use, value = Claim_Count, label = Claim_Count) + 
       labs(title = "Auto Collision", subtitle = "Age: H")
 ```
 
 <img src="man/figures/ggpie-auto-collision-age-h.png"/>
+
+### `plotly_pie()`
+
+``` r
+if (!require("insuranceData")) install.packages("insuranceData")
+
+library(insuranceData)
+
+data("AutoCollision")
+data <- AutoCollision[AutoCollision$Age == "H",]
+head(data)
+#>    Age Vehicle_Use Severity Claim_Count
+#> 29   H    Pleasure   192.00         260
+#> 30   H  DriveShort   196.33         578
+#> 31   H   DriveLong   259.79         312
+#> 32   H    Business   342.58          96
+
+# No theme_view, it already contains `theme_void()`
+plotly_pie(data, labels = Vehicle_Use, values = Claim_Count) |>
+      layout(title = "Auto Collision<br><sup>Age: H</sup>")
+```
+
+<img src="man/figures/plotly_pie-auto-collision-age-h.png"/>
 
 ### `ggtable()`
 

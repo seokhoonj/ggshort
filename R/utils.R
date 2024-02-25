@@ -34,11 +34,11 @@ scale_y_comma <- function() scale_y_continuous(labels = scales::comma)
 #'
 #' Create consistent pair fill scales
 #'
-#' @param pair A vector contains data of pair values
+#' @param pair a vector contains data of pair values
 #' @param pair_levels Two element vector expressing pair values (default, c("1", "2"))
-#' @param color_type A string of color type, `base` and `deep`
-#' @param guide A function used to create a guide or its name. See [guides()] for more information.
-#' @return A ggplot object
+#' @param color_type a string of color type, `base` and `deep`
+#' @param guide a function used to create a guide or its name. See [guides()] for more information.
+#' @return a ggplot object
 #'
 #' @seealso [scale_pair_fill_manual()]
 #'

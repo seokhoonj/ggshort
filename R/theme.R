@@ -27,8 +27,7 @@ theme_view <- function(family = "Comic Sans MS", x.size = NULL, y.size = NULL,
                        y.angle = 0, x.hjust = .5, x.vjust = .5, y.hjust = NULL,
                        y.vjust = NULL, legend.key.height = NULL,
                        legend.key.width = NULL, legend.position = "right",
-                       legend.justification = "center",
-                       panel.background = NULL) { # original default: panel.background = element_rect()
+                       legend.justification = "center") {
   list(
     theme(
       text  = element_text(family = family),
@@ -44,8 +43,8 @@ theme_view <- function(family = "Comic Sans MS", x.size = NULL, y.size = NULL,
       legend.key.width = legend.key.width,
       legend.position = legend.position,
       legend.justification = legend.justification,
-      panel.border = element_rect(colour = "black", fill = NA),
-      panel.background = panel.background,
+      panel.border = element_rect(colour = "black", fill = "transparent"),
+      panel.background = element_rect(fill = "transparent"),
       strip.background = element_rect(colour = "black")
     )
   )
@@ -82,7 +81,6 @@ theme_shiny <- function(family = "Comic Sans MS", x.size = 12, y.size = 12,
                         y.vjust = NULL, legend.key.height = NULL,
                         legend.key.width = NULL, legend.position = "right",
                         legend.justification = "center",
-                        panel.background = NULL,
                         plot.background.fill = "transparent") { # original default: panel.background = element_rect() #ECF0F5
   list(
     theme(
@@ -99,8 +97,8 @@ theme_shiny <- function(family = "Comic Sans MS", x.size = 12, y.size = 12,
       legend.key.width  = legend.key.width,
       legend.position   = legend.position,
       legend.justification = legend.justification,
-      panel.border = element_rect(colour = "black", fill = NA),
-      panel.background  = panel.background,
+      panel.border = element_rect(colour = "black", fill = "transparent"),
+      panel.background = element_rect(fill = "transparent"),
       strip.background = element_rect(colour = "black"),
       plot.background = element_rect(
         fill = plot.background.fill,
@@ -139,8 +137,7 @@ theme_save <- function(family = "Comic Sans MS", x.size = 12, y.size = 12,
                        x.vjust = .5, y.hjust = NULL, y.vjust = NULL,
                        legend.key.height = NULL, legend.key.width = NULL,
                        legend.position = "right",
-                       legend.justification = "center",
-                       panel.background = NULL) { # original default: panel.background = element_rect()
+                       legend.justification = "center") {
   list(
     theme(
       text  = element_text(family = family),
@@ -156,8 +153,8 @@ theme_save <- function(family = "Comic Sans MS", x.size = 12, y.size = 12,
       legend.key.width = legend.key.width,
       legend.position = legend.position,
       legend.justification = legend.justification,
-      panel.border = element_rect(colour = "black", fill = NA),
-      panel.background  = panel.background,
+      panel.border = element_rect(colour = "black", fill = "transparent"),
+      panel.background = element_rect(fill = "transparent"),
       strip.background = element_rect(colour = "black")
     )
   )

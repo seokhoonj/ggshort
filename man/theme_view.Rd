@@ -25,8 +25,7 @@ theme_view(
   legend.key.height = NULL,
   legend.key.width = NULL,
   legend.position = "right",
-  legend.justification = "center",
-  panel.background = NULL
+  legend.justification = "center"
 )
 }
 \arguments{
@@ -50,9 +49,6 @@ legend text face}
 \item{legend.justification}{anchor point for positioning legend inside plot
 ("center" or two-element numeric vector) or the justification according to
 the plot area when positioned outside the plot}
-
-\item{panel.background}{background of plotting area, drawn underneath plot
-(\code{\link[=element_rect]{element_rect()}}; inherits from \code{rect})}
 }
 \value{
 A ggplot object

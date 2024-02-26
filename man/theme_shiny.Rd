@@ -26,7 +26,6 @@ theme_shiny(
   legend.key.width = NULL,
   legend.position = "right",
   legend.justification = "center",
-  panel.background = NULL,
   plot.background.fill = "transparent"
 )
 }
@@ -51,9 +50,6 @@ legend text face}
 \item{legend.justification}{anchor point for positioning legend inside plot
 ("center" or two-element numeric vector) or the justification according to
 the plot area when positioned outside the plot}
-
-\item{panel.background}{background of plotting area, drawn underneath plot
-(\code{\link[=element_rect]{element_rect()}}; inherits from \code{rect})}
 
 \item{plot.background.fill}{fill background of the entire plot}
 }

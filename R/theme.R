@@ -15,8 +15,6 @@
 #' @param legend.justification anchor point for positioning legend inside plot
 #'   ("center" or two-element numeric vector) or the justification according to
 #'   the plot area when positioned outside the plot
-#' @param panel.background background of plotting area, drawn underneath plot
-#'   ([element_rect()]; inherits from `rect`)
 #' @return A ggplot object
 #'
 #' @export
@@ -68,8 +66,6 @@ theme_view <- function(family = "Comic Sans MS", x.size = NULL, y.size = NULL,
 #' @param legend.justification anchor point for positioning legend inside plot
 #'   ("center" or two-element numeric vector) or the justification according to
 #'   the plot area when positioned outside the plot
-#' @param panel.background background of plotting area, drawn underneath plot
-#'   ([element_rect()]; inherits from `rect`)
 #' @param plot.background.fill fill background of the entire plot
 #'
 #' @export
@@ -126,8 +122,6 @@ theme_shiny <- function(family = "Comic Sans MS", x.size = 12, y.size = 12,
 #' @param legend.justification anchor point for positioning legend inside plot
 #'   ("center" or two-element numeric vector) or the justification according to
 #'   the plot area when positioned outside the plot
-#' @param panel.background background of plotting area, drawn underneath plot
-#'   ([element_rect()]; inherits from `rect`)
 #'
 #' @export
 theme_save <- function(family = "Comic Sans MS", x.size = 12, y.size = 12,

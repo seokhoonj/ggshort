@@ -216,6 +216,7 @@ plotly_pie(data, labels = Vehicle_Use, values = Claim_Count) |>
 if (!require("insuranceData")) install.packages("insuranceData")
 
 library(insuranceData)
+library(scales)
 
 data("IndustryAuto")
 head(IndustryAuto)
@@ -230,8 +231,7 @@ head(IndustryAuto)
 IndustryAuto$Incurral.Year <- as.factor(IndustryAuto$Incurral.Year)
 IndustryAuto$Development.Year <- as.factor(IndustryAuto$Development.Year)
 
-ggtable(IndustryAuto, x = Development.Year, y = Incurral.Year, label = Claim) +
-  scale_y_comma() +
+ggtable(IndustryAuto, x = Development.Year, y = Incurral.Year, label = scales::comma(Claim)) +
   theme_view()
 ```
 

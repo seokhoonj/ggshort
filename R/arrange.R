@@ -23,7 +23,6 @@
 #' legend <- get_legend(g1)
 #' grid_top_bottom_right(g1, g2, legend)}
 #'
-#'
 #' @export
 grid_top_bottom_right <- function(g1, g2, legend) {
   legend <- get_legend(g1)
@@ -36,4 +35,5 @@ grid_top_bottom_right <- function(g1, g2, legend) {
     ), legend, ncol = 2, widths = c(8.5, 1.5)
   )
   gridExtra::grid.arrange(g)
+  invisible(g)
 }

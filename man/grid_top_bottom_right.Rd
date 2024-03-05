@@ -35,5 +35,4 @@ g2 <- ggline(data = data, x = x, y = y, color = color) +
 legend <- get_legend(g1)
 grid_top_bottom_right(g1, g2, legend)}
 
-
 }

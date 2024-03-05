@@ -14,6 +14,7 @@ Remotes:
 Imports:
   data.table (>= 1.13.0),
   ggplot2 (>= 3.3.3),
+  gridExtra (>= 2.3),
   jaid (>= 0.0.0.9000),
   plotly (>= 4.10.1),
   rlang (>= 1.1.1),

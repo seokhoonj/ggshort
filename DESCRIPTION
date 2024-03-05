@@ -8,6 +8,7 @@ Description: Shortly simplify the grammar of ggplot to the functions only with
              frequently used arguments.
 License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: true
 Depends: R (>= 3.5.0)
 Remotes:
   github::seokhoonj/jaid

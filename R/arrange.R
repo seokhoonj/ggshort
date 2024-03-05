@@ -34,6 +34,7 @@ grid_top_bottom_right <- function(g1, g2, legend) {
       ggplotGrob(g2), nrow = 2, heights = c(5, 5)
     ), legend, ncol = 2, widths = c(8.5, 1.5)
   )
+  grid::grid.newpage()
   gridExtra::grid.arrange(g)
   invisible(g)
 }

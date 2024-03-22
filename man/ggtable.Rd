@@ -16,7 +16,8 @@ ggtable(
   label_angle = 0,
   label_hjust = 0.5,
   label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6")
+  label_color = c("#000000", "#FAF9F6"),
+  xlab_position = c("top", "bottom")
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ ggtable(
 adjustment}
 
 \item{label_color}{a string specifying label color}
+
+\item{xlab_position}{a string specifying x label position (default: top)}
 }
 \value{
 a ggplot object

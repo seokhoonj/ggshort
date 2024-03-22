@@ -296,6 +296,7 @@ ggpie <- function(data, group, value, text, label, label_family = "Comic Sans MS
 #' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
 #' @param label_color a string specifying label color
+#' @param xlab_position a string specifying x label position (default: top)
 #' @return a ggplot object
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggmix()], [ggpie()]
 #'
@@ -311,7 +312,8 @@ ggpie <- function(data, group, value, text, label, label_family = "Comic Sans MS
 ggtable <- function(data, x, y, linetype = "dashed", text = NULL, label,
                     label_family = "Comic Sans MS", label_size = 4,
                     label_angle = 0, label_hjust = .5, label_vjust = .5,
-                    label_color = c("#000000", "#FAF9F6")) {
+                    label_color = c("#000000", "#FAF9F6"),
+                    xlab_position = c("top", "bottom")) {
   dx <- rlang::as_name(rlang::enquo(x))
   dy <- rlang::as_name(rlang::enquo(y))
 
@@ -335,12 +337,14 @@ ggtable <- function(data, x, y, linetype = "dashed", text = NULL, label,
   quo_maps <- rlang::enquos(x = x, y = y, text = text)
   quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
   quo_lbl  <- rlang::enquos(label = label)
+  xlab_position <- match.arg(xlab_position)
   ggplot(data, aes(!!!quo_maps)) +
     geom_text(aes(!!!quo_lbl), size = label_size, family = label_family,
               angle = label_angle, hjust = label_hjust, vjust = label_vjust,
               color = label_color[1L]) +
     geom_vline(xintercept = seq(1, 1+xlen) - .5, linetype = linetype) +
     geom_hline(yintercept = seq(1, 1+ylen) - .5, linetype = linetype) +
-    scale_x_continuous(breaks = seq(1, xlen), labels = xlvl, position = "top") +
+    scale_x_continuous(breaks = seq(1, xlen), labels = xlvl,
+                       position = xlab_position) +
     scale_y_reverse(breaks = seq(1, ylen), labels = ylvl)
 }

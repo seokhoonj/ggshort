@@ -5,8 +5,8 @@
 #' @keywords internal
 #' @import ggplot2
 #' @importFrom gridExtra arrangeGrob grid.arrange
-#' @importFrom data.table `:=` `.SD` as.data.table data.table set setDT
-#' @importFrom jaid paste_list set_dt unilen
+#' @importFrom data.table `:=` `.SD` as.data.table data.table melt set setDT
+#' @importFrom jaid assert_class meta paste_list set_dt unilen
 #' @importFrom plotly ggplotly plot_ly
 #' @importFrom rlang enquo enquos quo_is_null
 #' @importFrom scales comma

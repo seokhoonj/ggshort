@@ -41,7 +41,7 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
     geom_bar(stat = "identity", position = position_dodge2(preserve = "single"),
              color = bar_color) +
     list(if (!(missing(ymin_err) & missing(ymax_err))) {
-      quo_errs <- rlang::enquos(x = x, ymin_err = ymin_err, ymax_err = ymax_err)
+      quo_errs <- rlang::enquos(x = x, ymin = ymin_err, ymax = ymax_err)
       geom_errorbar(aes(!!!quo_errs),
                     position = position_dodge2(preserve = "single"),
                     alpha = .5)
@@ -96,7 +96,7 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
   ggplot(data = data, aes(!!!quo_maps)) +
     geom_line() +
     list(if (!(missing(ymin_err) & missing(ymax_err))) {
-      quo_errs <- rlang::enquos(x = x, ymin_err = ymin_err, ymax_err = ymax_err)
+      quo_errs <- rlang::enquos(x = x, ymin = ymin_err, ymax = ymax_err)
       geom_errorbar(aes(!!!quo_errs),
                     position = position_dodge2(preserve = "single"),
                     alpha = .5)

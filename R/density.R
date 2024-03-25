@@ -46,7 +46,7 @@ ggdensity <- function(data, x, facet, kernel = "gaussian", probs = .95,
         dt <- data[, .SD, .SDcols = .x]
       }
     } else {
-      .facet <- match_cols(data, vapply(substitute(facet), deparse, "character"))
+      .facet <- jaid::match_cols(data, jaid::desubs(facet))
       if (!inherits(data, "data.table")) {
         dt <- data.table::as.data.table(data[, c(.x, .facet)])
       } else {

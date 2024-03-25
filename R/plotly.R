@@ -30,8 +30,8 @@ plotly_treemap <- function(data, groups, values, path_labels = FALSE,
                            hoverinfo = "percent entry+percent parent+percent root") {
   old_class <- class(data)
   jaid::set_dt(data)
-  groups <- match_cols(data, sapply(rlang::enexpr(groups), rlang::as_name))
-  values <- match_cols(data, sapply(rlang::enexpr(values), rlang::as_name))
+  groups <- jaid::match_cols(data, sapply(rlang::enexpr(groups), rlang::as_name))
+  values <- jaid::match_cols(data, sapply(rlang::enexpr(values), rlang::as_name))
 
   # add parents
   if (add_parents)

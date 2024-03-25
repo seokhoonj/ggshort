@@ -103,5 +103,3 @@ get_two_colors <- function(choice = c("base", "deep")) {
 get_twelve_colors <- function() {
   return(local(.TWELVE_COLORS, envir = .GGSHORT_COLORS_ENV))
 }
-
-match_cols <- function(df, cols) names(df)[match(cols, names(df), 0L)]

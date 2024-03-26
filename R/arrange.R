@@ -5,6 +5,7 @@
 #' @param g1 a ggplot object
 #' @param g2 a ggplot object
 #' @param legend a gtable object
+#' @param heights,widths a unit vector giving the height of each row
 #' @return a gtable object
 #'
 #' @examples
@@ -24,14 +25,14 @@
 #' grid_top_bottom_right(g1, g2, legend)}
 #'
 #' @export
-grid_top_bottom_right <- function(g1, g2, legend) {
+grid_top_bottom_right <- function(g1, g2, legend, heights = c(5, 5)) {
   legend <- get_legend(g1)
   g1 <- g1 + theme(legend.position = "none")
   g2 <- g2 + theme(legend.position = "none")
   g <- gridExtra::arrangeGrob(
     gridExtra::arrangeGrob(
       ggplotGrob(g1),
-      ggplotGrob(g2), nrow = 2, heights = c(5, 5)
+      ggplotGrob(g2), nrow = 2, heights = heights
     ), legend, ncol = 2, widths = c(8.5, 1.5)
   )
   gridExtra::grid.arrange(g)
@@ -40,14 +41,14 @@ grid_top_bottom_right <- function(g1, g2, legend) {
 
 #' @rdname grid_top_bottom_right
 #' @export
-grid_left_to_right <- function(g1, g2, legend) {
+grid_left_to_right <- function(g1, g2, legend, widths = c(5, 5)) {
   legend <- get_legend(g1)
   g1 <- g1 + theme(legend.position = "none")
   g2 <- g2 + theme(legend.position = "none")
   g <- gridExtra::arrangeGrob(
     gridExtra::arrangeGrob(
       ggplotGrob(g1),
-      ggplotGrob(g2), ncol = 2, heights = c(5, 5)
+      ggplotGrob(g2), ncol = 2, widths = widths
     ), legend, ncol = 2, widths = c(8.5, 1.5)
   )
   gridExtra::grid.arrange(g)

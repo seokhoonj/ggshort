@@ -5,9 +5,9 @@
 \alias{grid_left_to_right}
 \title{Grid top plot, bottom plot and right legend}
 \usage{
-grid_top_bottom_right(g1, g2, legend)
+grid_top_bottom_right(g1, g2, legend, heights = c(5, 5))
 
-grid_left_to_right(g1, g2, legend)
+grid_left_to_right(g1, g2, legend, widths = c(5, 5))
 }
 \arguments{
 \item{g1}{a ggplot object}
@@ -15,6 +15,8 @@ grid_left_to_right(g1, g2, legend)
 \item{g2}{a ggplot object}
 
 \item{legend}{a gtable object}
+
+\item{heights, widths}{a unit vector giving the height of each row}
 }
 \value{
 a gtable object

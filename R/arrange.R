@@ -37,3 +37,19 @@ grid_top_bottom_right <- function(g1, g2, legend) {
   gridExtra::grid.arrange(g)
   invisible(g)
 }
+
+#' @rdname grid_top_bottom_right
+#' @export
+grid_left_to_right <- function(g1, g2, legend) {
+  legend <- get_legend(g1)
+  g1 <- g1 + theme(legend.position = "none")
+  g2 <- g2 + theme(legend.position = "none")
+  g <- gridExtra::arrangeGrob(
+    gridExtra::arrangeGrob(
+      ggplotGrob(g1),
+      ggplotGrob(g2), ncol = 2, heights = c(5, 5)
+    ), legend, ncol = 2, widths = c(8.5, 1.5)
+  )
+  gridExtra::grid.arrange(g)
+  invisible(g)
+}

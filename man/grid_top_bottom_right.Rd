@@ -2,9 +2,12 @@
 % Please edit documentation in R/arrange.R
 \name{grid_top_bottom_right}
 \alias{grid_top_bottom_right}
+\alias{grid_left_to_right}
 \title{Grid top plot, bottom plot and right legend}
 \usage{
 grid_top_bottom_right(g1, g2, legend)
+
+grid_left_to_right(g1, g2, legend)
 }
 \arguments{
 \item{g1}{a ggplot object}

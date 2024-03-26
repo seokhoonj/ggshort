@@ -5,7 +5,7 @@
 #' @param g1 a ggplot object
 #' @param g2 a ggplot object
 #' @param legend a gtable object
-#' @param heights,widths a unit vector giving the height of each row
+#' @param heights,widths a unit vector giving the height of each row or the widths of each column
 #' @return a gtable object
 #'
 #' @examples
@@ -53,4 +53,27 @@ grid_left_to_right <- function(g1, g2, legend, widths = c(5, 5)) {
   )
   gridExtra::grid.arrange(g)
   invisible(g)
+}
+
+#' Add top
+#'
+#' Add top labels
+#'
+#' @param g a ggplot object
+#' @param top a string specifying a top label
+#' @param heights a unit vector giving the height of each row
+#' @param fontfamily the font family
+#' @param fontsize the font size
+#' @param hjust A numeric vector specifying horizontal justification. If specified, overrides the just setting.
+#' @param vjust A numeric vector specifying vertical justification. If specified, overrides the just setting.
+#' @return a gtable object
+#'
+#' @export
+add_top <- function(g, top, heights = c(1, 9), fontfamily = "Comic Sans MS",
+                    fontsize = 16, hjust = NULL, vjust = NULL) {
+  top <- grid::textGrob(
+    top, gp = grid::gpar(fontfamily = fontfamily, fontsize = fontsize
+  ), hjust = hjust, vjust = vjust)
+  g <- gridExtra::arrangeGrob(top, g, heights = heights)
+  gridExtra::grid.arrange(g)
 }

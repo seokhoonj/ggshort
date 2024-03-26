@@ -16,7 +16,7 @@ grid_left_to_right(g1, g2, legend, widths = c(5, 5))
 
 \item{legend}{a gtable object}
 
-\item{heights, widths}{a unit vector giving the height of each row}
+\item{heights, widths}{a unit vector giving the height of each row or the widths of each column}
 }
 \value{
 a gtable object

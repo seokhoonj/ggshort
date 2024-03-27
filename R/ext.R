@@ -126,24 +126,33 @@ StatChull <- ggproto(
   required_aes = c("x", "y")
 )
 
-
-# to be updated -----------------------------------------------------------
-
-stat_mean <- function(mapping = NULL, data = NULL, geom = "point",
-                      position = "identity", na.rm = FALSE, show.legend = NA,
-                      inherit.aes = TRUE, ...) {
+#' Point of the mean of x, y
+#'
+#' Draw a point of the mean of x, y
+#'
+#' @inheritParams ggplot2::layer
+#' @param ... other arguments to pass to \code{\link[ggplot2]{geom_point}}.
+#' @param na.rm If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.
+#' @param shape [shape]
+#' @return a ggplot object
+#'
+#' @export
+stat_mean_point <- function(mapping = NULL, data = NULL,
+                            geom = "point", position = "identity",
+                            na.rm = FALSE, show.legend = NA,
+                            inherit.aes = TRUE, shape = 4, ...) {
   layer(
-    stat = StatMean, data = data, mapping = mapping, geom = geom,
+    stat = StatMeanPoint, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, ...)
+    params = list(shape = shape, na.rm = na.rm, ...)
   )
 }
 
-StatMean <- ggproto(
+StatMeanPoint <- ggproto(
   "StatMean", Stat,
   compute_group = function(data, scales) {
     data.frame(x = mean(data$x, na.rm = TRUE),
                y = mean(data$y, na.rm = TRUE))
-    },
-    required_aes = c("x", "y")
+  },
+  required_aes = c("x", "y")
 )

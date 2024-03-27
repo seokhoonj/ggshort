@@ -158,7 +158,7 @@ ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
     list(if (!missing(label)) {
       quo_lbl <- rlang::enquos(label = label)
       geom_text(aes(!!!quo_lbl),
-                position = position_fill(vjust = .5),
+                position = position_nudge(),
                 family = label_family, size = label_size, angle = label_angle,
                 hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
     })

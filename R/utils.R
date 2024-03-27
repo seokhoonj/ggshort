@@ -21,14 +21,19 @@ get_legend <- function(plot) {
   return(gtable$grobs[[guide]])
 }
 
-#' Add commas to x-axis tick labels
+#' Add commas to x-axis or y-axis tick labels
 #'
-#' Add commas to x-axis tick labels.
+#' Add commas to x-axis or y-axis tick labels.
 #'
 #' @return an ggproto object
 #'
 #' @export
+scale_x_comma <- function() scale_x_continuous(labels = scales::comma)
+
+#' @rdname scale_x_comma
+#' @export
 scale_y_comma <- function() scale_y_continuous(labels = scales::comma)
+
 
 #' Create pair fill scales
 #'

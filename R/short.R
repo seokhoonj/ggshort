@@ -1,7 +1,7 @@
 #' ggplot bar functions only with frequently used arguments
 #'
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
+#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
 #'
 #' @param data a data.frame
 #' @param x,y  a name of axis `x` and `y`
@@ -17,7 +17,7 @@
 #' @param label_color a string specifying label color
 #' @return a ggplot object
 #'
-#' @seealso [ggline()], [ggpoint()], [ggjitter()], [ggmix()], [ggpie()], [ggtable()]
+#' @seealso [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()], [ggtable()]
 #'
 #' @examples
 #' # bar
@@ -58,7 +58,7 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' ggplot line functions only with frequently used arguments
 #'
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments.
+#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
 #'
 #' @param data a data.frame
 #' @param x,y a name of axis `x` and `y`
@@ -73,7 +73,7 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' adjustment
 #' @param label_color a string specifying label color
 #' @return a ggplot object
-#' @seealso [ggbar()], [ggpoint()], [ggjitter()], [ggmix()], [ggpie()], [ggtable()]
+#' @seealso [ggbar()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()], [ggtable()]
 #'
 #' @examples
 #' # line
@@ -113,7 +113,7 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' ggplot point functions only with frequently used arguments
 #'
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments.
+#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
 #'
 #' @param data a data.frame
 #' @param x,y a name of axis `x` and `y`
@@ -129,7 +129,7 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' adjustment
 #' @param label_color a string specifying label color
 #' @return a ggplot object
-#' @seealso [ggbar()], [ggline()], [ggjitter()], [ggmix()], [ggpie()], [ggtable()]
+#' @seealso [ggbar()], [ggline()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()], [ggtable()]
 #'
 #' @examples
 #' # point
@@ -186,11 +186,48 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
     })
 }
 
+#' @rdname ggpoint
+#' @param jitter `ggscatter()` only, a logical whether to use `jitter`
+#' @export
+ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
+                      color = NULL, shape = NULL, size = NULL, alpha = NULL,
+                      text = NULL, label, label_family = "Comic Sans MS",
+                      label_size = 4, label_angle = 0, label_hjust = .5,
+                      label_vjust = .5, label_color = c("#000000", "#FAF9F6"),
+                      jitter = FALSE) {
+  x <- rlang::enquo(x)
+  y <- rlang::enquo(y)
+  ymin <- rlang::enquo(ymin)
+  ymax <- rlang::enquo(ymax)
+  group <- rlang::enquo(group)
+  color <- rlang::enquo(color)
+  shape <- rlang::enquo(shape)
+  text  <- rlang::enquo(text)
+  ggfun <- if (jitter) ggjitter else ggpoint
+  if (missing(label)) {
+    g <- ggfun(data, x = !!x, y = !!y, ymin = !!ymin, ymax = !!ymax,
+               group = !!group, color = !!color, shape = !!shape, size = size,
+               alpha = alpha, text = !!text)
+  } else {
+    label <- rlang::enquo(label)
+    g <- ggfun(data, x = !!x, y = !!y, ymin = !!ymin, ymax = !!ymax,
+               group = !!group, color = !!color, shape = !!shape, size = size,
+               alpha = alpha, text = !!text, label = !!label,
+               label_family = label_family, label_size = label_size,
+               label_angle = label_angle, label_hjust = label_hjust,
+               label_vjust = label_vjust, label_color = label_color)
+  }
+  g + stat_chull() +
+    stat_mean_line() +
+    stat_mean_point() +
+    scale_x_comma() +
+    scale_y_comma()
+}
 
 #' ggplot mix functions only with frequently used arguments
 #'
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
+#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
 #'
 #' @param data a data.frame
 #' @param x,y a name of axis `x` and `y`
@@ -205,7 +242,7 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' @param label_color a string specifying label color
 #' @param reverse a boolean whether to reverse the order of the `y` variable
 #' @return a ggplot object
-#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggpie()], [ggtable()]
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggpie()], [ggtable()]
 #'
 #' @examples
 #' # mix
@@ -241,7 +278,7 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' ggplot pie functions only with frequently used arguments
 #'
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
+#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
 #'
 #' @param data a data.frame
 #' @param group a name of variable you want to group
@@ -253,7 +290,7 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' adjustment
 #' @param label_color a string specifying label color
 #' @return a ggplot object
-#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggmix()], [ggtable()]
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggtable()]
 #'
 #' @examples
 #' # pie
@@ -285,7 +322,7 @@ ggpie <- function(data, group, value, text, label, label_family = "Comic Sans MS
 #' ggplot table functions only with frequently used arguments
 #'
 #' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggmix`, `ggpie`, `ggtable`)
+#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
 #'
 #' @param data a data.frame
 #' @param x,y a name of axis `x` and `y`
@@ -298,7 +335,7 @@ ggpie <- function(data, group, value, text, label, label_family = "Comic Sans MS
 #' @param label_color a string specifying label color
 #' @param xlab_position a string specifying x label position (default: top)
 #' @return a ggplot object
-#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggmix()], [ggpie()]
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()]
 #'
 #' @examples
 #' # table

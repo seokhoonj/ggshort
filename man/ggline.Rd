@@ -54,7 +54,7 @@ a ggplot object
 }
 \description{
 Shortly simplify the grammar of ggplot to the functions only with frequently
-used arguments.
+used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggmix}, \code{ggpie}, \code{ggtable})
 }
 \examples{
 # line
@@ -66,5 +66,5 @@ ggline(data = data, x = x, y = y, color = color) +
 
 }
 \seealso{
-\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggtable]{ggtable()}}
 }

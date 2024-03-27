@@ -3,6 +3,7 @@
 \name{ggpoint}
 \alias{ggpoint}
 \alias{ggjitter}
+\alias{ggscatter}
 \title{ggplot point functions only with frequently used arguments}
 \usage{
 ggpoint(
@@ -46,6 +47,28 @@ ggjitter(
   label_vjust = 0.5,
   label_color = c("#000000", "#FAF9F6")
 )
+
+ggscatter(
+  data,
+  x,
+  y,
+  ymin = NULL,
+  ymax = NULL,
+  group = NULL,
+  color = NULL,
+  shape = NULL,
+  size = NULL,
+  alpha = NULL,
+  text = NULL,
+  label,
+  label_family = "Comic Sans MS",
+  label_size = 4,
+  label_angle = 0,
+  label_hjust = 0.5,
+  label_vjust = 0.5,
+  label_color = c("#000000", "#FAF9F6"),
+  jitter = FALSE
+)
 }
 \arguments{
 \item{data}{a data.frame}
@@ -72,13 +95,15 @@ ggjitter(
 adjustment}
 
 \item{label_color}{a string specifying label color}
+
+\item{jitter}{\code{ggscatter()} only, a logical whether to use \code{jitter}}
 }
 \value{
 a ggplot object
 }
 \description{
 Shortly simplify the grammar of ggplot to the functions only with frequently
-used arguments.
+used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggmix}, \code{ggpie}, \code{ggtable})
 }
 \examples{
 # point
@@ -94,5 +119,5 @@ ggpoint(data = data, x = x, y = y, shape = shape, label = y, label_family = NA) 
 
 }
 \seealso{
-\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggtable]{ggtable()}}
 }

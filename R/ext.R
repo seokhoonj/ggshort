@@ -1,36 +1,149 @@
-GeomHlineMean <- ggproto(
-  "GeomHlineMean", Stat,
+#' Horizontal line of the mean of y
+#'
+#' Draw a horizontal line of the mean of y
+#'
+#' @inheritParams ggplot2::layer
+#' @param ... other arguments to pass to \code{\link[ggplot2]{geom_polygon}}.
+#' @param na.rm If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.
+#' @param linetype,linewidth [linetype]
+#' @return a ggplot object
+#'
+#' @export
+stat_mean_hline <- function(mapping = NULL, data = NULL, geom = "hline",
+                            position = "identity", na.rm = FALSE, show.legend = NA,
+                            inherit.aes = TRUE, linetype = "dashed",
+                            linewidth = .25,  ...) {
+  layer(
+    stat = StatMeanHline, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(linetype = linetype, linewidth = linewidth,
+                  na.rm = na.rm, ...)
+  )
+}
+
+StatMeanHline <- ggproto(
+  "StatMeanHline", Stat,
   compute_group = function(data, scales) {
     transform(data, yintercept = mean(y))
   },
   required_aes = c("x", "y")
 )
 
-#' Geom horizontal mean line
+#' Vertical line of the mean of x
 #'
-#' Draw a geom horizontal mean line.
+#' Draw a Vertical line of the mean of x
 #'
-#' @inheritParams ggplot2::geom_abline
-#' @param geom name of geom to use for annotation
-#' @param position Position adjustment, either as a string naming the adjustment (e.g. "jitter" to use
-#' position_jitter), or the result of a call to a position adjustment function. Use the latter if you
-#' need to change the settings of the adjustment.
-#' @param inherit.aes If `FALSE`, overrides the default aesthetics, rather than combining with them. This is most useful
-#' for helper functions that define both data and aesthetics and shouldn't inherit behaviour from
-#' the default plot specification, e.g. [borders()].
-#' @param colour [colour()]
-#' @param linetype,linewidth [linetype()]
+#' @inheritParams ggplot2::layer
+#' @param ... other arguments to pass to \code{\link[ggplot2]{geom_polygon}}.
+#' @param na.rm If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.
+#' @param linetype,linewidth [linetype]
 #' @return a ggplot object
 #'
 #' @export
-geom_hline_mean <- function(mapping = NULL, data = NULL, geom = "hline",
-                            position = "identity", na.rm = FALSE, show.legend = NA,
-                            inherit.aes = TRUE, colour = "red", linetype = "dashed",
-                            linewidth = .25,  ...) {
+stat_mean_vline <- function(mapping = NULL, data = NULL,
+                            geom = "vline", position = "identity",
+                            na.rm = FALSE, show.legend = NA,
+                            inherit.aes = TRUE, linetype = "dashed",
+                            linewidth = .25, ...) {
   layer(
-    stat = GeomHlineMean, data = data, mapping = mapping, geom = geom,
+    stat = StatMeanVline, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(colour = colour, linetype = linetype, linewidth = linewidth,
+    params = list(linetype = linetype, linewidth = linewidth,
                   na.rm = na.rm, ...)
   )
 }
+
+StatMeanVline <- ggproto(
+  "StatMeanVLine", Stat,
+  compute_group = function(data, scales) {
+    transform(data, xintercept = mean(x))
+  },
+  required_aes = c("x", "y")
+)
+
+#' Horizontal and vertical line of the mean of x, y
+#'
+#' Draw a horizontal and vertical line of the mean of x, y
+#'
+#' @inheritParams ggplot2::layer
+#' @param ... other arguments to pass to \code{\link[ggplot2]{geom_polygon}}.
+#' @param na.rm If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.
+#' @param linetype,linewidth [linetype]
+#' @return a ggplot object
+#'
+#' @export
+stat_mean_line <- function(mapping = NULL, data = NULL,
+                           geom = c("hline", "vline"), position = "identity",
+                           na.rm = FALSE, show.legend = NA,
+                           inherit.aes = TRUE, linetype = "dashed",
+                           linewidth = .25, ...) {
+  list(
+    stat_mean_hline(
+      mapping = mapping, data = data, geom = geom[1L], position = position,
+      na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes,
+      linetype = linetype, linewidth = linewidth, ...
+    ),
+    stat_mean_vline(
+      mapping = mapping, data = data, geom = geom[2L], position = position,
+      na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes,
+      linetype = linetype, linewidth = linewidth, ...
+    )
+  )
+}
+
+#' Convex hull
+#'
+#' Draw a convex hull
+#'
+#' @inheritParams ggplot2::layer
+#' @param alpha colour transparency level in \[0,1]
+#' @param ... other arguments to pass to \code{\link[ggplot2]{geom_polygon}}.
+#' @param na.rm If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.
+#' @return a ggplot object
+#'
+#' @export
+stat_chull <- function(mapping = NULL, data = NULL,
+                       geom = "polygon", position = "identity",
+                       na.rm = FALSE, show.legend = NA,
+                       inherit.aes = TRUE, alpha = .5, ...) {
+  layer(
+    stat = StatChull,
+    data = data,
+    mapping = mapping,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(alpha = alpha, na.rm = na.rm, ...)
+  )
+}
+
+StatChull <- ggproto(
+  "StatChull", Stat,
+  compute_group = function(data, scales) {
+    data[grDevices::chull(data$x, data$y), , drop = FALSE]
+  },
+  required_aes = c("x", "y")
+)
+
+
+# to be updated -----------------------------------------------------------
+
+stat_mean <- function(mapping = NULL, data = NULL, geom = "point",
+                      position = "identity", na.rm = FALSE, show.legend = NA,
+                      inherit.aes = TRUE, ...) {
+  layer(
+    stat = StatMean, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+  )
+}
+
+StatMean <- ggproto(
+  "StatMean", Stat,
+  compute_group = function(data, scales) {
+    data.frame(x = mean(data$x, na.rm = TRUE),
+               y = mean(data$y, na.rm = TRUE))
+    },
+    required_aes = c("x", "y")
+)

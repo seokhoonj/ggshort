@@ -3,11 +3,14 @@
 \name{scale_x_comma}
 \alias{scale_x_comma}
 \alias{scale_y_comma}
+\alias{scale_comma}
 \title{Add commas to x-axis or y-axis tick labels}
 \usage{
 scale_x_comma()
 
 scale_y_comma()
+
+scale_comma()
 }
 \value{
 an ggproto object

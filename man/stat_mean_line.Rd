@@ -2,9 +2,23 @@
 % Please edit documentation in R/ext.R
 \name{stat_mean_line}
 \alias{stat_mean_line}
+\alias{stat_median_line}
 \title{Horizontal and vertical line of the mean of x, y}
 \usage{
 stat_mean_line(
+  mapping = NULL,
+  data = NULL,
+  geom = c("hline", "vline"),
+  position = "identity",
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  linetype = "dashed",
+  linewidth = 0.25,
+  ...
+)
+
+stat_median_line(
   mapping = NULL,
   data = NULL,
   geom = c("hline", "vline"),

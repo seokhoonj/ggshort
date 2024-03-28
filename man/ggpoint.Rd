@@ -24,7 +24,8 @@ ggpoint(
   label_angle = 0,
   label_hjust = 0.5,
   label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6")
+  label_color = c("#000000", "#FAF9F6"),
+  show.legend = NA
 )
 
 ggjitter(
@@ -45,7 +46,8 @@ ggjitter(
   label_angle = 0,
   label_hjust = 0.5,
   label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6")
+  label_color = c("#000000", "#FAF9F6"),
+  show.legend = NA
 )
 
 ggscatter(
@@ -56,6 +58,7 @@ ggscatter(
   ymax = NULL,
   group = NULL,
   color = NULL,
+  fill = NULL,
   shape = NULL,
   size = NULL,
   alpha = NULL,
@@ -67,7 +70,9 @@ ggscatter(
   label_hjust = 0.5,
   label_vjust = 0.5,
   label_color = c("#000000", "#FAF9F6"),
-  jitter = FALSE
+  show.legend = NA,
+  jitter = FALSE,
+  median = FALSE
 )
 }
 \arguments{

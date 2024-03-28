@@ -34,6 +34,15 @@ scale_x_comma <- function() scale_x_continuous(labels = scales::comma)
 #' @export
 scale_y_comma <- function() scale_y_continuous(labels = scales::comma)
 
+#' @rdname scale_x_comma
+#' @export
+scale_comma <- function() {
+  list(
+    scale_x_comma(),
+    scale_y_comma()
+  )
+}
+
 
 #' Create pair fill scales
 #'

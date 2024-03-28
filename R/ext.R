@@ -29,6 +29,28 @@ StatMeanHline <- ggproto(
   required_aes = c("x", "y")
 )
 
+#' @rdname stat_mean_hline
+#' @export
+stat_median_hline <- function(mapping = NULL, data = NULL, geom = "hline",
+                              position = "identity", na.rm = FALSE, show.legend = NA,
+                              inherit.aes = TRUE, linetype = "dashed",
+                              linewidth = .25,  ...) {
+  layer(
+    stat = StatMedianHline, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(linetype = linetype, linewidth = linewidth,
+                  na.rm = na.rm, ...)
+  )
+}
+
+StatMedianHline <- ggproto(
+  "StatMedianHline", Stat,
+  compute_group = function(data, scales) {
+    transform(data, yintercept = median(y))
+  },
+  required_aes = c("x", "y")
+)
+
 #' Vertical line of the mean of x
 #'
 #' Draw a Vertical line of the mean of x
@@ -61,6 +83,29 @@ StatMeanVline <- ggproto(
   required_aes = c("x", "y")
 )
 
+#' @rdname stat_mean_vline
+#' @export
+stat_median_vline <- function(mapping = NULL, data = NULL,
+                              geom = "vline", position = "identity",
+                              na.rm = FALSE, show.legend = NA,
+                              inherit.aes = TRUE, linetype = "dashed",
+                              linewidth = .25, ...) {
+  layer(
+    stat = StatMedianVline, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(linetype = linetype, linewidth = linewidth,
+                  na.rm = na.rm, ...)
+  )
+}
+
+StatMedianVline <- ggproto(
+  "StatMedianVLine", Stat,
+  compute_group = function(data, scales) {
+    transform(data, xintercept = median(x))
+  },
+  required_aes = c("x", "y")
+)
+
 #' Horizontal and vertical line of the mean of x, y
 #'
 #' Draw a horizontal and vertical line of the mean of x, y
@@ -84,6 +129,27 @@ stat_mean_line <- function(mapping = NULL, data = NULL,
       linetype = linetype, linewidth = linewidth, ...
     ),
     stat_mean_vline(
+      mapping = mapping, data = data, geom = geom[2L], position = position,
+      na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes,
+      linetype = linetype, linewidth = linewidth, ...
+    )
+  )
+}
+
+#' @rdname stat_mean_line
+#' @export
+stat_median_line <- function(mapping = NULL, data = NULL,
+                             geom = c("hline", "vline"), position = "identity",
+                             na.rm = FALSE, show.legend = NA,
+                             inherit.aes = TRUE, linetype = "dashed",
+                             linewidth = .25, ...) {
+  list(
+    stat_median_hline(
+      mapping = mapping, data = data, geom = geom[1L], position = position,
+      na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes,
+      linetype = linetype, linewidth = linewidth, ...
+    ),
+    stat_median_vline(
       mapping = mapping, data = data, geom = geom[2L], position = position,
       na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes,
       linetype = linetype, linewidth = linewidth, ...
@@ -149,10 +215,32 @@ stat_mean_point <- function(mapping = NULL, data = NULL,
 }
 
 StatMeanPoint <- ggproto(
-  "StatMean", Stat,
+  "StatMeanPoint", Stat,
   compute_group = function(data, scales) {
     data.frame(x = mean(data$x, na.rm = TRUE),
                y = mean(data$y, na.rm = TRUE))
+  },
+  required_aes = c("x", "y")
+)
+
+#' @rdname stat_mean_point
+#' @export
+stat_median_point <- function(mapping = NULL, data = NULL,
+                              geom = "point", position = "identity",
+                              na.rm = FALSE, show.legend = NA,
+                              inherit.aes = TRUE, shape = 4, ...) {
+  layer(
+    stat = StatMedianPoint, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(shape = shape, na.rm = na.rm, ...)
+  )
+}
+
+StatMedianPoint <- ggproto(
+  "StatMedian", Stat,
+  compute_group = function(data, scales) {
+    data.frame(x = median(data$x, na.rm = TRUE),
+               y = median(data$y, na.rm = TRUE))
   },
   required_aes = c("x", "y")
 )

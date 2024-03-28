@@ -2,9 +2,23 @@
 % Please edit documentation in R/ext.R
 \name{stat_mean_vline}
 \alias{stat_mean_vline}
+\alias{stat_median_vline}
 \title{Vertical line of the mean of x}
 \usage{
 stat_mean_vline(
+  mapping = NULL,
+  data = NULL,
+  geom = "vline",
+  position = "identity",
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  linetype = "dashed",
+  linewidth = 0.25,
+  ...
+)
+
+stat_median_vline(
   mapping = NULL,
   data = NULL,
   geom = "vline",

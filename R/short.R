@@ -148,13 +148,15 @@ ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
                     color = NULL, shape = NULL, size = NULL, alpha = NULL,
                     text = NULL, label, label_family = "Comic Sans MS",
                     label_size = 4, label_angle = 0, label_hjust = .5,
-                    label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
-                            group = group, color = color, shape = shape,
-                            size = size, alpha = alpha, text = text)
+                    label_vjust = .5, label_color = c("#000000", "#FAF9F6"),
+                    show.legend = NA) {
+  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
   quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  quo_maps2 <- rlang::enquos(group = group, color = color, shape = shape,
+                             size = size, alpha = alpha)
+  quo_maps2 <- quo_maps2[!sapply(quo_maps2, rlang::quo_is_null)]
   ggplot(data = data, aes(!!!quo_maps)) +
-    geom_point() +
+    geom_point(aes(!!!quo_maps2), show.legend = show.legend) +
     list(if (!missing(label)) {
       quo_lbl <- rlang::enquos(label = label)
       geom_text(aes(!!!quo_lbl),
@@ -170,13 +172,15 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
                      color = NULL, shape = NULL, size = NULL, alpha = NULL,
                      text = NULL, label, label_family = "Comic Sans MS",
                      label_size = 4, label_angle = 0, label_hjust = .5,
-                     label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
-                            group = group, color = color, shape = shape,
-                            size = size, alpha = alpha, text = text)
+                     label_vjust = .5, label_color = c("#000000", "#FAF9F6"),
+                     show.legend = NA) {
+  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
   quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+  quo_maps2 <- rlang::enquos(group = group, color = color, shape = shape,
+                             size = size, alpha = alpha)
+  quo_maps2 <- quo_maps2[!sapply(quo_maps2, rlang::quo_is_null)]
   ggplot(data = data, aes(!!!quo_maps)) +
-    geom_jitter(position = position_jitter()) +
+    geom_jitter(aes(!!!quo_maps2), show.legend = show.legend) +
     list(if (!missing(label)) {
       quo_lbl <- rlang::enquos(label = label)
       geom_text(aes(!!!quo_lbl),
@@ -190,38 +194,50 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' @param jitter `ggscatter()` only, a logical whether to use `jitter`
 #' @export
 ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
-                      color = NULL, shape = NULL, size = NULL, alpha = NULL,
-                      text = NULL, label, label_family = "Comic Sans MS",
-                      label_size = 4, label_angle = 0, label_hjust = .5,
-                      label_vjust = .5, label_color = c("#000000", "#FAF9F6"),
-                      jitter = FALSE) {
-  x <- rlang::enquo(x)
-  y <- rlang::enquo(y)
-  ymin <- rlang::enquo(ymin)
-  ymax <- rlang::enquo(ymax)
-  group <- rlang::enquo(group)
-  color <- rlang::enquo(color)
-  shape <- rlang::enquo(shape)
-  text  <- rlang::enquo(text)
-  ggfun <- if (jitter) ggjitter else ggpoint
-  if (missing(label)) {
-    g <- ggfun(data, x = !!x, y = !!y, ymin = !!ymin, ymax = !!ymax,
-               group = !!group, color = !!color, shape = !!shape, size = size,
-               alpha = alpha, text = !!text)
-  } else {
-    label <- rlang::enquo(label)
-    g <- ggfun(data, x = !!x, y = !!y, ymin = !!ymin, ymax = !!ymax,
-               group = !!group, color = !!color, shape = !!shape, size = size,
-               alpha = alpha, text = !!text, label = !!label,
-               label_family = label_family, label_size = label_size,
-               label_angle = label_angle, label_hjust = label_hjust,
-               label_vjust = label_vjust, label_color = label_color)
-  }
-  g + stat_chull() +
-    stat_mean_line() +
-    stat_mean_point() +
-    scale_x_comma() +
-    scale_y_comma()
+                      color = NULL, fill = NULL, shape = NULL, size = NULL,
+                      alpha = NULL, text = NULL, label,
+                      label_family = "Comic Sans MS", label_size = 4,
+                      label_angle = 0, label_hjust = .5, label_vjust = .5,
+                      label_color = c("#000000", "#FAF9F6"),
+                      show.legend = NA, jitter = FALSE, median = FALSE) {
+  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
+  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+
+  quo_maps2 <- rlang::enquos(group = group, color = color, shape = shape,
+                             size = size, alpha = alpha)
+  quo_maps2 <- quo_maps2[!sapply(quo_maps2, rlang::quo_is_null)]
+
+  quo_maps_chull <- rlang::enquos(group = group, color = color, fill = fill,
+                                  shape = shape, size = size)
+  quo_maps_chull <- quo_maps_chull[!sapply(quo_maps_chull, rlang::quo_is_null)]
+
+  quo_maps_point <- rlang::enquos(group = group)
+  quo_maps_point <- quo_maps_point[!sapply(quo_maps_point, rlang::quo_is_null)]
+
+  geom_fun <- if (jitter) geom_jitter else geom_point
+  ggplot(data = data, aes(!!!quo_maps)) +
+    geom_fun(aes(!!!quo_maps2), show.legend = show.legend) +
+    list(if (!missing(label)) {
+      quo_lbl <- rlang::enquos(label = label)
+      position <- if (jitter) position_jitter() else position_identity()
+      geom_text(aes(!!!quo_lbl),
+                position = position,
+                family = label_family, size = label_size, angle = label_angle,
+                hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
+    }) +
+    list(if (median) {
+      list(
+        stat_median_line(),
+        stat_median_point(aes(!!!quo_maps_point), color = "red")
+      )
+    } else {
+      list(
+        stat_mean_line(),
+        stat_mean_point(aes(!!!quo_maps_point), color = "red")
+      )
+    }) +
+    stat_chull(aes(!!!quo_maps_chull)) +
+    scale_comma()
 }
 
 #' ggplot mix functions only with frequently used arguments

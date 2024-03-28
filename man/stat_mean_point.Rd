@@ -2,9 +2,22 @@
 % Please edit documentation in R/ext.R
 \name{stat_mean_point}
 \alias{stat_mean_point}
+\alias{stat_median_point}
 \title{Point of the mean of x, y}
 \usage{
 stat_mean_point(
+  mapping = NULL,
+  data = NULL,
+  geom = "point",
+  position = "identity",
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  shape = 4,
+  ...
+)
+
+stat_median_point(
   mapping = NULL,
   data = NULL,
   geom = "point",

@@ -34,13 +34,13 @@ ggline(
 
 \item{ymin_err, ymax_err}{\code{min} and \code{max} values of y errors for the error bar}
 
-\item{group, color}{a name of variable you want to group and color}
+\item{group, color}{a name of variable to group and color}
 
 \item{linetype}{a name of linetype variable}
 
 \item{text}{a name of variable or expression for ggplotly hover text}
 
-\item{label}{a name of variable or expression you want to label}
+\item{label}{a name of variable or expression to label}
 
 \item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
 

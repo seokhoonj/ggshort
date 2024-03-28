@@ -24,8 +24,7 @@ ggpoint(
   label_angle = 0,
   label_hjust = 0.5,
   label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6"),
-  show.legend = NA
+  label_color = c("#000000", "#FAF9F6")
 )
 
 ggjitter(
@@ -46,8 +45,7 @@ ggjitter(
   label_angle = 0,
   label_hjust = 0.5,
   label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6"),
-  show.legend = NA
+  label_color = c("#000000", "#FAF9F6")
 )
 
 ggscatter(
@@ -70,7 +68,6 @@ ggscatter(
   label_hjust = 0.5,
   label_vjust = 0.5,
   label_color = c("#000000", "#FAF9F6"),
-  show.legend = NA,
   jitter = FALSE,
   median = FALSE
 )
@@ -82,17 +79,17 @@ ggscatter(
 
 \item{ymin, ymax}{\code{min} and \code{max} values of y for the height}
 
-\item{group, color}{a name of variable you want to group and color}
+\item{group, color}{a name of variable to group and color}
 
 \item{shape}{a name of point shape variable}
 
 \item{size}{a name of point size variable}
 
-\item{alpha}{a name of variable you want to make transparent}
+\item{alpha}{a name of variable to make transparent}
 
 \item{text}{a name of variable or expression for ggplotly hover text}
 
-\item{label}{a name of variable or expression you want to label}
+\item{label}{a name of variable or expression to label}
 
 \item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
 
@@ -101,7 +98,11 @@ adjustment}
 
 \item{label_color}{a string specifying label color}
 
+\item{fill}{a name of variable to fill for covex hull algorithm}
+
 \item{jitter}{\code{ggscatter()} only, a logical whether to use \code{jitter}}
+
+\item{median}{a logical whether to use median to draw a horizontal and vertical line}
 }
 \value{
 a ggplot object

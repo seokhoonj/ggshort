@@ -21,13 +21,13 @@ ggpie(
 \arguments{
 \item{data}{a data.frame}
 
-\item{group}{a name of variable you want to group}
+\item{group}{a name of variable to group}
 
 \item{value}{a name of variable specifying values}
 
 \item{text}{a name of variable or expression for ggplotly hover text}
 
-\item{label}{a name of variable or expression you want to label}
+\item{label}{a name of variable or expression to label}
 
 \item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
 

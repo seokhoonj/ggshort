@@ -7,10 +7,10 @@
 #' @param x,y  a name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
 #' @param ymin_err,ymax_err `min` and `max` values of y errors for the error bar
-#' @param group,fill a name of variable you want to group and fill
+#' @param group,fill a name of variable to group and fill
 #' @param text a name of variable or expression for ggplotly hover text
 #' @param bar_color a string specifying bar color
-#' @param label a name of variable or expression you want to label
+#' @param label a name of variable or expression to label
 #' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
 #' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
@@ -64,10 +64,10 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' @param x,y a name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
 #' @param ymin_err,ymax_err `min` and `max` values of y errors for the error bar
-#' @param group,color a name of variable you want to group and color
+#' @param group,color a name of variable to group and color
 #' @param linetype a name of linetype variable
 #' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression you want to label
+#' @param label a name of variable or expression to label
 #' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
 #' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
@@ -118,12 +118,12 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' @param data a data.frame
 #' @param x,y a name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
-#' @param group,color a name of variable you want to group and color
-#' @param alpha a name of variable you want to make transparent
+#' @param group,color a name of variable to group and color
+#' @param alpha a name of variable to make transparent
 #' @param shape a name of point shape variable
 #' @param size a name of point size variable
 #' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression you want to label
+#' @param label a name of variable or expression to label
 #' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
 #' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
@@ -148,15 +148,14 @@ ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
                     color = NULL, shape = NULL, size = NULL, alpha = NULL,
                     text = NULL, label, label_family = "Comic Sans MS",
                     label_size = 4, label_angle = 0, label_hjust = .5,
-                    label_vjust = .5, label_color = c("#000000", "#FAF9F6"),
-                    show.legend = NA) {
+                    label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
   quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
   quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
   quo_maps2 <- rlang::enquos(group = group, color = color, shape = shape,
                              size = size, alpha = alpha)
   quo_maps2 <- quo_maps2[!sapply(quo_maps2, rlang::quo_is_null)]
   ggplot(data = data, aes(!!!quo_maps)) +
-    geom_point(aes(!!!quo_maps2), show.legend = show.legend) +
+    geom_point(aes(!!!quo_maps2)) +
     list(if (!missing(label)) {
       quo_lbl <- rlang::enquos(label = label)
       geom_text(aes(!!!quo_lbl),
@@ -172,15 +171,14 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
                      color = NULL, shape = NULL, size = NULL, alpha = NULL,
                      text = NULL, label, label_family = "Comic Sans MS",
                      label_size = 4, label_angle = 0, label_hjust = .5,
-                     label_vjust = .5, label_color = c("#000000", "#FAF9F6"),
-                     show.legend = NA) {
+                     label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
   quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
   quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
   quo_maps2 <- rlang::enquos(group = group, color = color, shape = shape,
                              size = size, alpha = alpha)
   quo_maps2 <- quo_maps2[!sapply(quo_maps2, rlang::quo_is_null)]
   ggplot(data = data, aes(!!!quo_maps)) +
-    geom_jitter(aes(!!!quo_maps2), show.legend = show.legend) +
+    geom_jitter(aes(!!!quo_maps2)) +
     list(if (!missing(label)) {
       quo_lbl <- rlang::enquos(label = label)
       geom_text(aes(!!!quo_lbl),
@@ -191,15 +189,17 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 }
 
 #' @rdname ggpoint
+#' @param fill a name of variable to fill for covex hull algorithm
 #' @param jitter `ggscatter()` only, a logical whether to use `jitter`
+#' @param median a logical whether to use median to draw a horizontal and vertical line
 #' @export
 ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
                       color = NULL, fill = NULL, shape = NULL, size = NULL,
                       alpha = NULL, text = NULL, label,
                       label_family = "Comic Sans MS", label_size = 4,
                       label_angle = 0, label_hjust = .5, label_vjust = .5,
-                      label_color = c("#000000", "#FAF9F6"),
-                      show.legend = NA, jitter = FALSE, median = FALSE) {
+                      label_color = c("#000000", "#FAF9F6"), jitter = FALSE,
+                      median = FALSE) {
   quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
   quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
 
@@ -216,7 +216,7 @@ ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 
   geom_fun <- if (jitter) geom_jitter else geom_point
   ggplot(data = data, aes(!!!quo_maps)) +
-    geom_fun(aes(!!!quo_maps2), show.legend = show.legend) +
+    geom_fun(aes(!!!quo_maps2)) +
     list(if (!missing(label)) {
       quo_lbl <- rlang::enquos(label = label)
       position <- if (jitter) position_jitter() else position_identity()
@@ -248,10 +248,10 @@ ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' @param data a data.frame
 #' @param x,y a name of axis `x` and `y`
 #' @param ymin,ymax `min` and `max` values of y for the height
-#' @param group,fill a name of variable you want to group and fill
+#' @param group,fill a name of variable to group and fill
 #' @param bar_color a string specifying bar color
 #' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression you want to label
+#' @param label a name of variable or expression to label
 #' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
 #' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
@@ -297,10 +297,10 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
 #' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
 #'
 #' @param data a data.frame
-#' @param group a name of variable you want to group
+#' @param group a name of variable to group
 #' @param value a name of variable specifying values
 #' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression you want to label
+#' @param label a name of variable or expression to label
 #' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
 #' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment

@@ -1,9 +1,29 @@
+#' Grob to ggplot
+#'
+#' Change a grob object to a ggplot object.
+#'
+#' @param plot a ggplot object
+#' @return a ggplot object.
+#'
+#' @export
+grob2ggplot <- function(plot) {
+  assert_class(plot, "grob")
+  return(
+    ggplot(data.frame(x = 0:1, y = 0:1), aes(x = x, y = y)) +
+      geom_blank() +
+      scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) +
+      scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) +
+      annotation_custom(plot, xmin = 0, xmax = 1, ymin = 0, ymax = 1) +
+      theme_void()
+  )
+}
+
 #' Get a legend
 #'
 #' Get a legend object from the ggplot object.
 #'
-#' @param plot ggplot object
-#' @return ggplot object
+#' @param plot a ggplot object
+#' @return a ggplot object
 #'
 #' @examples
 #' # get a legend.

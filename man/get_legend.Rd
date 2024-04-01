@@ -7,10 +7,10 @@
 get_legend(plot)
 }
 \arguments{
-\item{plot}{ggplot object}
+\item{plot}{a ggplot object}
 }
 \value{
-ggplot object
+a ggplot object
 }
 \description{
 Get a legend object from the ggplot object.

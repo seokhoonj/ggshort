@@ -2,12 +2,13 @@
 #'
 #' Change a grob object to a ggplot object.
 #'
-#' @param plot a ggplot object
+#' @param plot a grob object
 #' @return a ggplot object.
 #'
 #' @export
 grob2ggplot <- function(plot) {
   assert_class(plot, "grob")
+  x <- y <- NULL
   return(
     ggplot(data.frame(x = 0:1, y = 0:1), aes(x = x, y = y)) +
       geom_blank() +

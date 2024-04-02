@@ -7,7 +7,7 @@
 grob2ggplot(plot)
 }
 \arguments{
-\item{plot}{a ggplot object}
+\item{plot}{a grob object}
 }
 \value{
 a ggplot object.

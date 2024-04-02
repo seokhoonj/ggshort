@@ -64,6 +64,40 @@ scale_comma <- function() {
   )
 }
 
+#' Scale reverse (x & y)
+#'
+#' Reverse x & y axis scale
+#'
+#' @param x a vector x or y variable
+#' @return a ggproto object
+#'
+#' @export
+scale_x_reverse <- function(x) {
+  if (is.factor(x)) {
+    return(scale_x_discrete(limits = rev(levels(x))))
+  }
+  else if (is.character(x)) {
+    return(scale_x_discrete(limits = rev(sort(unique(x)))))
+  }
+  else if (is.numeric(x)) {
+    return(scale_x_reverse())
+  }
+}
+
+#' @rdname scale_x_reverse
+#' @export
+scale_y_reverse <- function(x) {
+  if (is.factor(x)) {
+    return(scale_y_discrete(limits = rev(levels(x))))
+  }
+  else if (is.character(x)) {
+    return(scale_y_discrete(limits = rev(sort(unique(x)))))
+  }
+  else if (is.numeric(x)) {
+    return(scale_y_reverse())
+  }
+}
+
 
 #' Create pair fill scales
 #'

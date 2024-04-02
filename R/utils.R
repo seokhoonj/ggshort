@@ -64,15 +64,15 @@ scale_comma <- function() {
   )
 }
 
-#' Scale reverse (x & y)
+#' Scale limit reverse (x & y)
 #'
-#' Reverse x & y axis scale
+#' Reverse x & y axis scale limit
 #'
 #' @param x a vector x or y variable
 #' @return a ggproto object
 #'
 #' @export
-scale_x_reverse <- function(x) {
+scale_x_limit_reverse <- function(x) {
   if (is.factor(x)) {
     return(scale_x_discrete(limits = rev(levels(x))))
   }
@@ -84,9 +84,9 @@ scale_x_reverse <- function(x) {
   }
 }
 
-#' @rdname scale_x_reverse
+#' @rdname scale_x_limit_reverse
 #' @export
-scale_y_reverse <- function(x) {
+scale_y_limit_reverse <- function(x) {
   if (is.factor(x)) {
     return(scale_y_discrete(limits = rev(levels(x))))
   }

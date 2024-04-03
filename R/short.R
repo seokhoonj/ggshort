@@ -228,12 +228,14 @@ ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
     list(if (median) {
       list(
         stat_median_line(),
-        stat_median_point(aes(!!!quo_maps_point), color = "red")
+        stat_median_point(stroke = 1.5),
+        stat_median_point(aes(!!!quo_maps_point), color = "red", stroke = 1)
       )
     } else {
       list(
         stat_mean_line(),
-        stat_mean_point(aes(!!!quo_maps_point), color = "red")
+        stat_mean_point(stroke = 1.5),
+        stat_mean_point(aes(!!!quo_maps_point), color = "red", stroke = 1)
       )
     }) +
     stat_chull(aes(!!!quo_maps_chull)) +

@@ -38,7 +38,7 @@ metaplot <- function(x, widths = c(5, 5), theme = c("view", "save", "shiny")) {
       facet_wrap(~ info) +
       xlab("") +
       ylab("") +
-      ggshort_theme(theme = theme),
+      match_theme(theme = theme),
     ggbar(dt, x = column, y = value, ymax = 1.5,
           label = sprintf("%.3f", value), label_hjust = -.1) +
       geom_vline(xintercept = seq(1, 1 + length(xlvl)) - 0.5, linetype = "solid") +
@@ -48,7 +48,7 @@ metaplot <- function(x, widths = c(5, 5), theme = c("view", "save", "shiny")) {
       facet_wrap(~ variable) +
       xlab("") +
       ylab("") +
-      ggshort_theme(theme = theme, y.size = 0),
+      match_theme(theme = theme, y.size = 0),
     ncol = 2L, widths = widths
   )
   gridExtra::grid.arrange(p)

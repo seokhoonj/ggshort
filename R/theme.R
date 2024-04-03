@@ -154,8 +154,16 @@ theme_save <- function(family = "Comic Sans MS", x.size = 12, y.size = 12,
   )
 }
 
-ggshort_theme <- function(theme = c("view", "save", "shiny"), ...) {
+#' Match theme
+#'
+#' Match a ggshort theme.
+#'
+#' @param theme a string specifying a ggshort theme function ("view", "save", "shiny")
+#' @param ... arguments passed on to (`theme_view`, `theme_save`, `theme_shiny`)
+#'
+#' @export
+match_theme <- function(theme = c("view", "save", "shiny"), ...) {
   theme <- match.arg(theme)
-  switch(theme, view = ggshort::theme_view(...), save = ggshort::theme_save(...),
-         shiny = ggshort::theme_shiny(...))
+  switch(theme, view = theme_view(...), save = theme_save(...),
+         shiny = theme_shiny(...))
 }

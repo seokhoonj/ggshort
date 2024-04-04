@@ -76,7 +76,7 @@ stat_mean_vline <- function(mapping = NULL, data = NULL,
 }
 
 StatMeanVline <- ggproto(
-  "StatMeanVLine", Stat,
+  "StatMeanVline", Stat,
   compute_group = function(data, scales) {
     transform(data, xintercept = mean(x))
   },
@@ -99,7 +99,7 @@ stat_median_vline <- function(mapping = NULL, data = NULL,
 }
 
 StatMedianVline <- ggproto(
-  "StatMedianVLine", Stat,
+  "StatMedianVline", Stat,
   compute_group = function(data, scales) {
     transform(data, xintercept = median(x))
   },
@@ -237,7 +237,7 @@ stat_median_point <- function(mapping = NULL, data = NULL,
 }
 
 StatMedianPoint <- ggproto(
-  "StatMedian", Stat,
+  "StatMedianPoint", Stat,
   compute_group = function(data, scales) {
     data.frame(x = median(data$x, na.rm = TRUE),
                y = median(data$y, na.rm = TRUE))

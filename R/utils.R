@@ -98,6 +98,20 @@ scale_y_limit_reverse <- function(x) {
   }
 }
 
+#' Horizontal line 1
+#'
+#' Draw a horizontal line 1.
+#'
+#' @param logscale a logical whether to apply log scale.
+#' @param yintercept a numeric that control the position of the horizontal line.
+#' @param color a character specifying a color.
+#' @param linetype [linetype]
+#' @param ... other arguments to pass to \code{\link[ggplot2]{geom_hline}}.
+geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
+                        linetype = "dashed", ...) {
+  geom_hline(yintercept = if (logscale) log(yintercept) else yintercept,
+             color = color, linetype = linetype, ...)
+}
 
 #' Create pair fill scales
 #'

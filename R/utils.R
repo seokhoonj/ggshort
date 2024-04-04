@@ -107,6 +107,9 @@ scale_y_limit_reverse <- function(x) {
 #' @param color a character specifying a color.
 #' @param linetype [linetype]
 #' @param ... other arguments to pass to \code{\link[ggplot2]{geom_hline}}.
+#' @return a ggproto object
+#'
+#' @export
 geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
                         linetype = "dashed", ...) {
   geom_hline(yintercept = if (logscale) log(yintercept) else yintercept,

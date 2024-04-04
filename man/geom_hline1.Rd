@@ -23,6 +23,9 @@ geom_hline1(
 
 \item{...}{other arguments to pass to \code{\link[ggplot2]{geom_hline}}.}
 }
+\value{
+a ggproto object
+}
 \description{
 Draw a horizontal line 1.
 }

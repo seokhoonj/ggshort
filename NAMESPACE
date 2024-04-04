@@ -2,6 +2,7 @@
 
 S3method(plot,meta)
 export(add_top)
+export(geom_hline1)
 export(get_legend)
 export(ggbar)
 export(ggdensity)

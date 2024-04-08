@@ -90,7 +90,7 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
                    label_size = 4, label_angle = 0, label_hjust = .5,
                    label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
   quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
-                            group = group, color = color, lintype = linetype,
+                            group = group, color = color, linetype = linetype,
                             text = text)
   quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
   ggplot(data = data, aes(!!!quo_maps)) +

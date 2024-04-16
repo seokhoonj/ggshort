@@ -165,6 +165,7 @@ scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
 scale_pair_fill_manual <- function(pair, pair_levels = c("1", "2"),
                                    color_type = c("base", "deep"),
                                    guide = "legend") {
+  assert_class(pair, c("character", "factor"))
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
   list(if (jaid::unilen(pair) == 2L) {

@@ -23,7 +23,7 @@ metaplot <- function(x, widths = c(5, 5), theme = c("view", "save", "shiny")) {
 
   dt <- melt(as.data.table(x), id.vars = c("column"),
              measure.vars = c("prop", "nzprop"))
-  dt$column <- factor(dt$column, levels = sort(unique(dt$column)))
+  dt$column <- factor(dt$column, levels = unique(dt$column))
   xlvl <- levels(dt$column)
   dt$column <- as.numeric(dt$column)
 

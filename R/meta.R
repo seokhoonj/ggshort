@@ -29,6 +29,7 @@ metaplot <- function(x, widths = c(5, 5), theme = c("view", "save", "shiny")) {
 
   ds <- melt(as.data.table(x), id.vars = c("column"),
              measure.vars = c("class", "distinct", "mode"))
+  ds$column <- factor(ds$column, levels = xlvl)
   ds$info <- "info"
 
   theme <- match.arg(theme)

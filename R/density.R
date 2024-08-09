@@ -55,13 +55,14 @@ ggdensity <- function(data, x, facet, kernel = "gaussian", probs = .95,
     }
   }
 
-  if (logscale)
-    data.table::set(dt, j = .x, value = log(1 + dt[[.x]]))
+  # if (logscale)
+  #   data.table::set(dt, j = .x, value = log(1 + dt[[.x]]))
 
   area <- prob <- y <- NULL
+  from <- min(dt[[.x]])
   if (missing(facet)) {
-    ds <- dt[, list(x = unlist(lapply(.SD, function(x) density(x, kernel = kernel)[["x"]])),
-                    y = unlist(lapply(.SD, function(x) density(x, kernel = kernel)[["y"]]))),
+    ds <- dt[, list(x = unlist(lapply(.SD, function(x) density(x, kernel = kernel, from = from)[["x"]])),
+                    y = unlist(lapply(.SD, function(x) density(x, kernel = kernel, from = from)[["y"]]))),
              .SDcols = .x]
     cutoff_ds <- ds[, list(
       prob = probs,
@@ -72,8 +73,8 @@ ggdensity <- function(data, x, facet, kernel = "gaussian", probs = .95,
       cutoff = unlist(lapply(.SD, function(x) quantile(x, probs = probs)))
     ), .SDcols = .x]
   } else {
-    ds <- dt[, list(x = unlist(lapply(.SD, function(x) density(x, kernel = kernel)[["x"]])),
-                    y = unlist(lapply(.SD, function(x) density(x, kernel = kernel)[["y"]]))),
+    ds <- dt[, list(x = unlist(lapply(.SD, function(x) density(x, kernel = kernel, from = from)[["x"]])),
+                    y = unlist(lapply(.SD, function(x) density(x, kernel = kernel, from = from)[["y"]]))),
              keyby = .facet, .SDcols = .x]
     cutoff_ds <- ds[, list(
       prob = probs,
@@ -101,18 +102,27 @@ ggdensity <- function(data, x, facet, kernel = "gaussian", probs = .95,
 
   g <- ggplot(data = ds[], aes(x = x, ymin = 0, ymax = y, group = area, fill = area)) +
     geom_ribbon() + geom_line(aes(y = y)) +
+    # list(
+    #   if (logscale) {
+    #     geom_text(data = cutoff_dt, aes(
+    #       x = cutoff, y = y,
+    #       label = sprintf("%s%%\n(%s)", prob * 100, round(exp(cutoff)-1, round_digits)),
+    #       group = area), family = family, hjust = -0.1, vjust = 2)
+    #   } else {
+    #     geom_text(data = cutoff_dt, aes(
+    #       x = cutoff, y = y,
+    #       label = sprintf("%s%%\n(%s)", prob * 100, round(cutoff, round_digits)),
+    #       group = area), family = family, hjust = -0.1, vjust = 2)
+    #   }) +
+    geom_text(data = cutoff_dt, aes(
+      x = cutoff, y = y,
+      label = sprintf("%s%%\n(%s)", prob * 100, round(cutoff, round_digits)),
+      group = area), family = family, hjust = -0.1, vjust = 2) +
     list(
       if (logscale) {
-        geom_text(data = cutoff_dt, aes(
-          x = cutoff, y = y,
-          label = sprintf("%s%%\n(%s)", prob * 100, round(exp(cutoff)-1, round_digits)),
-          group = area), family = family, hjust = -0.1, vjust = 2)
-      } else {
-        geom_text(data = cutoff_dt, aes(
-          x = cutoff, y = y,
-          label = sprintf("%s%%\n(%s)", prob * 100, round(cutoff, round_digits)),
-          group = area), family = family, hjust = -0.1, vjust = 2)
-      }) +
+        scale_x_log10()
+      }
+    ) +
     geom_vline(data = cutoff_dt, aes(xintercept = cutoff), color = "red",
                linetype = "dashed") +
     list(

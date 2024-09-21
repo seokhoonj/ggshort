@@ -18,8 +18,8 @@ plot_cran_top <- function(when = c("last-month", "last-week", "last-day"),
           labs(title = sprintf("Cran Top Downloads (%s)", when)) +
           theme_shiny(x.angle = 45)
       })
-    }, viewer = dialogViewer(sprintf("Cran Top Downloads %s", when),
-                             width = viewer_width, height = viewer_height))
+    }, viewer = shiny::dialogViewer(sprintf("Cran Top Downloads %s", when),
+                                    width = viewer_width, height = viewer_height))
 }
 
 plot_cran <- function(packages = c("ecos", "kisopenapi", "kosis"),
@@ -39,6 +39,6 @@ plot_cran <- function(packages = c("ecos", "kisopenapi", "kosis"),
           labs(title = sprintf("Cran Downloads (%s)", when)) +
           theme_shiny(x.angle = 45)
       })
-    }, viewer = dialogViewer(sprintf("Cran Downloads %s", when),
-                             width = viewer_width, height = viewer_height))
+    }, viewer = shiny::dialogViewer(sprintf("Cran Downloads %s", when),
+                                    width = viewer_width, height = viewer_height))
 }

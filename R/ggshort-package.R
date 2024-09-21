@@ -3,7 +3,9 @@
 #' frequently used arguments. Despite its limited flexibility, it helps people
 #' draw ggplot easily.
 #' @keywords internal
+#' @import cranlogs
 #' @import ggplot2
+#' @import shiny
 #' @importFrom gridExtra arrangeGrob grid.arrange
 #' @importFrom data.table `:=` `.SD` as.data.table data.table melt set setDT
 #' @importFrom jaid assert_class desubs match_cols meta paste_list set_dt unilen

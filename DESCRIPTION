@@ -10,16 +10,18 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Remotes:
-  github::seokhoonj/jaid
+    github::seokhoonj/jaid
 Imports:
-  data.table (>= 1.13.0),
-  ggplot2 (>= 3.3.3),
-  gridExtra (>= 2.3),
-  jaid (>= 0.0.0.9000),
-  plotly (>= 4.10.1),
-  rlang (>= 1.1.1),
-  scales (>= 1.2.1)
+    cranlogs (>= 2.1.1),
+    data.table (>= 1.13.0),
+    ggplot2 (>= 3.3.3),
+    gridExtra (>= 2.3),
+    jaid (>= 0.0.0.9000),
+    plotly (>= 4.10.1),
+    rlang (>= 1.1.1),
+    scales (>= 1.2.1),
+    shiny (>= 1.7.4)
 Suggests:
-  insuranceData (>= 1.0)
+    insuranceData (>= 1.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

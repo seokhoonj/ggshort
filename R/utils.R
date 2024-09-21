@@ -7,7 +7,7 @@
 #'
 #' @export
 grob2ggplot <- function(plot) {
-  assert_class(plot, "grob")
+  jaid::assert_class(plot, "grob")
   x <- y <- NULL
   return(
     ggplot(data.frame(x = 0:1, y = 0:1), aes(x = x, y = y)) +
@@ -165,7 +165,7 @@ scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
 scale_pair_fill_manual <- function(pair, pair_levels = c("1", "2"),
                                    color_type = c("base", "deep"),
                                    guide = "legend") {
-  assert_class(pair, c("character", "factor"))
+  jaid::assert_class(pair, c("character", "factor"))
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
   list(if (jaid::unilen(pair) == 2L) {

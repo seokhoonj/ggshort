@@ -1,4 +1,3 @@
-#' @export
 plot_cran_top <- function(when = c("last-month", "last-week", "last-day"),
                           count = 10, viewer_width = 1200, viewer_height = 500) {
   when <- match.arg(when)

@@ -4,12 +4,13 @@ plot_cran_top <- function(when = c("last-month", "last-week", "last-day"),
   when <- match.arg(when)
   shiny::runGadget(
     shiny::fluidPage(
-      plotOutput("cran_download_plot", width = "100%", height = "500px")
+      shiny::plotOutput("cran_download_plot", width = "100%", height = "500px")
     ),
     function(input, output, session) {
       output$cran_download_plot <- renderPlot({
         cran_tops <- cranlogs::cran_top_downloads(when = when, count = count)
         cran_tops$rank <- as.factor(cran_tops$rank)
+        count <- package <- rank <- NULL
         ggbar(cran_tops, x = rank, y = count, fill = rank,
               label = package, label_size = 5, label_hjust = -.1) +
           scale_y_comma() +
@@ -19,7 +20,8 @@ plot_cran_top <- function(when = c("last-month", "last-week", "last-day"),
           theme_shiny(x.angle = 45)
       })
     }, viewer = shiny::dialogViewer(sprintf("Cran Top Downloads %s", when),
-                                    width = viewer_width, height = viewer_height))
+                                    width = viewer_width, height = viewer_height)
+  )
 }
 
 plot_cran <- function(packages = c("ecos", "kisopenapi", "kosis"),
@@ -28,11 +30,12 @@ plot_cran <- function(packages = c("ecos", "kisopenapi", "kosis"),
   when <- match.arg(when)
   shiny::runGadget(
     shiny::fluidPage(
-      plotOutput("cran_download_plot", width = "100%", height = "500px")
+      shiny::plotOutput("cran_download_plot", width = "100%", height = "500px")
     ),
     function(input, output, session) {
       output$cran_download_plot <- renderPlot({
         cran_downloads <- cranlogs::cran_downloads(packages = packages, when = when)
+        count <- data <- package <- NULL
         ggline(cran_downloads, x = date, y = count, color = package,
                label_size = 5, label_hjust = -.1) +
           scale_y_comma() +
@@ -40,5 +43,6 @@ plot_cran <- function(packages = c("ecos", "kisopenapi", "kosis"),
           theme_shiny(x.angle = 45)
       })
     }, viewer = shiny::dialogViewer(sprintf("Cran Downloads %s", when),
-                                    width = viewer_width, height = viewer_height))
+                                    width = viewer_width, height = viewer_height)
+  )
 }

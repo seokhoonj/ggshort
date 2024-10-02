@@ -21,14 +21,14 @@ metaplot <- function(x, widths = c(5, 5), theme = c("view", "save", "shiny")) {
   x$distinct <- as.character(x$distinct)
   x$mode <- as.character(x$mode)
 
-  dt <- melt(as.data.table(x), id.vars = c("column"),
-             measure.vars = c("prop", "nzprop"))
+  dt <- data.table::melt(data.table::as.data.table(x), id.vars = c("column"),
+                         measure.vars = c("prop", "nzprop"))
   dt$column <- factor(dt$column, levels = unique(dt$column))
   xlvl <- levels(dt$column)
   dt$column <- as.numeric(dt$column)
 
-  ds <- melt(as.data.table(x), id.vars = c("column"),
-             measure.vars = c("class", "distinct", "mode"))
+  ds <- data.table::melt(data.table::as.data.table(x), id.vars = c("column"),
+                         measure.vars = c("class", "distinct", "mode"))
   ds$column <- factor(ds$column, levels = xlvl)
   ds$info <- "info"
 

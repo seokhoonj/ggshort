@@ -10,6 +10,8 @@
 #' @param alpha a point color transparency
 #' @param label_family a string specifying label font-family
 #' @param theme a string specifying a ggshort theme function ("view", "save", "shiny")
+#' @param ... arguments passed on to (`theme_view`, `theme_save`, `theme_shiny`)
+#'
 #' @return a ggplot object
 #'
 #' @examples

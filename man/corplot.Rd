@@ -6,16 +6,19 @@
 \usage{
 corplot(
   x,
-  display = c("full", "lower", "upper"),
-  theme = c("view", "save", "shiny")
+  display = c("lower", "upper", "full"),
+  theme = c("view", "save", "shiny"),
+  ...
 )
 }
 \arguments{
 \item{x}{a correlation matrix}
 
-\item{display}{a matrix display type ("full", "lower", "upper")}
+\item{display}{a matrix display type ("lower", "upper", "full")}
 
 \item{theme}{a string specifying a ggshort theme function ("view", "save", "shiny")}
+
+\item{...}{arguments passed on to (\code{theme_view}, \code{theme_save}, \code{theme_shiny})}
 }
 \value{
 a ggplot object

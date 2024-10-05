@@ -32,6 +32,8 @@ pcaplot(
 \item{label_family}{a string specifying label font-family}
 
 \item{theme}{a string specifying a ggshort theme function ("view", "save", "shiny")}
+
+\item{...}{arguments passed on to (\code{theme_view}, \code{theme_save}, \code{theme_shiny})}
 }
 \value{
 a ggplot object

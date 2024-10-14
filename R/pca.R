@@ -5,7 +5,7 @@
 #' @param object a prcomp object
 #' @param x a priciple component rank for a x axis (default: 1)
 #' @param y a priciple component rank for a y axis (default: 2)
-#' @param target a vector for grouping points (default: NULL)
+#' @param color a vector for grouping points color (default: NULL)
 #' @param scale a scaling parameter, disabled by 0 (default: 1)
 #' @param alpha a point color transparency
 #' @param label_family a string specifying label font-family
@@ -18,10 +18,10 @@
 #' # PCA plot
 #' \dontrun{
 #' pca <- prcomp(iris[, -5])
-#' pcaplot(pca, x = 1, y = 1, target = iris$Species)}
+#' pcaplot(pca, x = 1, y = 1, color = iris$Species)}
 #'
 #' @export
-pcaplot <- function(object, x = 1, y = 2, target = NULL, scale = 1, alpha = .3,
+pcaplot <- function(object, x = 1, y = 2, color = NULL, scale = 1, alpha = .3,
                     label_family = "Comic Sans MS",
                     theme = c("view", "save", "shiny"), ...) {
   assert_class(object, "prcomp")
@@ -30,7 +30,7 @@ pcaplot <- function(object, x = 1, y = 2, target = NULL, scale = 1, alpha = .3,
   if (!is.null(target)) {
     if (is.numeric(target))
       target <- as.factor(target)
-    data <- cbind(data, target = target)
+    data <- cbind(data, color = color)
   }
   sdev <- object$sdev
   ve <- sdev^2 / sum(sdev^2)
@@ -56,7 +56,7 @@ pcaplot <- function(object, x = 1, y = 2, target = NULL, scale = 1, alpha = .3,
     if (is.null(target)) {
       geom_point(alpha = alpha)
     } else {
-      geom_point(aes(color = target), alpha = alpha)
+      geom_point(aes(color = color), alpha = alpha)
     }) +
     ggshort::stat_mean_line() +
     geom_segment(data = rotation,

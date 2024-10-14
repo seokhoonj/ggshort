@@ -8,7 +8,7 @@ pcaplot(
   object,
   x = 1,
   y = 2,
-  target = NULL,
+  color = NULL,
   scale = 1,
   alpha = 0.3,
   label_family = "Comic Sans MS",
@@ -23,7 +23,7 @@ pcaplot(
 
 \item{y}{a priciple component rank for a y axis (default: 2)}
 
-\item{target}{a vector for grouping points (default: NULL)}
+\item{color}{a vector for grouping points color (default: NULL)}
 
 \item{scale}{a scaling parameter, disabled by 0 (default: 1)}
 
@@ -45,6 +45,6 @@ Draw a PCA plot for a prcomp object.
 # PCA plot
 \dontrun{
 pca <- prcomp(iris[, -5])
-pcaplot(pca, x = 1, y = 1, target = iris$Species)}
+pcaplot(pca, x = 1, y = 1, color = iris$Species)}
 
 }

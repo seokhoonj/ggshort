@@ -27,9 +27,9 @@ pcaplot <- function(object, x = 1, y = 2, color = NULL, scale = 1, alpha = .3,
   assert_class(object, "prcomp")
   theme <- match.arg(theme)
   data <- as.data.frame(object$x)
-  if (!is.null(target)) {
-    if (is.numeric(target))
-      target <- as.factor(target)
+  if (!is.null(color)) {
+    if (is.numeric(color))
+      color <- as.factor(color)
     data <- cbind(data, color = color)
   }
   sdev <- object$sdev
@@ -53,7 +53,7 @@ pcaplot <- function(object, x = 1, y = 2, color = NULL, scale = 1, alpha = .3,
   rotation[, 1L:2L] <- rotation[, 1L:2L] * scaler * .8
   ggplot(data = data, aes(x = !!rlang::sym(col_x), y = !!rlang::sym(col_y))) +
     list(
-    if (is.null(target)) {
+    if (is.null(color)) {
       geom_point(alpha = alpha)
     } else {
       geom_point(aes(color = color), alpha = alpha)

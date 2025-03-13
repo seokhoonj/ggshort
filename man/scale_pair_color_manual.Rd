@@ -8,14 +8,14 @@
 scale_pair_color_manual(
   pair,
   pair_levels = c("1", "2"),
-  color_type = c("base", "deep"),
+  color_type = c("base", "deep", "base_inv", "deep_inv"),
   guide = "legend"
 )
 
 scale_pair_fill_manual(
   pair,
   pair_levels = c("1", "2"),
-  color_type = c("base", "deep"),
+  color_type = c("base", "deep", "base_inv", "deep_inv"),
   guide = "legend"
 )
 }
@@ -24,7 +24,7 @@ scale_pair_fill_manual(
 
 \item{pair_levels}{Two element vector expressing pair values (default, c("1", "2"))}
 
-\item{color_type}{a string of color type, \code{base} and \code{deep}}
+\item{color_type}{a string of color type, \code{base}, \code{deep}, \code{base_inv} and \code{deep_inv}.}
 
 \item{guide}{a function used to create a guide or its name. See \code{\link[=guides]{guides()}} for more information.}
 }

@@ -8,7 +8,7 @@ geom_hline1(
   logscale = FALSE,
   yintercept = 1,
   color = "red",
-  linetype = "dashed",
+  linetype = "longdash",
   ...
 )
 }

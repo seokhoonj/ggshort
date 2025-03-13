@@ -4,6 +4,8 @@
   .GGSHORT_COLORS_ENV <<- new.env()
   assign(".TWO_COLORS_BASE", c("#80B1D3", "#FB8072"), envir = .GGSHORT_COLORS_ENV)
   assign(".TWO_COLORS_DEEP", c("#377EB8", "#E41A1C"), envir = .GGSHORT_COLORS_ENV)
+  assign(".TWO_COLORS_BASE_INV", c("#FB8072", "#80B1D3"), envir = .GGSHORT_COLORS_ENV)
+  assign(".TWO_COLORS_DEEP_INV", c("#E41A1C", "#377EB8"), envir = .GGSHORT_COLORS_ENV)
   assign(".TWO_COLORS_BASE_REV", c("#FB8072", "#80B1D3"), envir = .GGSHORT_COLORS_ENV)
   assign(".TWO_COLORS_DEEP_REV", c("#E41A1C", "#377EB8"), envir = .GGSHORT_COLORS_ENV)
   assign(".TWELVE_COLORS",

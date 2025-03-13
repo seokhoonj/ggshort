@@ -111,7 +111,7 @@ scale_y_limit_reverse <- function(x) {
 #'
 #' @export
 geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
-                        linetype = "dashed", ...) {
+                        linetype = "longdash", ...) {
   geom_hline(yintercept = if (logscale) log(yintercept) else yintercept,
              color = color, linetype = linetype, ...)
 }
@@ -122,7 +122,7 @@ geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
 #'
 #' @param pair a vector contains data of pair values
 #' @param pair_levels Two element vector expressing pair values (default, c("1", "2"))
-#' @param color_type a string of color type, `base` and `deep`
+#' @param color_type a string of color type, `base`, `deep`, `base_inv` and `deep_inv`.
 #' @param guide a function used to create a guide or its name. See [guides()] for more information.
 #' @return a ggplot object
 #'
@@ -145,7 +145,7 @@ geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
 #'
 #' @export
 scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
-                                    color_type = c("base", "deep"),
+                                    color_type = c("base", "deep", "base_inv", "deep_inv"),
                                     guide = "legend") {
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
@@ -163,7 +163,7 @@ scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
 #' @rdname scale_pair_color_manual
 #' @export
 scale_pair_fill_manual <- function(pair, pair_levels = c("1", "2"),
-                                   color_type = c("base", "deep"),
+                                   color_type = c("base", "deep", "base_inv", "deep_inv"),
                                    guide = "legend") {
   jaid::assert_class(pair, c("character", "factor"))
   choice <- match.arg(color_type)
@@ -179,11 +179,13 @@ scale_pair_fill_manual <- function(pair, pair_levels = c("1", "2"),
   })
 }
 
-get_two_colors <- function(choice = c("base", "deep")) {
+get_two_colors <- function(choice = c("base", "deep", "base_inv", "deep_inv")) {
   choice <- match.arg(choice)
   colors <- switch(choice,
                    base = ".TWO_COLORS_BASE",
-                   deep = ".TWO_COLORS_DEEP")
+                   deep = ".TWO_COLORS_DEEP",
+                   base_inv = ".TWO_COLORS_BASE_INV",
+                   deep_inv = ".TWO_COLORS_DEEP_INV")
   return(get(colors, envir = .GGSHORT_COLORS_ENV))
 }
 

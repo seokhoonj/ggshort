@@ -144,9 +144,11 @@ geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
 #'   theme_view(family = NULL)}
 #'
 #' @export
-scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
-                                    color_type = c("base", "deep", "base_inv", "deep_inv"),
-                                    guide = "legend") {
+scale_pair_color_manual <- function(
+    pair, pair_levels = c("1", "2"),
+    color_type = c("base", "deep", "base_inv", "deep_inv"),
+    guide = "legend"
+) {
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
   list(if (jaid::unilen(pair) == 2L) {
@@ -162,9 +164,11 @@ scale_pair_color_manual <- function(pair, pair_levels = c("1", "2"),
 
 #' @rdname scale_pair_color_manual
 #' @export
-scale_pair_fill_manual <- function(pair, pair_levels = c("1", "2"),
-                                   color_type = c("base", "deep", "base_inv", "deep_inv"),
-                                   guide = "legend") {
+scale_pair_fill_manual <- function(
+    pair, pair_levels = c("1", "2"),
+    color_type = c("base", "deep", "base_inv", "deep_inv"),
+    guide = "legend"
+) {
   jaid::assert_class(pair, c("character", "factor"))
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
@@ -178,6 +182,64 @@ scale_pair_fill_manual <- function(pair, pair_levels = c("1", "2"),
     scale_fill_manual(values = "grey50", guide = guide)
   })
 }
+
+#' Continuous Position Scale for X-Axis with Custom Breaks
+#'
+#' `scale_x_break()` provides a continuous position scale for the x-axis,
+#' allowing users to specify the interval between axis breaks.
+#' It rounds the axis limits to align with the specified break interval.
+#'
+#' @param break_interval A numeric value specifying the interval between x-axis breaks.
+#' @param ... Other arguments passed to [ggplot2::scale_x_continuous()],
+#'   such as `limits`, `labels`, or `expand`.
+#'
+#' @return A ggplot2 scale object modifying the x-axis breaks.
+#'
+#' @section Computation:
+#' This function dynamically calculates axis breaks based on the range of x values in the data.
+#' - If `break_interval` is an integer, the axis breaks are rounded to the nearest whole numbers.
+#' - If `break_interval` is a decimal, the scale retains fractional values without rounding.
+#'
+#' @seealso [ggplot2::scale_x_continuous()]
+#'
+#' @examples
+#' library(ggplot2)
+#'
+#' # Example using the iris dataset
+#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+#'   geom_point() +
+#'   scale_x_break(break_interval = 0.5)
+#'
+#' ggplot(iris, aes(x = Sepal.Length, y = Petal.Length)) +
+#'   geom_point() +
+#'   scale_x_break(break_interval = 1, limits = c(4, 8))
+#'
+#' @export
+scale_x_break <- function(break_interval, ...) {
+  scale_x_continuous(
+    breaks = function(x) seq(
+      from = round(min(x, na.rm = TRUE), break_interval-1),
+      to   = round(max(x, na.rm = TRUE), break_interval-1),
+      by   = break_interval
+    ),
+    ...
+  )
+}
+
+#' @rdname scale_x_break
+#' @export
+scale_y_break <- function(break_interval, ...) {
+  scale_y_continuous(
+    breaks = function(y) seq(
+      from = round(min(y, na.rm = TRUE), break_interval-1),
+      to   = round(may(y, na.rm = TRUE), break_interval-1),
+      by   = break_interval
+    ),
+    ...
+  )
+}
+
+
 
 get_two_colors <- function(choice = c("base", "deep", "base_inv", "deep_inv")) {
   choice <- match.arg(choice)

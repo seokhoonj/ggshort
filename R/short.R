@@ -344,14 +344,14 @@ ggpie <- function(data, group, value, text, label, label_family = "Comic Sans MS
 #'
 #' @param data a data.frame
 #' @param x,y a name of axis `x` and `y`
-#' @param linetype a string specifying a linetype
+#' @param linetype a string specifying a linetype (default: solid)
 #' @param text a name of variable or expression for ggplotly hover text
 #' @param label a name of variable or expression you want to label
 #' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
 #' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
 #' adjustment
 #' @param label_color a string specifying label color
-#' @param xlab_position a string specifying x label position (default: top)
+#' @param xlab_position a string specifying x label position (default: bottom)
 #' @return a ggplot object
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()]
 #'
@@ -364,11 +364,11 @@ ggpie <- function(data, group, value, text, label, label_family = "Comic Sans MS
 #'   theme_view(family = NULL)}
 #'
 #' @export
-ggtable <- function(data, x, y, linetype = "dashed", text = NULL, label,
+ggtable <- function(data, x, y, linetype = "solid", text = NULL, label,
                     label_family = "Comic Sans MS", label_size = 4,
                     label_angle = 0, label_hjust = .5, label_vjust = .5,
                     label_color = c("#000000", "#FAF9F6"),
-                    xlab_position = c("top", "bottom")) {
+                    xlab_position = c("bottom", "top")) {
   dx <- rlang::as_name(rlang::enquo(x))
   dy <- rlang::as_name(rlang::enquo(y))
 

@@ -232,7 +232,7 @@ scale_y_break <- function(break_interval, ...) {
   scale_y_continuous(
     breaks = function(y) seq(
       from = round(min(y, na.rm = TRUE), break_interval-1),
-      to   = round(may(y, na.rm = TRUE), break_interval-1),
+      to   = round(max(y, na.rm = TRUE), break_interval-1),
       by   = break_interval
     ),
     ...

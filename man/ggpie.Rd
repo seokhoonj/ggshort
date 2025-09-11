@@ -2,7 +2,7 @@
 % Please edit documentation in R/short.R
 \name{ggpie}
 \alias{ggpie}
-\title{ggplot pie functions only with frequently used arguments}
+\title{ggplot pie helper (frequently used arguments)}
 \usage{
 ggpie(
   data,
@@ -10,47 +10,43 @@ ggpie(
   value,
   text,
   label,
-  label_family = "Comic Sans MS",
-  label_size = 4,
-  label_angle = 0,
-  label_hjust = 0.5,
-  label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6")
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = 0.5, color = "black")
 )
 }
 \arguments{
-\item{data}{a data.frame}
+\item{data}{A data.frame.}
 
-\item{group}{a name of variable to group}
+\item{group}{Unquoted column used for grouping (slices of the pie).}
 
-\item{value}{a name of variable specifying values}
+\item{value}{Unquoted column specifying values (slice sizes).}
 
-\item{text}{a name of variable or expression for ggplotly hover text}
+\item{text}{Optional column/expression for tooltip text (e.g., with plotly).}
 
-\item{label}{a name of variable or expression to label}
+\item{label}{Optional unquoted column/expression used as slice labels.}
 
-\item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
-
-\item{label_hjust, label_vjust}{a numeric specifying label horizontal and vertical
-adjustment}
-
-\item{label_color}{a string specifying label color}
+\item{label_args}{A named list of \code{geom_text()} style options.
+Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
 }
 \value{
-a ggplot object
+A ggplot object.
 }
 \description{
-Shortly simplify the grammar of ggplot to the functions only with frequently
-used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggmix}, \code{ggpie}, \code{ggtable})
+Quickly build pie charts with common options. Supply \strong{unquoted} column
+names for aesthetics. Supports text labels styled via \code{label_args}.
 }
 \examples{
-# pie
-\donttest{set.seed(123)
-data <- data.frame(group = c("A", "B", "C"), value = c(60, 30, 10))
-ggpie(data = data, group = group, value = value, label = sprintf("\%s\%\%", value),
-      label_family = NA)}
+\donttest{
+set.seed(123)
+df <- data.frame(group = c("A", "B", "C"), value = c(60, 30, 10))
+
+ggpie(df, group = group, value = value,
+      label = sprintf("\%s\%\%", value),
+      label_args = list(size = 5, family = getOption("ggshort.font")))
+}
 
 }
 \seealso{
-\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
+\code{\link[=ggdensity]{ggdensity()}}, \link{ggbox}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
 }

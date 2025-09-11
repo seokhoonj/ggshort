@@ -2,7 +2,7 @@
 % Please edit documentation in R/short.R
 \name{ggmix}
 \alias{ggmix}
-\title{ggplot mix functions only with frequently used arguments}
+\title{ggplot mix helper (stacked 100\% bars with common options)}
 \usage{
 ggmix(
   data,
@@ -10,61 +10,63 @@ ggmix(
   y,
   ymin = NULL,
   ymax = NULL,
-  group = NULL,
+  color = NULL,
   fill = NULL,
-  bar_color = "transparent",
+  group = NULL,
   text = NULL,
   label,
-  label_family = "Comic Sans MS",
-  label_size = 4,
-  label_angle = 0,
-  label_hjust = 0.5,
-  label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6"),
-  reverse = FALSE
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = 0.5, color = "black"),
+  reverse = TRUE,
+  flip = TRUE
 )
 }
 \arguments{
-\item{data}{a data.frame}
+\item{data}{A data.frame.}
 
-\item{x, y}{a name of axis \code{x} and \code{y}}
+\item{x, y}{Unquoted columns mapped to x and y (heights). Typically \code{y} is a value
+to be summed per \code{x} and \code{fill}, then normalized by \code{position_fill()}.}
 
-\item{ymin, ymax}{\code{min} and \code{max} values of y for the height}
+\item{ymin, ymax}{Optional lower/upper bounds for y (rarely needed here).}
 
-\item{group, fill}{a name of variable to group and fill}
+\item{color, fill, group}{Optional columns for grouping and fill (stacking is based on \code{fill}).}
 
-\item{bar_color}{a string specifying bar color}
+\item{text}{Optional column/expression for tooltip text (e.g., with plotly).}
 
-\item{text}{a name of variable or expression for ggplotly hover text}
+\item{label}{Optional unquoted column/expression used for \code{geom_text()}.}
 
-\item{label}{a name of variable or expression to label}
+\item{label_args}{A named list of \code{geom_text()} style options. Supported keys:
+\code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
 
-\item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
+\item{reverse}{Logical; if \code{TRUE}, reverse the stacking order in \code{position_fill()}.}
 
-\item{label_hjust, label_vjust}{a numeric specifying label horizontal and vertical
-adjustment}
-
-\item{label_color}{a string specifying label color}
-
-\item{reverse}{a boolean whether to reverse the order of the \code{y} variable}
+\item{flip}{Logical; if \code{TRUE} (default), use \code{\link[ggplot2:coord_flip]{ggplot2::coord_flip()}} to
+flip the axes so categories are on the y-axis and values on the x-axis.}
 }
 \value{
-a ggplot object
+A ggplot object.
 }
 \description{
-Shortly simplify the grammar of ggplot to the functions only with frequently
-used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggmix}, \code{ggpie}, \code{ggtable})
+Build \strong{proportion (100\%) stacked bars} quickly with the most-used options.
+Supply \strong{unquoted} column names for aesthetics. Supports text labels and
+reversing the stacking order.
 }
 \examples{
-# mix
-\donttest{set.seed(123)
-data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
-data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-ggmix(data = data, x = x, y = y, fill = fill, label = y, label_family = NA,
-  reverse = TRUE) +
-  theme_view(family = NULL)}
+\donttest{
+set.seed(123)
+df <- expand.grid(x = c("A","B","C"), fill = c("X","Y","Z"))
+df$y <- sample(1:10, nrow(df), TRUE)
+
+ggmix(
+  data = df, x = x, y = y, fill = fill,
+  label = y,
+  label_args = list(size = 3),
+  reverse = TRUE
+) + theme_view()
+}
 
 }
 \seealso{
-\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
+\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=ggpie]{ggpie()}}, \link{ggbox}, \code{\link[=ggtable]{ggtable()}}
 }

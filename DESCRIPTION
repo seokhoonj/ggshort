@@ -12,16 +12,18 @@ Depends: R (>= 3.5.0)
 Remotes:
     github::seokhoonj/jaid
 Imports:
-    cranlogs (>= 2.1.1),
     data.table (>= 1.13.0),
     ggplot2 (>= 3.3.3),
-    gridExtra (>= 2.3),
-    jaid (>= 0.0.0.9000),
+    gtable (>= 0.3.6),
+    lifecycle (>= 1.0.3),
     plotly (>= 4.10.1),
     rlang (>= 1.1.1),
     scales (>= 1.2.1),
-    shiny (>= 1.7.4)
+    systemfonts (>= 1.1.0)
 Suggests:
-    insuranceData (>= 1.0)
+    gridExtra (>= 2.3),
+    insuranceData (>= 1.0),
+    jaid (>= 0.0.0.9001),
+    sysfonts (>= 0.8.9)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

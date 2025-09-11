@@ -2,60 +2,66 @@
 % Please edit documentation in R/short.R
 \name{ggtable}
 \alias{ggtable}
-\title{ggplot table functions only with frequently used arguments}
+\title{ggplot table helper (frequently used arguments)}
 \usage{
 ggtable(
   data,
   x,
   y,
-  linetype = "solid",
+  linetype = c("dashed"),
   text = NULL,
   label,
-  label_family = "Comic Sans MS",
-  label_size = 4,
-  label_angle = 0,
-  label_hjust = 0.5,
-  label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6"),
-  xlab_position = c("bottom", "top")
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = 0.5, color = "black"),
+  xlab_position = c("bottom", "top"),
+  ylab_position = c("left", "right")
 )
 }
 \arguments{
-\item{data}{a data.frame}
+\item{data}{A data.frame.}
 
-\item{x, y}{a name of axis \code{x} and \code{y}}
+\item{x, y}{Unquoted factor columns mapped to the table axes. Character
+columns are automatically converted to factors.}
 
-\item{linetype}{a string specifying a linetype (default: solid)}
+\item{linetype}{Line type for grid lines. One of:
+\code{"solid"}, \code{"dashed"}(default), \code{"dotted"}, \code{"dotdash"}, \code{"longdash"} or
+\code{"twodash"}.}
 
-\item{text}{a name of variable or expression for ggplotly hover text}
+\item{text}{Optional column/expression for tooltip text (e.g., with plotly).}
 
-\item{label}{a name of variable or expression you want to label}
+\item{label}{Unquoted column/expression used as text labels inside cells.}
 
-\item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
+\item{label_args}{A named list of \code{geom_text()} style options.
+Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
 
-\item{label_hjust, label_vjust}{a numeric specifying label horizontal and vertical
-adjustment}
+\item{xlab_position}{Position of x-axis labels, one of \code{"bottom"} (default)
+or \code{"top"}.}
 
-\item{label_color}{a string specifying label color}
-
-\item{xlab_position}{a string specifying x label position (default: bottom)}
+\item{ylab_position}{Position of x-axis labels, one of \code{"left"} (default)
+or \code{"right"}.}
 }
 \value{
-a ggplot object
+A ggplot object representing a table-like plot.
 }
 \description{
-Shortly simplify the grammar of ggplot to the functions only with frequently
-used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggmix}, \code{ggpie}, \code{ggtable})
+Create a text table layout using \code{ggplot2}. Categories on \code{x} and \code{y} must
+be factors or coercible to factors. Labels are placed inside each cell, and
+grid lines are drawn with \code{geom_vline()}/\code{geom_hline()}.
 }
 \examples{
-# table
-\donttest{set.seed(123)
-data <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
-data$label <- sample(x = 1:10, size = 9, replace = TRUE)
-ggtable(data = data, x = x, y = y, label = label, label_family = NA) +
-  theme_view(family = NULL)}
+\donttest{
+set.seed(123)
+df <- expand.grid(x = c("A","B","C"), y = c("X","Y","Z"))
+df$label <- sample(1:10, size = 9, replace = TRUE)
+
+ggtable(df, x = x, y = y, label = label,
+        label_args = list(size = 5, family = getOption("ggshort.font")),
+        xlab_position = "top") +
+  theme_view()
+}
 
 }
 \seealso{
-\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggpie]{ggpie()}}
+\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
+\code{\link[=ggdensity]{ggdensity()}}, \link{ggbox}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}
 }

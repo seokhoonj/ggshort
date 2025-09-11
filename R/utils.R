@@ -1,61 +1,192 @@
-#' Grob to ggplot
-#'
-#' Change a grob object to a ggplot object.
-#'
-#' @param plot a grob object
-#' @return a ggplot object.
-#'
-#' @export
-grob2ggplot <- function(plot) {
-  jaid::assert_class(plot, "grob")
-  x <- y <- NULL
-  return(
-    ggplot(data.frame(x = 0:1, y = 0:1), aes(x = x, y = y)) +
-      geom_blank() +
-      scale_x_continuous(limits = c(0, 1), expand = c(0, 0)) +
-      scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) +
-      annotation_custom(plot, xmin = 0, xmax = 1, ymin = 0, ymax = 1) +
-      theme_void()
-  )
-}
 
-#' Get a legend
+# Utilitiy functions ------------------------------------------------------
+
+#' Convert grob-like objects to a ggplot
 #'
-#' Get a legend object from the ggplot object.
+#' Wrap a grid grob or gtable inside an empty ggplot so it can be displayed
+#' or combined consistently with other ggplots.
 #'
-#' @param plot a ggplot object
-#' @return a ggplot object
+#' - If `grob` is already a ggplot, it is returned unchanged.
+#' - If `grob` is a gtable or grob, it is embedded using
+#'   [ggplot2::annotation_custom()].
+#'
+#' @param grob A ggplot, gtable or grob.
+#'
+#' @return A ggplot object displaying the input.
 #'
 #' @examples
-#' # get a legend.
-#' \donttest{set.seed(123)
-#' data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
-#' data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-#' g <- ggbar(data = data, x = x, y = y, fill = fill, label = y, label_vjust = -.25) +
-#'   theme_view(family = NULL)
-#' get_legend(g)}
+#' \donttest{
+#' p <- ggplot2::qplot(mpg, hp, data = mtcars)
+#' grob <- ggplot2::ggplotGrob(p)
+#' grob_to_ggplot(grob) # convert gtable back to ggplot
+#' }
+#'
+#' @export
+grob_to_ggplot <- function(grob) {
+  if (inherits(grob, "ggplot"))
+    return(grob)
+
+  if (inherits(grob, "gtable") || inherits(grob, "grob")) {
+    return(
+      ggplot2::ggplot() +
+        ggplot2::theme_void() +
+        ggplot2::annotation_custom(
+          grob = grob,
+          xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf
+        ) +
+        ggplot2::coord_cartesian(clip = "off", expand = FALSE)
+    )
+  }
+
+  stop("plot must be a ggplot, gtable or grob.", call. = FALSE)
+}
+
+#' Extract the legend from a ggplot
+#'
+#' Get the legend grob from a ggplot object.
+#'
+#' @param plot A ggplot object.
+#'
+#' @return A legend grob (the `"guide-box"` grob) extracted from plot.
+#'
+#' @examples
+#' \donttest{
+#' set.seed(123)
+#' dat <- expand.grid(x = c("A","B","C"), fill = c("X","Y","Z"))
+#' dat$y <- sample(1:10, size = 9, replace = TRUE)
+#' g <- ggbar(dat, x = x, y = y, fill = fill, label = y,
+#'            label_args = list(vjust = -0.25)) +
+#'      theme_view(family = NULL)
+#' get_legend(g)
+#' }
 #'
 #' @export
 get_legend <- function(plot) {
-  gtable <- ggplot_gtable(ggplot_build(plot))
+  gtable <- ggplot2::ggplot_gtable(ggplot_build(plot))
   guide <- which(sapply(gtable$grobs, function(x) x$name) == "guide-box")
-  return(gtable$grobs[[guide]])
+  if (length(guide)) {
+    return(gtable$grobs[[guide]])
+  } else {
+    return(
+      gtable::gtable(
+        widths = grid::unit(1, "null"),
+        heights = grid::unit(1, "null")
+      )
+    )
+  }
 }
 
-#' Add commas to x-axis or y-axis tick labels
+#' Add a title above a plot
 #'
-#' Add commas to x-axis or y-axis tick labels.
+#' Place a title-like text grob above a ggplot or gtable, stacking it
+#' vertically with the main plot.
 #'
-#' @return an ggproto object
+#' @param plot A ggplot object or gtable.
+#' @param title Character string for the title text.
+#' @param heights Numeric vector of relative heights for title vs plot
+#'   (default `c(1, 9)`).
+#' @param family Font family for the title (default `getOption("ggshort.font")`).
+#' @param size Font size for the title (default `14`).
+#' @param hjust,vjust Numeric justification values passed to [grid::textGrob()].
+#'
+#' @return A gtable object with the title stacked on top. Use [grid::grid.draw()]
+#'   to render it.
+#'
+#' @examples
+#' \donttest{
+#' p <- ggbar(mtcars, x = factor(cyl), y = mpg) + theme_view()
+#' add_title(p, "MPG by cylinder")
+#' }
 #'
 #' @export
-scale_x_comma <- function() scale_x_continuous(labels = scales::comma)
+add_title <- function(plot, title,
+                      heights = c(1, 9),
+                      family = getOption("ggshort.font"),
+                      size = 14,
+                      hjust = NULL,
+                      vjust = NULL) {
+  # make text grob
+  title_grob <- grid::textGrob(
+    title,
+    gp = grid::gpar(fontfamily = family, fontsize = size),
+    hjust = hjust,
+    vjust = vjust
+  )
+
+  # stack top label and plot
+  gt <- vstack_plots(title_grob, plot, heights = heights)
+
+  grid::grid.newpage(); grid::grid.draw(gt)
+  invisible(gt)
+}
+
+#' Deprecated: add_top()
+#'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Please use [add_title()] instead.
+#'
+#' @inheritParams add_title
+#'
+#' @return A gtable object (same as [add_title()]).
+#'
+#' @seealso [add_title()]
+#' @export
+add_top <- function(plot, title,
+                    heights = c(1, 9),
+                    family = getOption("ggshort.font"),
+                    size = 14,
+                    hjust = NULL,
+                    vjust = NULL) {
+  lifecycle::deprecate_warn("0.0.0.9001", "add_top()", "add_title()")
+  add_title(plot = plot, title = title, heights = heights,
+            family = family, size = size, hjust = hjust, vjust = vjust)
+}
+
+# Geom functions ----------------------------------------------------------
+
+#' Draw a horizontal reference line at 1
+#'
+#' Add a horizontal line at y = 1 (or `log(1)` if `logscale = TRUE`).
+#'
+#' @param logscale Logical; if `TRUE`, interpret `yintercept` on the log scale.
+#' @param yintercept Numeric position of the reference line. Default: `1`.
+#' @param color Line color. Default: `"red"`.
+#' @param linetype Line type; see [ggplot2::geom_hline()]. Default: `"longdash"`.
+#' @param ... Additional arguments passed to [ggplot2::geom_hline()].
+#'
+#' @return A `ggplot2` layer.
+#'
+#' @export
+geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
+                        linetype = "longdash", ...) {
+  ggplot2::geom_hline(
+    yintercept = if (logscale) log(yintercept) else yintercept,
+    color = color, linetype = linetype, ...
+  )
+}
+
+# Scale functions ---------------------------------------------------------
+
+#' Add comma-formatted axis tick labels
+#'
+#' Convenience scales that format numeric axis labels with commas.
+#'
+#' @return A ggproto scale object.
+#'
+#' @seealso [scales::comma()], [ggplot2::scale_x_continuous()], [ggplot2::scale_y_continuous()]
+#'
+#' @export
+scale_x_comma <- function()
+  ggplot2::scale_x_continuous(labels = scales::comma)
 
 #' @rdname scale_x_comma
 #' @export
-scale_y_comma <- function() scale_y_continuous(labels = scales::comma)
+scale_y_comma <- function()
+  ggplot2::scale_y_continuous(labels = scales::comma)
 
 #' @rdname scale_x_comma
+#' @return A list of two scales: `scale_x_comma()` and `scale_y_comma()`.
 #' @export
 scale_comma <- function() {
   list(
@@ -64,23 +195,33 @@ scale_comma <- function() {
   )
 }
 
-#' Scale limit reverse (x & y)
+#' Reverse axis scale limits based on data type (x & y)
 #'
-#' Reverse x & y axis scale limit
+#' Reverse axis direction, choosing a discrete or continuous scale
+#' based on the class of the supplied vector.
 #'
-#' @param x a vector x or y variable
-#' @return a ggproto object
+#' @param x A vector representing the mapped variable (factor/character/numeric).
+#'
+#' @return A `ggproto` scale object.
+#'
+#' @examples
+#' \donttest{
+#' # x-axis examples
+#' scale_x_limit_reverse(factor(c("a","b","c")))
+#' scale_x_limit_reverse(c("a","c","b"))
+#' scale_x_limit_reverse(1:10)
+#' }
 #'
 #' @export
 scale_x_limit_reverse <- function(x) {
   if (is.factor(x)) {
-    return(scale_x_discrete(limits = rev(levels(x))))
+    return(ggplot2::scale_x_discrete(limits = rev(levels(x))))
   }
   else if (is.character(x)) {
-    return(scale_x_discrete(limits = rev(sort(unique(x)))))
+    return(ggplot2::scale_x_discrete(limits = rev(sort(unique(x)))))
   }
   else if (is.numeric(x)) {
-    return(scale_x_reverse())
+    return(ggplot2::scale_x_reverse())
   }
 }
 
@@ -88,60 +229,45 @@ scale_x_limit_reverse <- function(x) {
 #' @export
 scale_y_limit_reverse <- function(x) {
   if (is.factor(x)) {
-    return(scale_y_discrete(limits = rev(levels(x))))
+    return(ggplot2::scale_y_discrete(limits = rev(levels(x))))
   }
   else if (is.character(x)) {
-    return(scale_y_discrete(limits = rev(sort(unique(x)))))
+    return(ggplot2::scale_y_discrete(limits = rev(sort(unique(x)))))
   }
   else if (is.numeric(x)) {
-    return(scale_y_reverse())
+    return(ggplot2::scale_y_reverse())
   }
 }
 
-#' Horizontal line 1
+#' Pair color/fill scales for two-level groups
 #'
-#' Draw a horizontal line 1.
+#' Create consistent two-color scales for variables that take **two levels**.
 #'
-#' @param logscale a logical whether to apply log scale.
-#' @param yintercept a numeric that control the position of the horizontal line.
-#' @param color a character specifying a color.
-#' @param linetype [linetype]
-#' @param ... other arguments to pass to \code{\link[ggplot2]{geom_hline}}.
-#' @return a ggproto object
+#' @param pair A vector containing the observed pair values.
+#' @param pair_levels A length-2 character vector giving level labels to expect.
+#'   Default: `c("1","2")`.
+#' @param color_type One of `"base"`, `"deep"`, `"base_inv"`, `"deep_inv"`.
+#' @param guide A guide function or its name; passed to [ggplot2::guides()] via the scale.
 #'
-#' @export
-geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
-                        linetype = "longdash", ...) {
-  geom_hline(yintercept = if (logscale) log(yintercept) else yintercept,
-             color = color, linetype = linetype, ...)
-}
-
-#' Create pair fill scales
-#'
-#' Create consistent pair fill scales
-#'
-#' @param pair a vector contains data of pair values
-#' @param pair_levels Two element vector expressing pair values (default, c("1", "2"))
-#' @param color_type a string of color type, `base`, `deep`, `base_inv` and `deep_inv`.
-#' @param guide a function used to create a guide or its name. See [guides()] for more information.
-#' @return a ggplot object
+#' @return A one-element list containing a scale object (`scale_color_manual()` or
+#'   `scale_fill_manual()`), chosen based on the contents of `pair`. If a level
+#'   outside `pair_levels` is seen, a gray fallback is used.
 #'
 #' @seealso [scale_pair_fill_manual()]
 #'
 #' @examples
-#' # pair values with `ggline()`
-#' \donttest{data <- expand.grid(agecat = c(1:10), gender = c("1", "2"))
-#' data$n <- c(1:10, 2:11)
-#' ggline(data, x = agecat, y = n, color = gender) +
-#'   scale_pair_color_manual(data$gender) +
-#'   theme_view(family = NULL)}
+#' \donttest{
+#' dat <- expand.grid(agecat = 1:10, gender = c("1","2"))
+#' dat$n <- c(1:10, 2:11)
 #'
-#' # pair values with `ggbar()`
-#' \donttest{data <- expand.grid(agecat = c(1:10), gender = c("1", "2"))
-#' data$n <- c(1:10, 2:11)
-#' ggbar(data, x = agecat, y = n, fill = gender) +
-#'   scale_pair_fill_manual(data$gender, color_type = "deep") +
-#'   theme_view(family = NULL)}
+#' ggline(dat, x = agecat, y = n, color = gender) +
+#'   scale_pair_color_manual(dat$gender) +
+#'   theme_view()
+#'
+#' ggbar(dat, x = agecat, y = n, fill = gender) +
+#'   scale_pair_fill_manual(dat$gender, color_type = "deep") +
+#'   theme_view()
+#' }
 #'
 #' @export
 scale_pair_color_manual <- function(
@@ -151,14 +277,14 @@ scale_pair_color_manual <- function(
 ) {
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
-  list(if (jaid::unilen(pair) == 2L) {
-    scale_color_manual(values = values, guide = guide)
+  list(if (length(unique(pair)) == 2L) {
+    ggplot2::scale_color_manual(values = values, guide = guide)
   } else if (unique(pair) == pair_levels[1L]) {
-    scale_color_manual(values = values[1L], guide = guide)
+    ggplot2::scale_color_manual(values = values[1L], guide = guide)
   } else if (unique(pair) == pair_levels[2L]) {
-    scale_color_manual(values = values[2L], guide = guide)
+    ggplot2::scale_color_manual(values = values[2L], guide = guide)
   } else {
-    scale_color_manual(values = "grey50", guide = guide)
+    ggplot2::scale_color_manual(values = "grey50", guide = guide)
   })
 }
 
@@ -169,17 +295,18 @@ scale_pair_fill_manual <- function(
     color_type = c("base", "deep", "base_inv", "deep_inv"),
     guide = "legend"
 ) {
-  jaid::assert_class(pair, c("character", "factor"))
+  if (!inherits(pair, c("character", "factor")))
+    stop("pair must be a character or factor.")
   choice <- match.arg(color_type)
   values <- get_two_colors(choice)
-  list(if (jaid::unilen(pair) == 2L) {
-    scale_fill_manual(values = values, guide = guide)
+  list(if (length(unique(pair)) == 2L) {
+    ggplot2::scale_fill_manual(values = values, guide = guide)
   } else if (unique(pair) == pair_levels[1L]) {
-    scale_fill_manual(values = values[1L], guide = guide)
+    ggplot2::scale_fill_manual(values = values[1L], guide = guide)
   } else if (unique(pair) == pair_levels[2L]) {
-    scale_fill_manual(values = values[2L], guide = guide)
+    ggplot2::scale_fill_manual(values = values[2L], guide = guide)
   } else {
-    scale_fill_manual(values = "grey50", guide = guide)
+    ggplot2::scale_fill_manual(values = "grey50", guide = guide)
   })
 }
 
@@ -216,7 +343,7 @@ scale_pair_fill_manual <- function(
 #'
 #' @export
 scale_x_break <- function(break_interval, ...) {
-  scale_x_continuous(
+  ggplot2::scale_x_continuous(
     breaks = function(x) seq(
       from = round(min(x, na.rm = TRUE), break_interval-1),
       to   = round(max(x, na.rm = TRUE), break_interval-1),
@@ -229,7 +356,8 @@ scale_x_break <- function(break_interval, ...) {
 #' @rdname scale_x_break
 #' @export
 scale_y_break <- function(break_interval, ...) {
-  scale_y_continuous(
+  break_interval <-
+  ggplot2::scale_y_continuous(
     breaks = function(y) seq(
       from = round(min(y, na.rm = TRUE), break_interval-1),
       to   = round(max(y, na.rm = TRUE), break_interval-1),
@@ -239,7 +367,7 @@ scale_y_break <- function(break_interval, ...) {
   )
 }
 
-
+# Color functions ---------------------------------------------------------
 
 get_two_colors <- function(choice = c("base", "deep", "base_inv", "deep_inv")) {
   choice <- match.arg(choice)
@@ -253,4 +381,73 @@ get_two_colors <- function(choice = c("base", "deep", "base_inv", "deep_inv")) {
 
 get_twelve_colors <- function() {
   return(local(.TWELVE_COLORS, envir = .GGSHORT_COLORS_ENV))
+}
+
+# Internal helper functions -----------------------------------------------
+
+#' Convert objects to gtable
+#'
+#' Internal helpers to coerce different plot objects into a [gtable::gtable].
+#'
+#' - `.as_grob()` accepts a ggplot, gtable, or grob and returns a gtable.
+#' - `.as_gtable()` does the same but is slightly stricter about gtable output.
+#'
+#' @param x A ggplot, gtable, or grob.
+#'
+#' @return A [gtable::gtable] object.
+#'
+#' @keywords internal
+#' @noRd
+.as_grob <- function(x) {
+  if (inherits(x, "gtable"))
+    return(x)
+  if (inherits(x, "grob"))
+    return(
+      gtable::gtable(unit(1, "null"), unit(1, "null")) |>
+        gtable::gtable_add_grob(x, t = 1, l = 1)
+    )
+  if (inherits(x, "ggplot"))
+    return(ggplot2::ggplotGrob(x))
+  stop("x must be a ggplot, gtable or grob.", call. = FALSE)
+}
+
+#' @rdname .as_grob
+#' @keywords internal
+#' @noRd
+.as_gtable <- function(x) {
+  if (inherits(x, "gtable"))
+    return(x)
+  if (inherits(x, "ggplot"))
+    return(ggplot2::ggplotGrob(x))
+  if (inherits(x, "grob")) {
+    gt <- gtable::gtable(
+      widths = grid::unit(1, "null"),
+      heights = grid::unit(1, "null")
+    )
+    return(gtable::gtable_add_grob(gt, x, t = 1, l = 1))
+  }
+  stop("x must be a ggplot, gtable or grob.", call. = FALSE)
+}
+
+#' Suppress PostScript font database warnings
+#'
+#' Run an expression while ignoring warnings of the form
+#' "font family ... not found in PostScript font database".
+#' Other warnings are passed through as usual.
+#'
+#' @param expr Expression to evaluate.
+#'
+#' @return The result of evaluating `expr`.
+#'
+#' @keywords internal
+#' @noRd
+.suppress_ps_font_warnings <- function(expr) {
+  withCallingHandlers(
+    expr,
+    warning = function(w) {
+      if (grepl("PostScript font database", conditionMessage(w))) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
 }

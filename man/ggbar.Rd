@@ -2,7 +2,7 @@
 % Please edit documentation in R/short.R
 \name{ggbar}
 \alias{ggbar}
-\title{ggplot bar functions only with frequently used arguments}
+\title{ggplot bar helper (frequently used arguments)}
 \usage{
 ggbar(
   data,
@@ -12,60 +12,56 @@ ggbar(
   ymax = NULL,
   ymin_err,
   ymax_err,
-  group = NULL,
+  color = NULL,
   fill = NULL,
+  group = NULL,
   text = NULL,
-  bar_color = "transparent",
   label,
-  label_family = "Comic Sans MS",
-  label_size = 4,
-  label_angle = 0,
-  label_hjust = 0.5,
-  label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6")
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = 0.5, color = "black")
 )
 }
 \arguments{
-\item{data}{a data.frame}
+\item{data}{A data.frame.}
 
-\item{x, y}{a name of axis \code{x} and \code{y}}
+\item{x, y}{Unquoted column names for x and y aesthetics.}
 
-\item{ymin, ymax}{\code{min} and \code{max} values of y for the height}
+\item{ymin, ymax}{Optional lower/upper bounds for y (rarely used for bars).}
 
-\item{ymin_err, ymax_err}{\code{min} and \code{max} values of y errors for the error bar}
+\item{ymin_err, ymax_err}{Optional lower/upper bounds for error bars.}
 
-\item{group, fill}{a name of variable to group and fill}
+\item{color, fill, group}{Optional columns mapped to the \code{color}, \code{fill} and
+\code{group} aesthetics.}
 
-\item{text}{a name of variable or expression for ggplotly hover text}
+\item{text}{Optional column/expression for tooltip text (e.g., ggplotly).}
 
-\item{bar_color}{a string specifying bar color}
+\item{label}{Unquoted column/expression to use as text label.}
 
-\item{label}{a name of variable or expression to label}
-
-\item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
-
-\item{label_hjust, label_vjust}{a numeric specifying label horizontal and vertical
-adjustment}
-
-\item{label_color}{a string specifying label color}
+\item{label_args}{A named list of text style options for \code{geom_text()}.
+Supported names: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
 }
 \value{
-a ggplot object
+A ggplot object.
 }
 \description{
-Shortly simplify the grammar of ggplot to the functions only with frequently
-used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggmix}, \code{ggpie}, \code{ggtable})
+Quickly build bar charts with common options. Supply \strong{unquoted}
+column names.
 }
 \examples{
-# bar
-\donttest{set.seed(123)
-data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
-data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-ggbar(data = data, x = x, y = y, fill = fill, label = y, label_vjust = -.25,
-      label_family = NA) +
-  theme_view(family = NULL)}
+\donttest{
+set.seed(123)
+df <- expand.grid(x = c("A","B","C"), fill = c("X","Y","Z"))
+n <- nrow(df); df$y <- sample(10:30, n, TRUE)
+se <- runif(n, 1.5, 4)
+df$ymin_err <- pmax(df$y - se, 0); df$ymax_err <- df$y + se
+ggbar(df, x = x, y = y, fill = fill,
+      ymin_err = ymin_err, ymax_err = ymax_err,
+      label = y, label_args = list(vjust = -0.25)) +
+  theme_view()
+}
 
 }
 \seealso{
-\code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggdensity]{ggdensity()}},
+\code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
 }

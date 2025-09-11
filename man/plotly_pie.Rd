@@ -13,23 +13,28 @@ plotly_pie(
 )
 }
 \arguments{
-\item{data}{a grouping data frame}
+\item{data}{A data frame.}
 
-\item{labels}{a name of variable you want to group}
+\item{labels}{Character string: column in \code{data} used for slice labels.}
 
-\item{values}{a name of variable specifying values}
+\item{values}{Character string: numeric column in \code{data} used for slice sizes.}
 
-\item{texttemplate}{a string specifying a text template}
+\item{texttemplate}{Plotly \code{texttemplate}. Default:
+\code{"\%{label}<br>\%{value}<br>(\%{percent})"}.}
 
-\item{hovertemplate}{a string specifying a hover template}
+\item{hovertemplate}{Plotly \code{hovertemplate}. Default:
+\code{"\%{label}<br>\%{value}<br>(\%{percent})<extra></extra>"}.}
+}
+\value{
+A plotly object.
 }
 \description{
-Draw a Plotly pie plot using grouping data.
+Build a Plotly pie chart (column names as character).
 }
 \examples{
-# plotly pie
-\donttest{set.seed(123)
-data <- data.frame(labels = c("A", "B", "C"), values = c(300, 150, 50))
-plotly_pie(data = data, labels = labels, values = values)}
+\donttest{
+df <- data.frame(labels = c("A", "B", "C"), values = c(300, 150, 50))
+plotly_pie(df, labels = "labels", values = "values")
+}
 
 }

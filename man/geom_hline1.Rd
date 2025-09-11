@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{geom_hline1}
 \alias{geom_hline1}
-\title{Horizontal line 1}
+\title{Draw a horizontal reference line at 1}
 \usage{
 geom_hline1(
   logscale = FALSE,
@@ -13,19 +13,19 @@ geom_hline1(
 )
 }
 \arguments{
-\item{logscale}{a logical whether to apply log scale.}
+\item{logscale}{Logical; if \code{TRUE}, interpret \code{yintercept} on the log scale.}
 
-\item{yintercept}{a numeric that control the position of the horizontal line.}
+\item{yintercept}{Numeric position of the reference line. Default: \code{1}.}
 
-\item{color}{a character specifying a color.}
+\item{color}{Line color. Default: \code{"red"}.}
 
-\item{linetype}{\link{linetype}}
+\item{linetype}{Line type; see \code{\link[ggplot2:geom_abline]{ggplot2::geom_hline()}}. Default: \code{"longdash"}.}
 
-\item{...}{other arguments to pass to \code{\link[ggplot2]{geom_hline}}.}
+\item{...}{Additional arguments passed to \code{\link[ggplot2:geom_abline]{ggplot2::geom_hline()}}.}
 }
 \value{
-a ggproto object
+A \code{ggplot2} layer.
 }
 \description{
-Draw a horizontal line 1.
+Add a horizontal line at y = 1 (or \code{log(1)} if \code{logscale = TRUE}).
 }

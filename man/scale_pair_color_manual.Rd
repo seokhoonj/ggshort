@@ -3,7 +3,7 @@
 \name{scale_pair_color_manual}
 \alias{scale_pair_color_manual}
 \alias{scale_pair_fill_manual}
-\title{Create pair fill scales}
+\title{Pair color/fill scales for two-level groups}
 \usage{
 scale_pair_color_manual(
   pair,
@@ -20,34 +20,36 @@ scale_pair_fill_manual(
 )
 }
 \arguments{
-\item{pair}{a vector contains data of pair values}
+\item{pair}{A vector containing the observed pair values.}
 
-\item{pair_levels}{Two element vector expressing pair values (default, c("1", "2"))}
+\item{pair_levels}{A length-2 character vector giving level labels to expect.
+Default: \code{c("1","2")}.}
 
-\item{color_type}{a string of color type, \code{base}, \code{deep}, \code{base_inv} and \code{deep_inv}.}
+\item{color_type}{One of \code{"base"}, \code{"deep"}, \code{"base_inv"}, \code{"deep_inv"}.}
 
-\item{guide}{a function used to create a guide or its name. See \code{\link[=guides]{guides()}} for more information.}
+\item{guide}{A guide function or its name; passed to \code{\link[ggplot2:guides]{ggplot2::guides()}} via the scale.}
 }
 \value{
-a ggplot object
+A one-element list containing a scale object (\code{scale_color_manual()} or
+\code{scale_fill_manual()}), chosen based on the contents of \code{pair}. If a level
+outside \code{pair_levels} is seen, a gray fallback is used.
 }
 \description{
-Create consistent pair fill scales
+Create consistent two-color scales for variables that take \strong{two levels}.
 }
 \examples{
-# pair values with `ggline()`
-\donttest{data <- expand.grid(agecat = c(1:10), gender = c("1", "2"))
-data$n <- c(1:10, 2:11)
-ggline(data, x = agecat, y = n, color = gender) +
-  scale_pair_color_manual(data$gender) +
-  theme_view(family = NULL)}
+\donttest{
+dat <- expand.grid(agecat = 1:10, gender = c("1","2"))
+dat$n <- c(1:10, 2:11)
 
-# pair values with `ggbar()`
-\donttest{data <- expand.grid(agecat = c(1:10), gender = c("1", "2"))
-data$n <- c(1:10, 2:11)
-ggbar(data, x = agecat, y = n, fill = gender) +
-  scale_pair_fill_manual(data$gender, color_type = "deep") +
-  theme_view(family = NULL)}
+ggline(dat, x = agecat, y = n, color = gender) +
+  scale_pair_color_manual(dat$gender) +
+  theme_view()
+
+ggbar(dat, x = agecat, y = n, fill = gender) +
+  scale_pair_fill_manual(dat$gender, color_type = "deep") +
+  theme_view()
+}
 
 }
 \seealso{

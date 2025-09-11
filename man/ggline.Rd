@@ -2,7 +2,7 @@
 % Please edit documentation in R/short.R
 \name{ggline}
 \alias{ggline}
-\title{ggplot line functions only with frequently used arguments}
+\title{ggplot line helper (frequently used arguments)}
 \usage{
 ggline(
   data,
@@ -12,59 +12,60 @@ ggline(
   ymax = NULL,
   ymin_err,
   ymax_err,
-  group = NULL,
   color = NULL,
+  fill = NULL,
+  group = NULL,
   linetype = NULL,
   text = NULL,
   label,
-  label_family = "Comic Sans MS",
-  label_size = 4,
-  label_angle = 0,
-  label_hjust = 0.5,
-  label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6")
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = 0.5, color = "black")
 )
 }
 \arguments{
-\item{data}{a data.frame}
+\item{data}{A data.frame.}
 
-\item{x, y}{a name of axis \code{x} and \code{y}}
+\item{x, y}{Unquoted column names mapped to the x and y aesthetics.}
 
-\item{ymin, ymax}{\code{min} and \code{max} values of y for the height}
+\item{ymin, ymax}{Optional lower/upper bounds for y (rare in pure line charts).}
 
-\item{ymin_err, ymax_err}{\code{min} and \code{max} values of y errors for the error bar}
+\item{ymin_err, ymax_err}{Optional lower/upper bounds for error bars.}
 
-\item{group, color}{a name of variable to group and color}
+\item{color, fill, group}{Optional columns mapped to the \code{color}, \code{fill} and
+\code{group} aesthetics.}
 
-\item{linetype}{a name of linetype variable}
+\item{linetype}{Optional column for line type mapping.}
 
-\item{text}{a name of variable or expression for ggplotly hover text}
+\item{text}{Optional column/expression for tooltip text (e.g., with plotly).}
 
-\item{label}{a name of variable or expression to label}
+\item{label}{Optional unquoted column/expression used for text labels.}
 
-\item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
-
-\item{label_hjust, label_vjust}{a numeric specifying label horizontal and vertical
-adjustment}
-
-\item{label_color}{a string specifying label color}
+\item{label_args}{A named list of \code{geom_text()} style options.
+Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
 }
 \value{
-a ggplot object
+A ggplot object.
 }
 \description{
-Shortly simplify the grammar of ggplot to the functions only with frequently
-used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggmix}, \code{ggpie}, \code{ggtable})
+Quickly draw line charts with the most common options. Supply \strong{unquoted}
+column names for aesthetics. Supports optional error bars and text labels.
+Companion helpers: \code{ggbar}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggdensity},
+\code{ggpie}, \code{ggmix}, \code{ggtable}.
 }
 \examples{
-# line
-\donttest{set.seed(123)
-data <- expand.grid(x = 1:20, color = c("X", "Y", "Z"))
-data$y <- sample(1:10, size = nrow(data), replace = TRUE)
-ggline(data = data, x = x, y = y, color = color) +
-  theme_view(family = NULL)}
+\donttest{
+set.seed(123)
+df <- expand.grid(x = 1:20, color = c("X","Y","Z"))
+df$y <- sample(1:10, nrow(df), TRUE)
+
+ggline(
+  data = df, x = x, y = y, color = color,
+  label = y, label_args = list(vjust = -0.4, size = 3)
+) + theme_view()
+}
 
 }
 \seealso{
-\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggdensity]{ggdensity()}},
+\code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
 }

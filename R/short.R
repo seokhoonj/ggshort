@@ -1,376 +1,853 @@
-#' ggplot bar functions only with frequently used arguments
+#' ggplot bar helper (frequently used arguments)
 #'
-#' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
+#' Quickly build bar charts with common options. Supply **unquoted**
+#' column names.
 #'
-#' @param data a data.frame
-#' @param x,y  a name of axis `x` and `y`
-#' @param ymin,ymax `min` and `max` values of y for the height
-#' @param ymin_err,ymax_err `min` and `max` values of y errors for the error bar
-#' @param group,fill a name of variable to group and fill
-#' @param text a name of variable or expression for ggplotly hover text
-#' @param bar_color a string specifying bar color
-#' @param label a name of variable or expression to label
-#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
-#' adjustment
-#' @param label_color a string specifying label color
-#' @return a ggplot object
+#' @param data A data.frame.
+#' @param x,y Unquoted column names for x and y aesthetics.
+#' @param ymin,ymax Optional lower/upper bounds for y (rarely used for bars).
+#' @param ymin_err,ymax_err Optional lower/upper bounds for error bars.
+#' @param color,fill,group Optional columns mapped to the `color`, `fill` and
+#'   `group` aesthetics.
+#' @param text Optional column/expression for tooltip text (e.g., ggplotly).
+#' @param label Unquoted column/expression to use as text label.
+#' @param label_args A named list of text style options for `geom_text()`.
+#'   Supported names: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #'
-#' @seealso [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()], [ggtable()]
+#' @return A ggplot object.
 #'
-#' @examples
-#' # bar
-#' \donttest{set.seed(123)
-#' data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
-#' data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-#' ggbar(data = data, x = x, y = y, fill = fill, label = y, label_vjust = -.25,
-#'       label_family = NA) +
-#'   theme_view(family = NULL)}
-#'
-#' @export
-ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
-                  group = NULL, fill = NULL, text = NULL, bar_color = "transparent",
-                  label, label_family = "Comic Sans MS", label_size = 4,
-                  label_angle = 0, label_hjust = .5, label_vjust = .5,
-                  label_color = c("#000000", "#FAF9F6")) {
-  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
-                            group = group, fill = fill, text = text)
-  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
-  ggplot(data = data, aes(!!!quo_maps)) +
-    geom_bar(stat = "identity", position = position_dodge2(preserve = "single"),
-             color = bar_color) +
-    list(if (!(missing(ymin_err) & missing(ymax_err))) {
-      quo_errs <- rlang::enquos(x = x, ymin = ymin_err, ymax = ymax_err)
-      geom_errorbar(aes(!!!quo_errs),
-                    position = position_dodge2(preserve = "single"),
-                    alpha = .5)
-    }) +
-    list(if (!missing(label)) {
-      quo_lbl <- rlang::enquos(label = label)
-      geom_text(aes(!!!quo_lbl),
-                position = position_dodge2(width = .9, preserve = "single"),
-                family = label_family, size = label_size, angle = label_angle,
-                hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
-    })
-}
-
-#' ggplot line functions only with frequently used arguments
-#'
-#' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
-#'
-#' @param data a data.frame
-#' @param x,y a name of axis `x` and `y`
-#' @param ymin,ymax `min` and `max` values of y for the height
-#' @param ymin_err,ymax_err `min` and `max` values of y errors for the error bar
-#' @param group,color a name of variable to group and color
-#' @param linetype a name of linetype variable
-#' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression to label
-#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
-#' adjustment
-#' @param label_color a string specifying label color
-#' @return a ggplot object
-#' @seealso [ggbar()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()], [ggtable()]
+#' @seealso [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggdensity()],
+#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()]
 #'
 #' @examples
-#' # line
-#' \donttest{set.seed(123)
-#' data <- expand.grid(x = 1:20, color = c("X", "Y", "Z"))
-#' data$y <- sample(1:10, size = nrow(data), replace = TRUE)
-#' ggline(data = data, x = x, y = y, color = color) +
-#'   theme_view(family = NULL)}
-#'
-#' @export
-ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
-                   group = NULL, color = NULL, linetype = NULL,
-                   text = NULL, label, label_family = "Comic Sans MS",
-                   label_size = 4, label_angle = 0, label_hjust = .5,
-                   label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
-                            group = group, color = color, linetype = linetype,
-                            text = text)
-  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
-  ggplot(data = data, aes(!!!quo_maps)) +
-    geom_line() +
-    list(if (!(missing(ymin_err) & missing(ymax_err))) {
-      quo_errs <- rlang::enquos(x = x, ymin = ymin_err, ymax = ymax_err)
-      geom_errorbar(aes(!!!quo_errs),
-                    position = position_dodge2(preserve = "single"),
-                    alpha = .5)
-    }) +
-    list(if (!missing(label)) {
-      quo_lbl <- rlang::enquos(label = label)
-      geom_text(aes(!!!quo_lbl),
-                position = position_dodge2(width = .9, preserve = "single"),
-                family = label_family, size = label_size, angle = label_angle,
-                hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
-    })
-}
-
-#' ggplot point functions only with frequently used arguments
-#'
-#' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
-#'
-#' @param data a data.frame
-#' @param x,y a name of axis `x` and `y`
-#' @param ymin,ymax `min` and `max` values of y for the height
-#' @param group,color a name of variable to group and color
-#' @param alpha a name of variable to make transparent
-#' @param shape a name of point shape variable
-#' @param size a name of point size variable
-#' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression to label
-#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
-#' adjustment
-#' @param label_color a string specifying label color
-#' @return a ggplot object
-#' @seealso [ggbar()], [ggline()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()], [ggtable()]
-#'
-#' @examples
-#' # point
-#' \donttest{set.seed(123)
-#' data <- expand.grid(x = 1:10, y = 1:10)
-#' data$shape <- sample(x = c("A", "B", "C"), size = 10, replace = TRUE)
-#' ggpoint(data = data, x = x, y = y, shape = shape, label = y, label_family = NA) +
-#'   theme_view(family = NA)
-#'  ggjitter(data = data, x = x, y = y, shape = shape, size = y, label = shape,
-#'           color = shape, label_family = NA) +
-#'   theme_view(family = NULL)
+#' \donttest{
+#' set.seed(123)
+#' df <- expand.grid(x = c("A","B","C"), fill = c("X","Y","Z"))
+#' n <- nrow(df); df$y <- sample(10:30, n, TRUE)
+#' se <- runif(n, 1.5, 4)
+#' df$ymin_err <- pmax(df$y - se, 0); df$ymax_err <- df$y + se
+#' ggbar(df, x = x, y = y, fill = fill,
+#'       ymin_err = ymin_err, ymax_err = ymax_err,
+#'       label = y, label_args = list(vjust = -0.25)) +
+#'   theme_view()
 #' }
 #'
 #' @export
-ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
-                    color = NULL, shape = NULL, size = NULL, alpha = NULL,
-                    text = NULL, label, label_family = "Comic Sans MS",
-                    label_size = 4, label_angle = 0, label_hjust = .5,
-                    label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
-  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
-  quo_maps2 <- rlang::enquos(group = group, color = color, shape = shape,
-                             size = size, alpha = alpha)
-  quo_maps2 <- quo_maps2[!sapply(quo_maps2, rlang::quo_is_null)]
-  ggplot(data = data, aes(!!!quo_maps)) +
-    geom_point(aes(!!!quo_maps2)) +
-    list(if (!missing(label)) {
-      quo_lbl <- rlang::enquos(label = label)
-      geom_text(aes(!!!quo_lbl),
-                position = position_identity(),
-                family = label_family, size = label_size, angle = label_angle,
-                hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
-    })
+ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
+                  color = NULL, fill = NULL, group = NULL, text = NULL,
+                  label,
+                  label_args = list(
+                    family = getOption("ggshort.font"),
+                    size   = 4,
+                    angle  = 0,
+                    hjust  = 0.5,
+                    vjust  = 0.5,
+                    color  = "black"
+                  )) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, y = y, ymin = ymin, ymax = ymax,
+    color = color, group = group, fill = fill,
+    text = text
+  ))
+
+  position <- ggplot2::position_dodge2(preserve = "single")
+
+  p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_bar(
+      stat = "identity",
+      position = position
+    )
+
+  if (!(missing(ymin_err) && missing(ymax_err))) {
+    quos_err <- .valid_enquos(rlang::enquos(
+      x = x, ymin = ymin_err, ymax = ymax_err
+    ))
+    p <- p + ggplot2::geom_errorbar(
+      ggplot2::aes(!!!quos_err),
+      position = position,
+      alpha = .5
+    )
+  }
+
+  if (!missing(label)) {
+    args <- .modify_label_args(label_args)
+    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    position <- ggplot2::position_dodge2(width = .9, preserve = "single")
+    p <- p + ggplot2::geom_text(
+      ggplot2::aes(!!!quos_label),
+      position = position,
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    )
+  }
+
+  p
+}
+
+#' ggplot line helper (frequently used arguments)
+#'
+#' Quickly draw line charts with the most common options. Supply **unquoted**
+#' column names for aesthetics. Supports optional error bars and text labels.
+#' Companion helpers: `ggbar`, `ggpoint`, `ggjitter`, `ggscatter`, `ggdensity`,
+#' `ggpie`, `ggmix`, `ggtable`.
+#'
+#' @param data A data.frame.
+#' @param x,y Unquoted column names mapped to the x and y aesthetics.
+#' @param ymin,ymax Optional lower/upper bounds for y (rare in pure line charts).
+#' @param ymin_err,ymax_err Optional lower/upper bounds for error bars.
+#' @param color,fill,group Optional columns mapped to the `color`, `fill` and
+#'   `group` aesthetics.
+#' @param linetype Optional column for line type mapping.
+#' @param text Optional column/expression for tooltip text (e.g., with plotly).
+#' @param label Optional unquoted column/expression used for text labels.
+#' @param label_args A named list of `geom_text()` style options.
+#'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#'
+#' @return A ggplot object.
+#'
+#' @seealso [ggbar()], [ggpoint()], [ggjitter()], [ggscatter()], [ggdensity()],
+#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'
+#' @examples
+#' \donttest{
+#' set.seed(123)
+#' df <- expand.grid(x = 1:20, color = c("X","Y","Z"))
+#' df$y <- sample(1:10, nrow(df), TRUE)
+#'
+#' ggline(
+#'   data = df, x = x, y = y, color = color,
+#'   label = y, label_args = list(vjust = -0.4, size = 3)
+#' ) + theme_view()
+#' }
+#'
+#' @export
+ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
+                   color = NULL, fill = NULL, group = NULL,
+                   linetype = NULL, text = NULL,
+                   label,
+                   label_args = list(
+                     family = getOption("ggshort.font"),
+                     size   = 4,
+                     angle  = 0,
+                     hjust  = 0.5,
+                     vjust  = 0.5,
+                     color  = "black"
+                   )) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, y = y, ymin = ymin, ymax = ymax,
+    color = color, fill = fill, group = group,
+    linetype = linetype,
+    text = text
+  ))
+
+  p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_line()
+
+  if (!(missing(ymin_err) && missing(ymax_err))) {
+    quos_err <- .valid_enquos(rlang::enquos(
+      x = x, ymin = ymin_err, ymax = ymax_err
+    ))
+    position <- ggplot2::position_dodge2(preserve = "single")
+    p <- p + ggplot2::geom_errorbar(
+      ggplot2::aes(!!!quos_err),
+      position = position,
+      alpha = .5
+    )
+  }
+
+  if (!missing(label)) {
+    args <- .modify_label_args(label_args)
+    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    position <- ggplot2::position_dodge2(width = .9, preserve = "single")
+    p <- p + ggplot2::geom_text(
+      ggplot2::aes(!!!quos_label),
+      position = position,
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    )
+  }
+
+  p
+}
+
+#' ggplot point helpers (frequently used arguments)
+#'
+#' Build point-based plots (points, jittered points, scatter with extras) with
+#' the most common options. Supply **unquoted** column names for aesthetics.
+#' These helpers share a consistent interface and `label_args` for text styling.
+#'
+#' @section Functions:
+#' - **ggpoint()**: Basic point plot (`geom_point()`).
+#' - **ggjitter()**: Jittered point plot (`geom_jitter()`).
+#' - **ggscatter()**: Scatter plot with optional jitter toggle, median/mean
+#'   guides, and convex hull.
+#'
+#' @param data A data.frame.
+#' @param x,y Unquoted column names mapped to x and y.
+#' @param ymin,ymax Optional lower/upper y bounds (rarely used for pure points).
+#' @param color,fill,group Optional columns mapped to the `color`, `fill` and
+#'   `group` aesthetics.
+#' @param alpha Optional column mapped to point transparency.
+#' @param shape Optional column mapped to point shape.
+#' @param size Optional column mapped to point size.
+#' @param text Optional column/expression used for tooltip text (e.g., plotly).
+#' @param label Optional unquoted column/expression for text labels.
+#' @param label_args A named list of `geom_text()` style options.
+#'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#' @param show_mean Logical; if `TRUE`, add group/global mean point(s) using
+#'   [stat_mean_point()].
+#' @param show_median Logical; if `TRUE`, add group/global median point(s) using
+#'   [stat_median_point()].
+#' @param show_ellipse Logical; if `TRUE`, add confidence ellipse(s) per group
+#'   via [ggplot2::stat_ellipse()] (default 90% level).
+#' @param show_chull Logical; if `TRUE`, draw convex hull(s) per group using
+#'   [stat_chull()].
+#'
+#' @return A ggplot object.
+#'
+#' @seealso [ggbar()], [ggline()], [ggjitter()], [ggscatter()], [ggdensity()],
+#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'
+#' @examples
+#' \donttest{
+#' # Basic points: Sepal.Length vs Petal.Width
+#' ggpoint(iris, x = Sepal.Length, y = Petal.Width,
+#'         color = Species, shape = Species,
+#'         label = Species,
+#'         label_args = list(size = 3, vjust = -0.5)) +
+#'   theme_view()
+#'
+#' # Jittered points
+#' ggjitter(iris, x = Species, y = Petal.Width,
+#'          color = Species, shape = Species) +
+#'   theme_view()
+#'
+#' # Scatter with convex hulls per species
+#' ggscatter(iris, x = Sepal.Length, y = Petal.Width,
+#'           color = Species, fill = Species,
+#'           show_median = TRUE, show_chull = TRUE) +
+#'   theme_view()
+#' }
+#'
+#' @name ggpoint
+#' @export
+ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL,
+                    color = NULL, fill = NULL, group = NULL,
+                    shape = NULL, size = NULL, alpha = NULL,
+                    text = NULL,
+                    label,
+                    label_args = list(
+                      family = getOption("ggshort.font"),
+                      size   = 4,
+                      angle  = 0,
+                      hjust  = 0.5,
+                      vjust  = 0.5,
+                      color  = "black"
+                    ),
+                    show_mean = FALSE,
+                    show_median = FALSE,
+                    show_ellipse = FALSE,
+                    show_chull = FALSE) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, y = y, ymin = ymin, ymax = ymax, text = text
+  ))
+  quos_map2 <- .valid_enquos(rlang::enquos(
+    color = color, fill = fill, group = group,
+    shape = shape, size = size, alpha = alpha
+  ))
+
+  p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_point(ggplot2::aes(!!!quos_map2))
+
+  if (!missing(label)) {
+    args <- .modify_label_args(label_args)
+    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    position <- ggplot2::position_identity()
+    p <- p + ggplot2::geom_text(
+      ggplot2::aes(!!!quos_label),
+      position = position,
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    )
+  }
+
+  quos_point <- .valid_enquos(rlang::enquos(group = group))
+
+  if (show_mean)
+    p <- p +
+      stat_mean_point(stroke = 1.5) +
+      stat_mean_point(ggplot2::aes(!!!quos_point),
+                      color = "red", stroke = 1)
+
+  if (show_median)
+    p <- p +
+      stat_median_point(stroke = 1.5) +
+      stat_median_point(ggplot2::aes(!!!quos_point),
+                        color = "red", stroke = 1)
+
+  if (show_ellipse) {
+    quos_ellipse <- .valid_enquos(rlang::enquos(
+      color = color, group = group
+    ))
+    p <- p + ggplot2::stat_ellipse(
+      ggplot2::aes(!!!quos_ellipse), level = .9, alpha = .9
+    )
+  }
+
+  if (show_chull) {
+    quos_chull <- .valid_enquos(rlang::enquos(
+      group = group, color = color, fill = fill,
+      shape = shape, size = size
+    ))
+    p <- p + stat_chull(ggplot2::aes(!!!quos_chull))
+  }
+
+  p
 }
 
 #' @rdname ggpoint
 #' @export
-ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
-                     color = NULL, shape = NULL, size = NULL, alpha = NULL,
-                     text = NULL, label, label_family = "Comic Sans MS",
-                     label_size = 4, label_angle = 0, label_hjust = .5,
-                     label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
-  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
-  quo_maps2 <- rlang::enquos(group = group, color = color, shape = shape,
-                             size = size, alpha = alpha)
-  quo_maps2 <- quo_maps2[!sapply(quo_maps2, rlang::quo_is_null)]
-  ggplot(data = data, aes(!!!quo_maps)) +
-    geom_jitter(aes(!!!quo_maps2)) +
-    list(if (!missing(label)) {
-      quo_lbl <- rlang::enquos(label = label)
-      geom_text(aes(!!!quo_lbl),
-                position = position_jitter(),
-                family = label_family, size = label_size, angle = label_angle,
-                hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
-    })
+ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL,
+                     color = NULL, fill = NULL, group = NULL,
+                     shape = NULL, size = NULL, alpha = NULL,
+                     text = NULL,
+                     label,
+                     label_args = list(
+                       family = getOption("ggshort.font"),
+                       size   = 4,
+                       angle  = 0,
+                       hjust  = 0.5,
+                       vjust  = 0.5,
+                       color  = "black"
+                     ),
+                     show_mean = FALSE,
+                     show_median = FALSE,
+                     show_ellipse = FALSE,
+                     show_chull = FALSE) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, y = y, ymin = ymin, ymax = ymax, text = text
+  ))
+  quos_map2 <- .valid_enquos(rlang::enquos(
+    color = color, fill = fill, group = group,
+    shape = shape, size = size, alpha = alpha
+  ))
+
+  p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_jitter(ggplot2::aes(!!!quos_map2))
+
+  if (!missing(label)) {
+    args <- .modify_label_args(label_args)
+    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    position <- ggplot2::position_jitter()
+    p <- p + ggplot2::geom_text(
+      ggplot2::aes(!!!quos_label),
+      position = position,
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    )
+  }
+
+  quos_point <- .valid_enquos(rlang::enquos(group = group))
+
+  if (show_mean)
+    p <- p +
+      stat_mean_point(stroke = 1.5) +
+      stat_mean_point(ggplot2::aes(!!!quos_point),
+                      color = "red", stroke = 1)
+
+  if (show_median)
+    p <- p +
+      stat_median_point(stroke = 1.5) +
+      stat_median_point(ggplot2::aes(!!!quos_point),
+                        color = "red", stroke = 1)
+
+  if (show_ellipse) {
+    quos_ellipse <- .valid_enquos(rlang::enquos(
+      color = color, group = group
+    ))
+    p <- p + ggplot2::stat_ellipse(
+      ggplot2::aes(!!!quos_ellipse),
+      level = .9, alpha = .9
+    )
+  }
+
+  if (show_chull) {
+    quos_chull <- .valid_enquos(rlang::enquos(
+      color = color, fill = fill, group = group,
+      shape = shape, size = size
+    ))
+    p <- p + stat_chull(ggplot2::aes(!!!quos_chull))
+  }
+
+  p
 }
 
 #' @rdname ggpoint
-#' @param fill a name of variable to fill for covex hull algorithm
-#' @param jitter `ggscatter()` only, a logical whether to use `jitter`
-#' @param median a logical whether to use median to draw a horizontal and vertical line
+#' @param jitter For `ggscatter()` only: logical; if `TRUE`, use jittered points.
 #' @export
-ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
-                      color = NULL, fill = NULL, shape = NULL, size = NULL,
-                      alpha = NULL, text = NULL, label,
-                      label_family = "Comic Sans MS", label_size = 4,
-                      label_angle = 0, label_hjust = .5, label_vjust = .5,
-                      label_color = c("#000000", "#FAF9F6"), jitter = FALSE,
-                      median = FALSE) {
-  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax, text = text)
-  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
+ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL,
+                      color = NULL, fill = NULL, group = NULL,
+                      shape = NULL, size = NULL, alpha = NULL, text = NULL,
+                      label,
+                      label_args = list(
+                        family = getOption("ggshort.font"),
+                        size   = 4,
+                        angle  = 0,
+                        hjust  = 0.5,
+                        vjust  = 0.5,
+                        color  = "black"
+                      ),
+                      jitter = FALSE,
+                      show_mean = FALSE,
+                      show_median = FALSE,
+                      show_ellipse = FALSE,
+                      show_chull = FALSE) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, y = y, ymin = ymin, ymax = ymax, text = text
+  ))
+  quos_map2 <- .valid_enquos(rlang::enquos(
+    color = color, fill = fill, group = group,
+    shape = shape, size = size, alpha = alpha
+  ))
 
-  quo_maps2 <- rlang::enquos(group = group, color = color, shape = shape,
-                             size = size, alpha = alpha)
-  quo_maps2 <- quo_maps2[!sapply(quo_maps2, rlang::quo_is_null)]
+  geom_fun <- if (jitter) ggplot2::geom_jitter else ggplot2::geom_point
 
-  quo_maps_chull <- rlang::enquos(group = group, color = color, fill = fill,
-                                  shape = shape, size = size)
-  quo_maps_chull <- quo_maps_chull[!sapply(quo_maps_chull, rlang::quo_is_null)]
+  p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
+    geom_fun(ggplot2::aes(!!!quos_map2))
 
-  quo_maps_point <- rlang::enquos(group = group)
-  quo_maps_point <- quo_maps_point[!sapply(quo_maps_point, rlang::quo_is_null)]
-
-  geom_fun <- if (jitter) geom_jitter else geom_point
-  ggplot(data = data, aes(!!!quo_maps)) +
-    geom_fun(aes(!!!quo_maps2)) +
-    list(if (!missing(label)) {
-      quo_lbl <- rlang::enquos(label = label)
-      position <- if (jitter) position_jitter() else position_identity()
-      geom_text(aes(!!!quo_lbl),
-                position = position,
-                family = label_family, size = label_size, angle = label_angle,
-                hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
-    }) +
-    list(if (median) {
-      list(
-        stat_median_line(),
-        stat_median_point(stroke = 1.5),
-        stat_median_point(aes(!!!quo_maps_point), color = "red", stroke = 1)
-      )
+  if (!missing(label)) {
+    args <- .modify_label_args(label_args)
+    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    position <- if (jitter) {
+      ggplot2::position_jitter()
     } else {
-      list(
-        stat_mean_line(),
-        stat_mean_point(stroke = 1.5),
-        stat_mean_point(aes(!!!quo_maps_point), color = "red", stroke = 1)
-      )
-    }) +
-    stat_chull(aes(!!!quo_maps_chull)) +
-    scale_comma()
+      ggplot2::position_identity()
+    }
+    p <- p + ggplot2::geom_text(
+      ggplot2::aes(!!!quos_label),
+      position = position,
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    )
+  }
+
+  quos_point <- .valid_enquos(rlang::enquos(group = group))
+
+  if (show_mean)
+    p <- p +
+      stat_mean_point(stroke = 1.5) +
+      stat_mean_point(ggplot2::aes(!!!quos_point),
+                      color = "red", stroke = 1)
+
+  if (show_median)
+    p <- p +
+      stat_median_point(stroke = 1.5) +
+      stat_median_point(ggplot2::aes(!!!quos_point),
+                        color = "red", stroke = 1)
+
+  if (show_ellipse) {
+    quos_ellipse <- .valid_enquos(rlang::enquos(
+      color = color, group = group
+    ))
+    p <- p + ggplot2::stat_ellipse(
+      ggplot2::aes(!!!quos_ellipse),
+      level = .9, alpha = .9
+    )
+  }
+
+  if (show_chull) {
+    quos_chull <- .valid_enquos(rlang::enquos(
+      color = color, fill = fill, group = group,
+      shape = shape, size = size
+    ))
+    p <- p + stat_chull(ggplot2::aes(!!!quos_chull))
+  }
+
+  p
 }
 
-#' ggplot mix functions only with frequently used arguments
+#' ggplot density helper (frequently used arguments)
 #'
-#' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
+#' Quickly draw kernel density curves with common options. Supply **unquoted**
+#' column names for aesthetics. Supports optional mean/median guides and
+#' quantile lines/labels.
 #'
-#' @param data a data.frame
-#' @param x,y a name of axis `x` and `y`
-#' @param ymin,ymax `min` and `max` values of y for the height
-#' @param group,fill a name of variable to group and fill
-#' @param bar_color a string specifying bar color
-#' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression to label
-#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
-#' adjustment
-#' @param label_color a string specifying label color
-#' @param reverse a boolean whether to reverse the order of the `y` variable
-#' @return a ggplot object
-#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggpie()], [ggtable()]
+#' @param data A data.frame.
+#' @param x Unquoted column mapped to the x aesthetic.
+#' @param color,fill,group Optional columns mapped to the corresponding
+#'   aesthetics.
+#' @param probs Numeric vector of probabilities in \[0,1\] for quantile guides
+#'   (used when `show_vline`/`show_label` are `TRUE`). Default `0.95`.
+#' @param na.rm Logical; remove missing values silently if `TRUE`. Default `TRUE`.
+#' @param y Numeric y position for quantile labels (used by `show_label`).
+#'   Default `Inf` (top of panel).
+#' @param show_mean,show_median Logical; add mean/median vertical guides
+#'   (via `stat_mean_vline()` / `stat_median_vline()`). Defaults `FALSE`.
+#' @param show_vline Logical; draw vertical quantile line(s) at `probs`
+#'   (via `stat_density_quantile_vline()`). Default `FALSE`.
+#' @param show_label Logical; add quantile label(s) at `probs`
+#'   (via `stat_density_quantile()`). Default `TRUE`.
+#' @param label_args A named list of `geom_text()` style options.
+#'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#'
+#' @return A ggplot object.
+#'
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
+#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()],
+#'   [stat_density_quantile_vline()], [stat_density_quantile()]
 #'
 #' @examples
-#' # mix
-#' \donttest{set.seed(123)
-#' data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
-#' data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-#' ggmix(data = data, x = x, y = y, fill = fill, label = y, label_family = NA,
-#'   reverse = TRUE) +
-#'   theme_view(family = NULL)}
+#' \donttest{
+#' # Basic density by group with 50% quantile line (median) and label
+#' ggdensity(iris, x = Sepal.Length, color = Species, fill = Species,
+#'           probs = 0.5, show_vline = TRUE, show_label = TRUE) +
+#'   theme_view()
+#' }
 #'
 #' @export
-ggmix <- function(data, x, y, ymin = NULL, ymax = NULL, group = NULL,
-                  fill = NULL, bar_color = "transparent", text = NULL,
-                  label, label_family = "Comic Sans MS", label_size = 4,
-                  label_angle = 0, label_hjust = .5, label_vjust = .5,
-                  label_color = c("#000000", "#FAF9F6"), reverse = FALSE) {
-  quo_maps <- rlang::enquos(x = x, y = y, ymin = ymin, ymax = ymax,
-                            group = group, fill = fill, text = text)
-  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
-  ggplot(data = data, aes(!!!quo_maps)) +
-    geom_bar(stat = "identity",
-             position = position_fill(vjust = .5, reverse = reverse),
-             color = bar_color) +
-    list(if (!missing(label)) {
-      quo_lbl <- rlang::enquos(label = label)
-      geom_text(aes(!!!quo_lbl),
-                position = position_fill(vjust = .5, reverse = reverse),
-                family = label_family, size = label_size, angle = label_angle,
-                hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
-    })
+ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
+                      probs = .95, na.rm = TRUE, y = Inf,
+                      show_mean = FALSE,
+                      show_median = FALSE,
+                      show_vline = TRUE,
+                      show_label = TRUE,
+                      label_args = list(
+                        family = getOption("ggshort.font"),
+                        size  = 4,
+                        angle = 90,
+                        hjust = 2,
+                        vjust = 0.5,
+                        color = "black"
+                      )) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, color = color, fill = fill, group = group
+  ))
+
+  p <- ggplot2::ggplot(data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_density(alpha = .6)
+
+  if (show_mean)
+    p <- p + stat_mean_vline(na.rm = na.rm, linetype = "dotdash")
+
+  if (show_median)
+    p <- p + stat_median_vline(na.rm = na.rm, linetype = "solid")
+
+  if (show_vline)
+    p <- p + stat_density_quantile_vline(probs = probs, na.rm = na.rm)
+
+  if (show_label) {
+    args <- .modify_label_args(label_args)
+    p <- p + stat_density_quantile_text(
+      probs = probs, na.rm = na.rm, y = y,
+      fmt = function(p, q) sprintf("%.2f (%.0f%%)", q, p * 100),
+      family = args$family, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust
+    )
+  }
+  p
 }
 
-#' ggplot pie functions only with frequently used arguments
+#' ggplot boxplot helper (frequently used arguments)
 #'
-#' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
+#' Quickly draw boxplots with common options. Supply **unquoted**
+#' column names for aesthetics. Supports optional mean/median markers
+#' and overlaid jittered points.
 #'
-#' @param data a data.frame
-#' @param group a name of variable to group
-#' @param value a name of variable specifying values
-#' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression to label
-#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
-#' adjustment
-#' @param label_color a string specifying label color
-#' @return a ggplot object
-#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggtable()]
+#' @param data A data.frame.
+#' @param x,y Unquoted column names mapped to the x and y aesthetics.
+#' @param color,fill,group Optional columns mapped to the `color`, `fill` and
+#'   `group` aesthetics.
+#' @param text Optional column/expression used for tooltip text (e.g., plotly).
+#' @param label Optional unquoted column/expression used for text labels
+#'   (placed at the box middle by default).
+#' @param label_args A named list of `geom_text()` style options.
+#'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#' @param width Box width passed to [ggplot2::geom_boxplot()] (default `0.6`).
+#' @param varwidth Logical; if `TRUE`, boxes are drawn with widths proportional
+#'   to the square-roots of the number of observations in the groups.
+#' @param show_point Logical; if `TRUE`, overlay jittered points
+#'   ([ggplot2::geom_jitter()]) on top of the boxplots.
+#' @param show_mean Logical; if `TRUE`, add mean markers
+#'   using [stat_mean_point()]
+#'
+#' @return A ggplot object.
+#'
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
+#'   [ggdensity()], [ggpie()], [ggmix()], [ggtable()]
 #'
 #' @examples
-#' # pie
-#' \donttest{set.seed(123)
-#' data <- data.frame(group = c("A", "B", "C"), value = c(60, 30, 10))
-#' ggpie(data = data, group = group, value = value, label = sprintf("%s%%", value),
-#'       label_family = NA)}
+#' \donttest{
+#' # Basic grouped boxplot with jittered points
+#' ggbox(iris, x = Species, y = Sepal.Length, fill = Species,
+#'       show_point = TRUE) +
+#'   theme_view()
+#'
+#' # Add labels at the middle of each box (here, the group name)
+#' ggbox(iris, x = Species, y = Sepal.Length, fill = Species,
+#'       label = Species, label_args = list(vjust = -0.4)) +
+#'   theme_view()
+#' }
 #'
 #' @export
-ggpie <- function(data, group, value, text, label, label_family = "Comic Sans MS",
-                  label_size = 4, label_angle = 0, label_hjust = .5,
-                  label_vjust = .5, label_color = c("#000000", "#FAF9F6")) {
-  quo_maps <- rlang::enquos(y = value, group = group, fill = group, text = text)
-  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
-  ggplot(data, aes(x = 0, !!!quo_maps))+
-    geom_bar(stat = "identity")+
-    coord_polar("y", start = 0) +
-    list(if (!missing(label)) {
-      quo_lbl <- rlang::enquos(label = label)
-      geom_text(aes(!!!quo_lbl), position = position_stack(vjust = .5),
-                family = label_family, size = label_size, angle = label_angle,
-                hjust = label_hjust, vjust = label_vjust, color = label_color[1L])
-    }) +
-    theme_void(base_family = label_family) +
-    theme(plot.title = element_text(hjust = .5),
-          plot.subtitle = element_text(hjust = .5))
+ggbox <- function(data, x, y,
+                  color = NULL, fill = NULL, group = NULL,
+                  text = NULL,
+                  label,
+                  label_args = list(
+                    family = getOption("ggshort.font"),
+                    size   = 4,
+                    angle  = 0,
+                    hjust  = 0.5,
+                    vjust  = 0.5,
+                    color  = "black"
+                  ),
+                  width = 0.6,
+                  varwidth = FALSE,
+                  show_point = TRUE,
+                  show_mean = TRUE) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, y = y,
+    color = color, fill = fill, group = group,
+    text = text
+  ))
+
+  p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_boxplot(width = width, varwidth = varwidth,
+                          outlier.shape = if (show_point) NA else 19)
+
+  if (show_point) {
+    quos_point <- .valid_enquos(rlang::enquos(
+      color = color, group = group
+    ))
+    p <- p + ggplot2::geom_jitter(
+      ggplot2::aes(!!!quos_point),
+      width = width * .4, height = 0, alpha = .5
+    )
+  }
+
+  if (!missing(label)) {
+    args <- .modify_label_args(label_args)
+    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    # add labels at median
+    p <- p + ggplot2::stat_summary(
+      ggplot2::aes(!!!quos_label),
+      fun = stats::median, geom = "text",
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    )
+  }
+
+  if (show_mean) {
+    quos_group <- .valid_enquos(rlang::enquos(group = group))
+    p <- p +
+      stat_mean_point(stroke = 2) +
+      stat_mean_point(ggplot2::aes(!!!quos_group), color = "red", stroke = 1)
+  }
+
+  p
 }
 
-#' ggplot table functions only with frequently used arguments
+#' ggplot pie helper (frequently used arguments)
 #'
-#' Shortly simplify the grammar of ggplot to the functions only with frequently
-#' used arguments. (`ggbar`, `ggline`, `ggpoint`, `ggjitter`, `ggscatter`, `ggmix`, `ggpie`, `ggtable`)
+#' Quickly build pie charts with common options. Supply **unquoted** column
+#' names for aesthetics. Supports text labels styled via `label_args`.
 #'
-#' @param data a data.frame
-#' @param x,y a name of axis `x` and `y`
-#' @param linetype a string specifying a linetype (default: solid)
-#' @param text a name of variable or expression for ggplotly hover text
-#' @param label a name of variable or expression you want to label
-#' @param label_family,label_size,label_angle a string specifying label font-family, size and angle
-#' @param label_hjust,label_vjust a numeric specifying label horizontal and vertical
-#' adjustment
-#' @param label_color a string specifying label color
-#' @param xlab_position a string specifying x label position (default: bottom)
-#' @return a ggplot object
-#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggmix()], [ggpie()]
+#' @param data A data.frame.
+#' @param group Unquoted column used for grouping (slices of the pie).
+#' @param value Unquoted column specifying values (slice sizes).
+#' @param text Optional column/expression for tooltip text (e.g., with plotly).
+#' @param label Optional unquoted column/expression used as slice labels.
+#' @param label_args A named list of `geom_text()` style options.
+#'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#'
+#' @return A ggplot object.
+#'
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
+#'   [ggdensity()], [ggbox], [ggmix()], [ggtable()]
 #'
 #' @examples
-#' # table
-#' \donttest{set.seed(123)
-#' data <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
-#' data$label <- sample(x = 1:10, size = 9, replace = TRUE)
-#' ggtable(data = data, x = x, y = y, label = label, label_family = NA) +
-#'   theme_view(family = NULL)}
+#' \donttest{
+#' set.seed(123)
+#' df <- data.frame(group = c("A", "B", "C"), value = c(60, 30, 10))
+#'
+#' ggpie(df, group = group, value = value,
+#'       label = sprintf("%s%%", value),
+#'       label_args = list(size = 5, family = getOption("ggshort.font")))
+#' }
 #'
 #' @export
-ggtable <- function(data, x, y, linetype = "solid", text = NULL, label,
-                    label_family = "Comic Sans MS", label_size = 4,
-                    label_angle = 0, label_hjust = .5, label_vjust = .5,
-                    label_color = c("#000000", "#FAF9F6"),
-                    xlab_position = c("bottom", "top")) {
-  dx <- rlang::as_name(rlang::enquo(x))
-  dy <- rlang::as_name(rlang::enquo(y))
+ggpie <- function(data, group, value, text,
+                  label,
+                  label_args = list(
+                    family = getOption("ggshort.font"),
+                    size   = 4,
+                    angle  = 0,
+                    hjust  = 0.5,
+                    vjust  = 0.5,
+                    color  = "black"
+                  )) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    y = value, group = group, fill = group, text = text
+  ))
+
+  p <- ggplot2::ggplot(data, ggplot2::aes(x = 0, !!!quos_map))+
+    ggplot2::geom_bar(stat = "identity")+
+    ggplot2::coord_polar("y", start = 0)
+
+  if (!missing(label)) {
+    args <- .modify_label_args(label_args)
+    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    position <- ggplot2::position_stack(vjust = .5)
+    p <- p + ggplot2::geom_text(
+      ggplot2::aes(!!!quos_label),
+      position = position,
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    )
+  }
+
+  base_family <- label_args$family %||% getOption("ggshort.font")
+  p + ggplot2::theme_void(base_family = base_family) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = .5),
+      plot.subtitle = ggplot2::element_text(hjust = .5)
+    )
+}
+
+#' ggplot mix helper (stacked 100% bars with common options)
+#'
+#' Build **proportion (100%) stacked bars** quickly with the most-used options.
+#' Supply **unquoted** column names for aesthetics. Supports text labels and
+#' reversing the stacking order.
+#'
+#' @param data A data.frame.
+#' @param x,y Unquoted columns mapped to x and y (heights). Typically `y` is a value
+#'   to be summed per `x` and `fill`, then normalized by `position_fill()`.
+#' @param ymin,ymax Optional lower/upper bounds for y (rarely needed here).
+#' @param color,fill,group Optional columns for grouping and fill (stacking is based on `fill`).
+#' @param text Optional column/expression for tooltip text (e.g., with plotly).
+#' @param label Optional unquoted column/expression used for `geom_text()`.
+#' @param label_args A named list of `geom_text()` style options. Supported keys:
+#'   `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#' @param reverse Logical; if `TRUE`, reverse the stacking order in `position_fill()`.
+#' @param flip Logical; if `TRUE` (default), use [ggplot2::coord_flip()] to
+#'   flip the axes so categories are on the y-axis and values on the x-axis.
+#'
+#' @return A ggplot object.
+#'
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
+#'   [ggdensity()], [ggpie()], [ggbox], [ggtable()]
+#'
+#' @examples
+#' \donttest{
+#' set.seed(123)
+#' df <- expand.grid(x = c("A","B","C"), fill = c("X","Y","Z"))
+#' df$y <- sample(1:10, nrow(df), TRUE)
+#'
+#' ggmix(
+#'   data = df, x = x, y = y, fill = fill,
+#'   label = y,
+#'   label_args = list(size = 3),
+#'   reverse = TRUE
+#' ) + theme_view()
+#' }
+#'
+#' @export
+ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
+                  color = NULL, fill = NULL, group = NULL,
+                  text = NULL,
+                  label,
+                  label_args = list(
+                    family = getOption("ggshort.font"),
+                    size   = 4,
+                    angle  = 0,
+                    hjust  = 0.5,
+                    vjust  = 0.5,
+                    color  = "black"
+                  ), reverse = TRUE, flip = TRUE) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, y = y, ymin = ymin, ymax = ymax,
+    color = color, fill = fill, group = group,
+    text = text
+  ))
+
+  position <- ggplot2::position_fill(vjust = .5, reverse = reverse)
+
+  p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_bar(stat = "identity", position = position)
+
+  if (!missing(label)) {
+    args <- .modify_label_args(label_args)
+    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    position <- ggplot2::position_fill(vjust = .5, reverse = reverse)
+    p <- p + ggplot2::geom_text(
+      ggplot2::aes(!!!quos_label),
+      position = position,
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    )
+  }
+
+  if (flip) {
+    p <- p + ggplot2::coord_flip()
+  }
+
+  p
+}
+
+#' ggplot table helper (frequently used arguments)
+#'
+#' Create a text table layout using `ggplot2`. Categories on `x` and `y` must
+#' be factors or coercible to factors. Labels are placed inside each cell, and
+#' grid lines are drawn with `geom_vline()`/`geom_hline()`.
+#'
+#' @param data A data.frame.
+#' @param x,y Unquoted factor columns mapped to the table axes. Character
+#'   columns are automatically converted to factors.
+#' @param linetype Line type for grid lines. One of:
+#'   `"solid"`, `"dashed"`(default), `"dotted"`, `"dotdash"`, `"longdash"` or
+#'   `"twodash"`.
+#' @param text Optional column/expression for tooltip text (e.g., with plotly).
+#' @param label Unquoted column/expression used as text labels inside cells.
+#' @param label_args A named list of `geom_text()` style options.
+#'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#' @param xlab_position Position of x-axis labels, one of `"bottom"` (default)
+#'   or `"top"`.
+#' @param ylab_position Position of x-axis labels, one of `"left"` (default)
+#'   or `"right"`.
+#'
+#' @return A ggplot object representing a table-like plot.
+#'
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
+#'   [ggdensity()], [ggbox], [ggpie()], [ggmix()]
+#'
+#' @examples
+#' \donttest{
+#' set.seed(123)
+#' df <- expand.grid(x = c("A","B","C"), y = c("X","Y","Z"))
+#' df$label <- sample(1:10, size = 9, replace = TRUE)
+#'
+#' ggtable(df, x = x, y = y, label = label,
+#'         label_args = list(size = 5, family = getOption("ggshort.font")),
+#'         xlab_position = "top") +
+#'   theme_view()
+#' }
+#'
+#' @export
+ggtable <- function(data, x, y, linetype = c("dashed"), text = NULL,
+                    label,
+                    label_args = list(
+                      family = getOption("ggshort.font"),
+                      size   = 4,
+                      angle  = 0,
+                      hjust  = 0.5,
+                      vjust  = 0.5,
+                      color  = "black"
+                    ),
+                    xlab_position = c("bottom", "top"),
+                    ylab_position = c("left", "right")) {
+  dx <- rlang::as_string(rlang::ensym(x))
+  dy <- rlang::as_string(rlang::ensym(y))
 
   if (is.character(data[[dx]]))
     data[[dx]] <- as.factor(data[[dx]])
@@ -382,24 +859,81 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL, label,
   if (!is.factor(data[[dy]]))
     stop(dy, " is not an object of type: factor")
 
-  xlvl <- levels(data[[dx]])
-  ylvl <- levels(data[[dy]])
-  xlen <- length(xlvl)
-  ylen <- length(ylvl)
+  x_lvl <- levels(data[[dx]])
+  y_lvl <- levels(data[[dy]])
+  x_len <- length(x_lvl)
+  y_len <- length(y_lvl)
   data[[dx]] <- as.numeric(data[[dx]])
   data[[dy]] <- as.numeric(data[[dy]])
 
-  quo_maps <- rlang::enquos(x = x, y = y, text = text)
-  quo_maps <- quo_maps[!sapply(quo_maps, rlang::quo_is_null)]
-  quo_lbl  <- rlang::enquos(label = label)
+  quos_map <- .valid_enquos(rlang::enquos(x = x, y = y, text = text))
+  quos_label <- .valid_enquos(rlang::enquos(label = label))
+  args <- .modify_label_args(label_args)
   xlab_position <- match.arg(xlab_position)
-  ggplot(data, aes(!!!quo_maps)) +
-    geom_text(aes(!!!quo_lbl), size = label_size, family = label_family,
-              angle = label_angle, hjust = label_hjust, vjust = label_vjust,
-              color = label_color[1L]) +
-    geom_vline(xintercept = seq(1, 1+xlen) - .5, linetype = linetype) +
-    geom_hline(yintercept = seq(1, 1+ylen) - .5, linetype = linetype) +
-    scale_x_continuous(breaks = seq(1, xlen), labels = xlvl,
-                       position = xlab_position) +
-    scale_y_reverse(breaks = seq(1, ylen), labels = ylvl)
+  ylab_position <- match.arg(ylab_position)
+  ggplot2::ggplot(data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_text(
+      ggplot2::aes(!!!quos_label),
+      family = args$family, size = args$size, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+    ) +
+    ggplot2::geom_vline(
+      xintercept = seq(1, 1 + x_len) - .5,
+      linetype = linetype
+    ) +
+    ggplot2::geom_hline(
+      yintercept = seq(1, 1 + y_len) - .5,
+      linetype = linetype
+    ) +
+    ggplot2::scale_x_continuous(
+      breaks = seq(1, x_len), labels = x_lvl,
+      limits = c(0.5, x_len + 0.5), expand = c(0, 0),
+      position = xlab_position
+    ) +
+    ggplot2::scale_y_reverse(
+      breaks = seq(1, y_len), labels = y_lvl,
+      limits = c(y_len + 0.5, 0.5), expand = c(0, 0),
+      position = ylab_position
+    )
+}
+
+# Helper functions --------------------------------------------------------
+
+#' Keep only valid quosures (not missing, not NULL)
+#'
+#' Utility to filter quosures returned by [rlang::enquos()],
+#' dropping those that are missing or explicitly NULL.
+#'
+#' @param quos A list of quosures (from [rlang::enquos()])
+#'
+#' @return A filtered list of quosures
+#'
+#' @keywords internal
+.valid_enquos <- function(quos) {
+  Filter(function(quo) {
+    !(rlang::quo_is_missing(quo) || rlang::quo_is_null(quo))
+  }, quos)
+}
+
+#' Merge label arguments with defaults
+#'
+#' Internal helper to merge user-supplied `label_args` with a set of defaults.
+#' Used by ggshort plotting helpers (e.g., `ggbar`, `ggline`, `ggpoint`).
+#'
+#' @param label_args A named list of label arguments passed by the user.
+#'   Recognized keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#' @return A named list of label arguments with defaults filled in.
+#'
+#' @keywords internal
+#' @noRd
+.modify_label_args <- function(label_args) {
+  defaults <- list(
+    family = getOption("ggshort.font"),
+    size   = 4,
+    angle  = 0,
+    hjust  = 0.5,
+    vjust  = 0.5,
+    color  = "black"
+  )
+  utils::modifyList(defaults, label_args, keep.null = TRUE)
 }

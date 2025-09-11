@@ -2,26 +2,28 @@
 % Please edit documentation in R/utils.R
 \name{get_legend}
 \alias{get_legend}
-\title{Get a legend}
+\title{Extract the legend from a ggplot}
 \usage{
 get_legend(plot)
 }
 \arguments{
-\item{plot}{a ggplot object}
+\item{plot}{A ggplot object.}
 }
 \value{
-a ggplot object
+A legend grob (the \code{"guide-box"} grob) extracted from plot.
 }
 \description{
-Get a legend object from the ggplot object.
+Get the legend grob from a ggplot object.
 }
 \examples{
-# get a legend.
-\donttest{set.seed(123)
-data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
-data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-g <- ggbar(data = data, x = x, y = y, fill = fill, label = y, label_vjust = -.25) +
-  theme_view(family = NULL)
-get_legend(g)}
+\donttest{
+set.seed(123)
+dat <- expand.grid(x = c("A","B","C"), fill = c("X","Y","Z"))
+dat$y <- sample(1:10, size = 9, replace = TRUE)
+g <- ggbar(dat, x = x, y = y, fill = fill, label = y,
+           label_args = list(vjust = -0.25)) +
+     theme_view(family = NULL)
+get_legend(g)
+}
 
 }

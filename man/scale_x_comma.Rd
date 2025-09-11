@@ -4,7 +4,7 @@
 \alias{scale_x_comma}
 \alias{scale_y_comma}
 \alias{scale_comma}
-\title{Add commas to x-axis or y-axis tick labels}
+\title{Add comma-formatted axis tick labels}
 \usage{
 scale_x_comma()
 
@@ -13,8 +13,13 @@ scale_y_comma()
 scale_comma()
 }
 \value{
-an ggproto object
+A ggproto scale object.
+
+A list of two scales: \code{scale_x_comma()} and \code{scale_y_comma()}.
 }
 \description{
-Add commas to x-axis or y-axis tick labels.
+Convenience scales that format numeric axis labels with commas.
+}
+\seealso{
+\code{\link[scales:comma]{scales::comma()}}, \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}, \code{\link[ggplot2:scale_continuous]{ggplot2::scale_y_continuous()}}
 }

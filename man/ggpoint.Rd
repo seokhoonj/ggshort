@@ -4,7 +4,7 @@
 \alias{ggpoint}
 \alias{ggjitter}
 \alias{ggscatter}
-\title{ggplot point functions only with frequently used arguments}
+\title{ggplot point helpers (frequently used arguments)}
 \usage{
 ggpoint(
   data,
@@ -12,19 +12,20 @@ ggpoint(
   y,
   ymin = NULL,
   ymax = NULL,
-  group = NULL,
   color = NULL,
+  fill = NULL,
+  group = NULL,
   shape = NULL,
   size = NULL,
   alpha = NULL,
   text = NULL,
   label,
-  label_family = "Comic Sans MS",
-  label_size = 4,
-  label_angle = 0,
-  label_hjust = 0.5,
-  label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6")
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = 0.5, color = "black"),
+  show_mean = FALSE,
+  show_median = FALSE,
+  show_ellipse = FALSE,
+  show_chull = FALSE
 )
 
 ggjitter(
@@ -33,19 +34,20 @@ ggjitter(
   y,
   ymin = NULL,
   ymax = NULL,
-  group = NULL,
   color = NULL,
+  fill = NULL,
+  group = NULL,
   shape = NULL,
   size = NULL,
   alpha = NULL,
   text = NULL,
   label,
-  label_family = "Comic Sans MS",
-  label_size = 4,
-  label_angle = 0,
-  label_hjust = 0.5,
-  label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6")
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = 0.5, color = "black"),
+  show_mean = FALSE,
+  show_median = FALSE,
+  show_ellipse = FALSE,
+  show_chull = FALSE
 )
 
 ggscatter(
@@ -54,76 +56,101 @@ ggscatter(
   y,
   ymin = NULL,
   ymax = NULL,
-  group = NULL,
   color = NULL,
   fill = NULL,
+  group = NULL,
   shape = NULL,
   size = NULL,
   alpha = NULL,
   text = NULL,
   label,
-  label_family = "Comic Sans MS",
-  label_size = 4,
-  label_angle = 0,
-  label_hjust = 0.5,
-  label_vjust = 0.5,
-  label_color = c("#000000", "#FAF9F6"),
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = 0.5, color = "black"),
   jitter = FALSE,
-  median = FALSE
+  show_mean = FALSE,
+  show_median = FALSE,
+  show_ellipse = FALSE,
+  show_chull = FALSE
 )
 }
 \arguments{
-\item{data}{a data.frame}
+\item{data}{A data.frame.}
 
-\item{x, y}{a name of axis \code{x} and \code{y}}
+\item{x, y}{Unquoted column names mapped to x and y.}
 
-\item{ymin, ymax}{\code{min} and \code{max} values of y for the height}
+\item{ymin, ymax}{Optional lower/upper y bounds (rarely used for pure points).}
 
-\item{group, color}{a name of variable to group and color}
+\item{color, fill, group}{Optional columns mapped to the \code{color}, \code{fill} and
+\code{group} aesthetics.}
 
-\item{shape}{a name of point shape variable}
+\item{shape}{Optional column mapped to point shape.}
 
-\item{size}{a name of point size variable}
+\item{size}{Optional column mapped to point size.}
 
-\item{alpha}{a name of variable to make transparent}
+\item{alpha}{Optional column mapped to point transparency.}
 
-\item{text}{a name of variable or expression for ggplotly hover text}
+\item{text}{Optional column/expression used for tooltip text (e.g., plotly).}
 
-\item{label}{a name of variable or expression to label}
+\item{label}{Optional unquoted column/expression for text labels.}
 
-\item{label_family, label_size, label_angle}{a string specifying label font-family, size and angle}
+\item{label_args}{A named list of \code{geom_text()} style options.
+Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
 
-\item{label_hjust, label_vjust}{a numeric specifying label horizontal and vertical
-adjustment}
+\item{show_mean}{Logical; if \code{TRUE}, add group/global mean point(s) using
+\code{\link[=stat_mean_point]{stat_mean_point()}}.}
 
-\item{label_color}{a string specifying label color}
+\item{show_median}{Logical; if \code{TRUE}, add group/global median point(s) using
+\code{\link[=stat_median_point]{stat_median_point()}}.}
 
-\item{fill}{a name of variable to fill for covex hull algorithm}
+\item{show_ellipse}{Logical; if \code{TRUE}, add confidence ellipse(s) per group
+via \code{\link[ggplot2:stat_ellipse]{ggplot2::stat_ellipse()}} (default 90\% level).}
 
-\item{jitter}{\code{ggscatter()} only, a logical whether to use \code{jitter}}
+\item{show_chull}{Logical; if \code{TRUE}, draw convex hull(s) per group using
+\code{\link[=stat_chull]{stat_chull()}}.}
 
-\item{median}{a logical whether to use median to draw a horizontal and vertical line}
+\item{jitter}{For \code{ggscatter()} only: logical; if \code{TRUE}, use jittered points.}
 }
 \value{
-a ggplot object
+A ggplot object.
 }
 \description{
-Shortly simplify the grammar of ggplot to the functions only with frequently
-used arguments. (\code{ggbar}, \code{ggline}, \code{ggpoint}, \code{ggjitter}, \code{ggscatter}, \code{ggmix}, \code{ggpie}, \code{ggtable})
+Build point-based plots (points, jittered points, scatter with extras) with
+the most common options. Supply \strong{unquoted} column names for aesthetics.
+These helpers share a consistent interface and \code{label_args} for text styling.
 }
+\section{Functions}{
+
+\itemize{
+\item \strong{ggpoint()}: Basic point plot (\code{geom_point()}).
+\item \strong{ggjitter()}: Jittered point plot (\code{geom_jitter()}).
+\item \strong{ggscatter()}: Scatter plot with optional jitter toggle, median/mean
+guides, and convex hull.
+}
+}
+
 \examples{
-# point
-\donttest{set.seed(123)
-data <- expand.grid(x = 1:10, y = 1:10)
-data$shape <- sample(x = c("A", "B", "C"), size = 10, replace = TRUE)
-ggpoint(data = data, x = x, y = y, shape = shape, label = y, label_family = NA) +
-  theme_view(family = NA)
- ggjitter(data = data, x = x, y = y, shape = shape, size = y, label = shape,
-          color = shape, label_family = NA) +
-  theme_view(family = NULL)
+\donttest{
+# Basic points: Sepal.Length vs Petal.Width
+ggpoint(iris, x = Sepal.Length, y = Petal.Width,
+        color = Species, shape = Species,
+        label = Species,
+        label_args = list(size = 3, vjust = -0.5)) +
+  theme_view()
+
+# Jittered points
+ggjitter(iris, x = Species, y = Petal.Width,
+         color = Species, shape = Species) +
+  theme_view()
+
+# Scatter with convex hulls per species
+ggscatter(iris, x = Sepal.Length, y = Petal.Width,
+          color = Species, fill = Species,
+          show_median = TRUE, show_chull = TRUE) +
+  theme_view()
 }
 
 }
 \seealso{
-\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggdensity]{ggdensity()}},
+\code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
 }

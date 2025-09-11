@@ -205,7 +205,7 @@ head(data)
 
 # No theme_view, it already contains `theme_void()`
 plotly_pie(data, labels = Vehicle_Use, values = Claim_Count) |>
-      layout(title = "Auto Collision<br><sup>Age: H</sup>")
+  layout(title = "Auto Collision<br><sup>Age: H</sup>")
 ```
 
 <img src="man/figures/plotly_pie-auto-collision-age-h.png"/>

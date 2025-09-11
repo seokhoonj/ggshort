@@ -3,41 +3,53 @@
 \name{grid_top_bottom_right}
 \alias{grid_top_bottom_right}
 \alias{grid_left_to_right}
-\title{Grid top plot, bottom plot and right legend}
+\title{Arrange multiple plots with a shared legend}
 \usage{
 grid_top_bottom_right(g1, g2, legend, heights = c(5, 5), widths = c(8.5, 1.5))
 
 grid_left_to_right(g1, g2, legend, widths = c(4, 4, 2))
 }
 \arguments{
-\item{g1}{a ggplot object}
+\item{g1, g2}{ggplot objects to arrange.}
 
-\item{g2}{a ggplot object}
+\item{legend}{A gtable legend object (as from \code{\link[=get_legend]{get_legend()}}). If missing,
+the legend is extracted from \code{g1}.}
 
-\item{legend}{a gtable object}
+\item{heights}{Numeric vector of relative heights for top/bottom plots (default \code{c(5, 5)}).}
 
-\item{heights, widths}{a unit vector giving the height of each row or the widths of each column}
+\item{widths}{Numeric vector of relative widths for plots vs legend
+(default \code{c(8.5, 1.5)} for \code{grid_top_bottom_right()},
+\code{c(4, 4, 2)} for \code{grid_left_to_right()}).}
 }
 \value{
-a gtable object
+A gtable object (arranged grid). The object is also drawn by default.
 }
 \description{
-Grid top plot, bottom plot and right legend
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Helpers for arranging two ggplot objects together with a legend.
+\itemize{
+\item \code{grid_top_bottom_right()}: place one plot on top, another below,
+and the legend to the right.
+\item \code{grid_left_to_right()}: place two plots side by side with the legend on the right.
+}
 }
 \examples{
-# grid top plot, bottom plot, right legend
-\donttest{set.seed(123)
-data <- expand.grid(x = c("A", "B", "C"), fill = c("X", "Y", "Z"))
-data$y <- sample(x = 1:10, size = 9, replace = TRUE)
-g1 <- ggbar(data = data, x = x, y = y, fill = fill, label = y, label_vjust = -.25,
-  label_family = NA) +
-  theme_view(family = NULL)
+\dontrun{
 set.seed(123)
-data <- expand.grid(x = 1:20, color = c("X", "Y", "Z"))
-data$y <- sample(1:10, size = nrow(data), replace = TRUE)
-g2 <- ggline(data = data, x = x, y = y, color = color) +
-  theme_view(family = NULL)
-legend <- get_legend(g1)
-grid_top_bottom_right(g1, g2, legend)}
+df <- expand.grid(x = c("A","B","C"), fill = c("X","Y","Z"))
+df$y <- sample(1:10, 9, TRUE)
+g1 <- ggbar(df, x = x, y = y, fill = fill, label = y,
+            label_args = list(vjust = -0.25)) +
+  theme_view()
+
+df2 <- expand.grid(x = 1:20, color = c("X","Y","Z"))
+df2$y <- sample(1:10, nrow(df2), TRUE)
+g2 <- ggline(df2, x = x, y = y, color = color) +
+  theme_view()
+
+grid_top_bottom_right(g1, g2)
+grid_left_to_right(g1, g2)
+}
 
 }

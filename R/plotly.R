@@ -1,53 +1,63 @@
 #' Plotly treemap
 #'
-#' Draw a Plotly treemap using grouping data.
+#' Build a Plotly treemap from grouped data (column names as character).
 #'
-#' @param data a grouping data frame
-#' @param groups names of group variables like (groups = .(GROUP_A, GROUP_B))
-#' @param values a variable name to sum by group variables
-#' @param path_labels a boolean value whether to use labels like path type
-#' @param path_sep a string to separate the path labels. (default: " / ")
-#' @param add_parents a boolean value whether the parents are prefixed to the labels
-#' @param textinfo a string to express text information
-#' (default: "label+value+percent entry+percent parent+percent root")
-#' @param hoverinfo a string to express hover information
-#' (default: "percent entry+percent parent+percent root")
-#' @return a plotly object
+#' @param data A data frame.
+#' @param groups Character vector of grouping columns in `data`
+#'   (e.g., `c("grp1","grp2")`). Order defines the hierarchy from root to leaves.
+#' @param values Single character string: numeric column in `data` to sum for sizes.
+#' @param path_labels Logical; if `TRUE`, use full hierarchical path for labels.
+#'   Default: `FALSE`.
+#' @param path_sep Separator for path labels. Default: `" / "`.
+#' @param add_parents Logical; if `TRUE`, prefix each group value with its
+#'   column name (parent label hint). Default: `FALSE`.
+#' @param textinfo Plotly `textinfo` string. Default:
+#'   `"label+value+percent entry+percent parent+percent root"`.
+#' @param hoverinfo Plotly `hoverinfo` string. Default:
+#'   `"percent entry+percent parent+percent root"`.
+#'
+#' @return A plotly object. The aggregated hierarchy is also attached as
+#'   `attr(x, "tree_data")` (data.frame).
 #'
 #' @examples
-#' # plotly treemap
-#' \donttest{set.seed(123)
+#' \donttest{
+#' set.seed(123)
 #' x <- c("A", "A", "B", "B", "C", "C")
 #' y <- c("X", "Y", "X", "Y", "X", "Y")
 #' z <- c(600, 500, 400, 300, 200, 100)
-#' data <- data.frame(x = x, y = y, z = z)
-#' plotly_treemap(data, groups = .(x, y), values = z)}
+#' df <- data.frame(x = x, y = y, z = z)
+#' plotly_treemap(df, groups = c("x","y"), values = "z")
+#' }
 #'
 #' @export
 plotly_treemap <- function(data, groups, values, path_labels = FALSE,
                            path_sep = " / ", add_parents = FALSE,
                            textinfo = "label+value+percent entry+percent parent+percent root",
                            hoverinfo = "percent entry+percent parent+percent root") {
-  old_class <- class(data)
-  jaid::set_dt(data)
-  groups <- jaid::match_cols(data, sapply(rlang::enexpr(groups), rlang::as_name))
-  values <- jaid::match_cols(data, sapply(rlang::enexpr(values), rlang::as_name))
+  if (!inherits(data, "data.frame"))
+    stop("`data` must be a data.frame.", call. = FALSE)
+  if (!inherits(data, "data.table"))
+    data <- data.table::as.data.table(data)
 
   # add parents
   if (add_parents)
     data[, groups] <- lapply(seq_along(groups), function(x)
       paste(rep(groups[x], nrow(data)), data[[groups[x]]]))
+
   # total
-  dt_tot <- data.table(parents = "", ids = "", labels = "",
-                       data[, lapply(.SD, sum), .SDcols = values])
+  dt_tot <- data.table::data.table(
+    parents = "", ids = "", labels = "",
+    data[, lapply(.SD, sum), .SDcols = values]
+  )
+
   # sum
   dt_sum_list <- lapply(seq_along(groups), function(x) {
     label_var <- groups[1:x]
     dt <- data[, lapply(.SD, sum), by = label_var, .SDcols = values]
     if (x > 1) {
       parent_var <- groups[1:(x-1)]
-      parents <- jaid::paste_list(dt[, .SD, .SDcols = parent_var], sep = path_sep)
-      ids     <- jaid::paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
+      parents <- .paste_list(dt[, .SD, .SDcols = parent_var], sep = path_sep)
+      ids     <- .paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
       if (path_labels) {
         labels  <- ids
       } else {
@@ -55,8 +65,8 @@ plotly_treemap <- function(data, groups, values, path_labels = FALSE,
       }
     } else {
       parents <- ""
-      ids     <- jaid::paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
-      labels  <- jaid::paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
+      ids     <- .paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
+      labels  <- .paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
       if (path_labels) {
         labels  <- ids
       } else {
@@ -67,10 +77,11 @@ plotly_treemap <- function(data, groups, values, path_labels = FALSE,
                dt[, .SD, .SDcols = values])
   })
   dt_sum <- data.table::rbindlist(dt_sum_list)
+
   # all
   dt_all <- data.table::rbindlist(list(dt_tot, dt_sum), fill = TRUE)
   colors <- c("", rep(get_twelve_colors(), ceiling(nrow(dt_all)/12)))
-  g <- plotly::plot_ly(
+  p <- plotly::plot_ly(
     type = "treemap",
     branchvalues = "total",
     ids = dt_all$id,
@@ -82,26 +93,29 @@ plotly_treemap <- function(data, groups, values, path_labels = FALSE,
     hoverinfo = hoverinfo,
     domain = list(column = 0)
   )
-  data.table::setattr(data, "class", old_class)
-  attr(g, "tree_data") <- dt_all
-  return(g)
+  attr(p, "tree_data") <- as.data.frame(dt_all)
+  p
 }
 
 #' Plotly pie
 #'
-#' Draw a Plotly pie plot using grouping data.
+#' Build a Plotly pie chart (column names as character).
 #'
-#' @param data a grouping data frame
-#' @param labels a name of variable you want to group
-#' @param values a name of variable specifying values
-#' @param texttemplate a string specifying a text template
-#' @param hovertemplate a string specifying a hover template
+#' @param data A data frame.
+#' @param labels Character string: column in `data` used for slice labels.
+#' @param values Character string: numeric column in `data` used for slice sizes.
+#' @param texttemplate Plotly `texttemplate`. Default:
+#'   `"%{label}<br>%{value}<br>(%{percent})"`.
+#' @param hovertemplate Plotly `hovertemplate`. Default:
+#'   `"%{label}<br>%{value}<br>(%{percent})<extra></extra>"`.
+#'
+#' @return A plotly object.
 #'
 #' @examples
-#' # plotly pie
-#' \donttest{set.seed(123)
-#' data <- data.frame(labels = c("A", "B", "C"), values = c(300, 150, 50))
-#' plotly_pie(data = data, labels = labels, values = values)}
+#' \donttest{
+#' df <- data.frame(labels = c("A", "B", "C"), values = c(300, 150, 50))
+#' plotly_pie(df, labels = "labels", values = "values")
+#' }
 #'
 #' @export
 plotly_pie <- function(
@@ -109,8 +123,8 @@ plotly_pie <- function(
     texttemplate = "%{label}<br>%{value}<br>(%{percent})",
     hovertemplate = "%{label}<br>%{value}<br>(%{percent})<extra></extra>"
     ) { # <extra></extra> is to remove trace label
-  labels <- formula(paste0("~", rlang::as_name(rlang::enquo(labels))))
-  values <- formula(paste0("~", rlang::as_name(rlang::enquo(values))))
+  labels <- formula(paste0("~", labels))
+  values <- formula(paste0("~", values))
   plotly::plot_ly(
     data = data,
     type = "pie",
@@ -120,4 +134,38 @@ plotly_pie <- function(
     hovertemplate = hovertemplate
   ) |>
     plotly::layout(uniformtext = list(minsize = 12, mode = "hide"))
+}
+
+# Internal helper functions -----------------------------------------------
+
+#' Paste vectors of a list
+#'
+#' Paste vectors of equal length in a list or data.frame
+#'
+#' @param x A list with same length vectors or data frame column vectors you want to paste.
+#' @param sep A character string to separate the terms.
+#' @param na.rm A logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.
+#' @return a vector pasted
+#'
+#' @examples
+#' \donttest{
+#' iris$size <- paste_list(iris[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")])
+#' head(iris)
+#' }
+#'
+#' @keywords internal
+#' @noRd
+.paste_list <- function(x, sep = "|", na.rm = FALSE) {
+  if (na.rm)
+    x[] <- lapply(x, function(s) ifelse(is.na(s), "", s))
+  pattern <- sprintf("^\\%s|\\%s\\%s|\\%s$", sep, sep, sep,
+                     sep)
+  n <- length(x)
+  if (n == 1L)
+    return(x[[1L]])
+  x <- do.call(function(...) paste(..., sep = sep), x)
+  x <- gsub(pattern, "", x)
+  if (na.rm)
+    x <- ifelse(x == "", NA, x)
+  return(x)
 }

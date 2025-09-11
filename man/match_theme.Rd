@@ -2,15 +2,19 @@
 % Please edit documentation in R/theme.R
 \name{match_theme}
 \alias{match_theme}
-\title{Match theme}
+\title{Deprecated: match_theme()}
 \usage{
 match_theme(theme = c("view", "save", "shiny"), ...)
 }
 \arguments{
-\item{theme}{a string specifying a ggshort theme function ("view", "save", "shiny")}
+\item{theme}{One of \code{"view"}, \code{"save"}, \code{"shiny"}.}
 
-\item{...}{arguments passed on to (\code{theme_view}, \code{theme_save}, \code{theme_shiny})}
+\item{...}{Additional arguments passed to the chosen theme function.}
 }
 \description{
-Match a ggshort theme.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\details{
+Deprecated alias for \code{\link[=switch_theme]{switch_theme()}}.
+Use \code{\link[=switch_theme]{switch_theme()}} instead.
 }

@@ -5,7 +5,7 @@
 \title{Save theme}
 \usage{
 theme_save(
-  family = "Comic Sans MS",
+  family = getOption("ggshort.font"),
   x.size = 12,
   y.size = 12,
   t.size = 14,
@@ -29,27 +29,30 @@ theme_save(
 )
 }
 \arguments{
-\item{family}{font family}
+\item{family}{Font family for all text.}
 
-\item{x.size, y.size, t.size, s.size, l.size}{x axis, y axis, title, strip,
-legend text size}
+\item{x.size, y.size, t.size, s.size, l.size}{Font sizes for x-axis, y-axis,
+title, strip, and legend text. Defaults: \code{NULL} (ggplot defaults).}
 
-\item{x.face, y.face, t.face, s.face, l.face}{x axis, y axis, title, strip,
-legend text face}
+\item{x.face, y.face, t.face, s.face, l.face}{Font face ("plain","bold","italic","bold.italic")
+for x-axis, y-axis, title, strip, and legend text.}
 
-\item{x.angle, y.angle}{x axis, y axis text angle}
+\item{x.angle, y.angle}{Angle of axis text (in degrees).}
 
-\item{x.hjust, x.vjust, y.hjust, y.vjust}{horizontal, vertical adjustment}
+\item{x.hjust, x.vjust, y.hjust, y.vjust}{Horizontal and vertical justification
+of axis text.}
 
-\item{legend.key.height, legend.key.width}{key background height & width}
+\item{legend.key.height, legend.key.width}{Height/width of legend key boxes.}
 
-\item{legend.position}{the default position of legends ("none", "left",
-"right", "bottom", "top", "inside")}
+\item{legend.position}{Position of legend: \code{"none"}, \code{"left"}, \code{"right"},
+\code{"bottom"}, \code{"top"}, \code{"inside"}.}
 
-\item{legend.justification}{anchor point for positioning legend inside plot
-("center" or two-element numeric vector) or the justification according to
-the plot area when positioned outside the plot}
+\item{legend.justification}{Anchor point for legend placement. Either a string
+(e.g., \code{"center"}) or numeric vector length 2.}
+}
+\value{
+A \code{\link[ggplot2:theme]{ggplot2::theme()}} object.
 }
 \description{
-Simple xlsx save theme for ggplot.
+A simple theme for saving ggplots (e.g., to xlsx or image output).
 }

@@ -16,37 +16,42 @@ plotly_treemap(
 )
 }
 \arguments{
-\item{data}{a grouping data frame}
+\item{data}{A data frame.}
 
-\item{groups}{names of group variables like (groups = .(GROUP_A, GROUP_B))}
+\item{groups}{Character vector of grouping columns in \code{data}
+(e.g., \code{c("grp1","grp2")}). Order defines the hierarchy from root to leaves.}
 
-\item{values}{a variable name to sum by group variables}
+\item{values}{Single character string: numeric column in \code{data} to sum for sizes.}
 
-\item{path_labels}{a boolean value whether to use labels like path type}
+\item{path_labels}{Logical; if \code{TRUE}, use full hierarchical path for labels.
+Default: \code{FALSE}.}
 
-\item{path_sep}{a string to separate the path labels. (default: " / ")}
+\item{path_sep}{Separator for path labels. Default: \code{" / "}.}
 
-\item{add_parents}{a boolean value whether the parents are prefixed to the labels}
+\item{add_parents}{Logical; if \code{TRUE}, prefix each group value with its
+column name (parent label hint). Default: \code{FALSE}.}
 
-\item{textinfo}{a string to express text information
-(default: "label+value+percent entry+percent parent+percent root")}
+\item{textinfo}{Plotly \code{textinfo} string. Default:
+\code{"label+value+percent entry+percent parent+percent root"}.}
 
-\item{hoverinfo}{a string to express hover information
-(default: "percent entry+percent parent+percent root")}
+\item{hoverinfo}{Plotly \code{hoverinfo} string. Default:
+\code{"percent entry+percent parent+percent root"}.}
 }
 \value{
-a plotly object
+A plotly object. The aggregated hierarchy is also attached as
+\code{attr(x, "tree_data")} (data.frame).
 }
 \description{
-Draw a Plotly treemap using grouping data.
+Build a Plotly treemap from grouped data (column names as character).
 }
 \examples{
-# plotly treemap
-\donttest{set.seed(123)
+\donttest{
+set.seed(123)
 x <- c("A", "A", "B", "B", "C", "C")
 y <- c("X", "Y", "X", "Y", "X", "Y")
 z <- c(600, 500, 400, 300, 200, 100)
-data <- data.frame(x = x, y = y, z = z)
-plotly_treemap(data, groups = .(x, y), values = z)}
+df <- data.frame(x = x, y = y, z = z)
+plotly_treemap(df, groups = c("x","y"), values = "z")
+}
 
 }

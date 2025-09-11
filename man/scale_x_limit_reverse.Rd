@@ -3,18 +3,28 @@
 \name{scale_x_limit_reverse}
 \alias{scale_x_limit_reverse}
 \alias{scale_y_limit_reverse}
-\title{Scale limit reverse (x & y)}
+\title{Reverse axis scale limits based on data type (x & y)}
 \usage{
 scale_x_limit_reverse(x)
 
 scale_y_limit_reverse(x)
 }
 \arguments{
-\item{x}{a vector x or y variable}
+\item{x}{A vector representing the mapped variable (factor/character/numeric).}
 }
 \value{
-a ggproto object
+A \code{ggproto} scale object.
 }
 \description{
-Reverse x & y axis scale limit
+Reverse axis direction, choosing a discrete or continuous scale
+based on the class of the supplied vector.
+}
+\examples{
+\donttest{
+# x-axis examples
+scale_x_limit_reverse(factor(c("a","b","c")))
+scale_x_limit_reverse(c("a","c","b"))
+scale_x_limit_reverse(1:10)
+}
+
 }

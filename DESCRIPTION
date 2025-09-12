@@ -8,7 +8,7 @@ Description: Shortly simplify the grammar of ggplot to the functions only with
              frequently used arguments.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.1)
 Remotes:
     github::seokhoonj/jaid
 Imports:
@@ -19,9 +19,11 @@ Imports:
     plotly (>= 4.10.1),
     rlang (>= 1.1.1),
     scales (>= 1.2.1),
+    showtext (>= 0.9.7),
     systemfonts (>= 1.1.0)
 Suggests:
     gridExtra (>= 2.3),
+    insurance (>= 0.2.0),
     insuranceData (>= 1.0),
     jaid (>= 0.0.0.9001),
     sysfonts (>= 0.8.9)

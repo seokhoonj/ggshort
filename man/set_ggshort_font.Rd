@@ -2,9 +2,12 @@
 % Please edit documentation in R/font.R
 \name{set_ggshort_font}
 \alias{set_ggshort_font}
+\alias{get_ggshort_font}
 \title{Set or get the default font for ggshort plots}
 \usage{
 set_ggshort_font(family)
+
+get_ggshort_font()
 }
 \arguments{
 \item{family}{A character string giving the font family to use.

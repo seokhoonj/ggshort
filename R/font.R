@@ -61,10 +61,23 @@ set_ggshort_font <- function(family) {
   }
 
   options(ggshort.font = family)
+
+  os_type <- Sys.info()[["sysname"]]
+  if (os_type == "Windows")
+    showtext::showtext_auto(.mean_dpi())
+
   family
 }
 
+#' @rdname set_ggshort_font
+#' @export
 get_ggshort_font <- function()
   getOption("ggshort.font", default = "")
 
+# Internal helper function ------------------------------------------------
 
+.mean_dpi <- function() {
+  dpi_x <- grDevices::dev.size("px")[1L] / grDevices::dev.size("in")[1L]
+  dpi_y <- grDevices::dev.size("px")[2L] / grDevices::dev.size("in")[2L]
+  mean(c(dpi_x, dpi_y))
+}

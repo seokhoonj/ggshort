@@ -18,6 +18,7 @@
 #' @importFrom plotly ggplotly plot_ly
 #' @importFrom rlang .data enquo enquos quo_is_missing quo_is_null
 #' @importFrom scales comma
+#' @importFrom showtext showtext_auto
 #' @importFrom stats density formula median prcomp quantile
 #' @importFrom systemfonts system_fonts
 #' @importFrom utils globalVariables head modifyList tail

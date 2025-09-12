@@ -41,7 +41,7 @@
 #'   it is resolved to the corresponding column name in `data`.
 #' - **Coloring logic:** If `color_var` is categorical (factor/character/logical),
 #'   a discrete Brewer palette (`palette`) is applied. If numeric, a continuous
-#'   gradient (blue → red) is used, and `show_mean`/`show_median` apply but
+#'   gradient (blue -> red) is used, and `show_mean`/`show_median` apply but
 #'   quantile labels remain available.
 #'
 #' @return A ggplot object.

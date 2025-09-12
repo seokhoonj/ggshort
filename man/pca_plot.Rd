@@ -119,7 +119,7 @@ pca_plot(
   title = "Iris PCA (categorical coloring)"
 )
 
-# Numeric color variable → continuous gradient; ellipses/means/density off
+# Numeric color variable -> continuous gradient; ellipses/means/density off
 df <- iris
 df$num_group <- df$Sepal.Length
 pca_plot(

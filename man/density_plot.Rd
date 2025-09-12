@@ -83,7 +83,7 @@ name (character) or column index (integer). If an integer is given,
 it is resolved to the corresponding column name in \code{data}.
 \item \strong{Coloring logic:} If \code{color_var} is categorical (factor/character/logical),
 a discrete Brewer palette (\code{palette}) is applied. If numeric, a continuous
-gradient (blue → red) is used, and \code{show_mean}/\code{show_median} apply but
+gradient (blue -> red) is used, and \code{show_mean}/\code{show_median} apply but
 quantile labels remain available.
 }
 }

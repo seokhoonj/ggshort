@@ -263,7 +263,7 @@ pca_plot <- function(data, measure_vars, color_var,
   if (show_ellipse && has_color && !is_color_numeric) {
     p <- p + ggplot2::stat_ellipse(
       ggplot2::aes(group = .data[[color_var]], color = .data[[color_var]]),
-      level = .9, alpha = .9
+      type = "norm", level = .9, alpha = .9
     )
   }
 

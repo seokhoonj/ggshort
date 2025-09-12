@@ -23,7 +23,6 @@ Imports:
     systemfonts (>= 1.1.0)
 Suggests:
     gridExtra (>= 2.3),
-    insurance (>= 0.2.0),
     insuranceData (>= 1.0),
     jaid (>= 0.0.0.9001),
     sysfonts (>= 0.8.9)

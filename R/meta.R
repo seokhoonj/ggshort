@@ -56,7 +56,11 @@ meta_plot <- function(x, widths = c(5, 5),
     measure.vars = c("class", "distinct", "mode")
   )
   ds$column <- factor(ds$column, levels = xlvl)
-  ds$info <- sprintf("NC: %d, NR, UQ", nrow(x)) #, attr(x, "nrow"))
+  ds$info <- sprintf(
+    "NR: %s, NU: %s",
+    scales::comma(attr(x, "nrow")),
+    scales::comma(attr(x, "nunique"))
+  )
 
   # left panel
   p1 <-

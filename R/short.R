@@ -53,10 +53,7 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
   position <- ggplot2::position_dodge2(preserve = "single")
 
   p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
-    ggplot2::geom_bar(
-      stat = "identity",
-      position = position
-    )
+    ggplot2::geom_bar(stat = "identity", position = position)
 
   if (!(missing(ymin_err) && missing(ymax_err))) {
     quos_err <- .valid_enquos(rlang::enquos(

@@ -31,12 +31,17 @@ pca_plot(
 \arguments{
 \item{data}{A data.frame containing the variables to be analyzed with PCA.}
 
-\item{measure_vars}{Character vector (or integer indices) of column(s) in \code{data}
-to use for PCA. If missing, all numeric columns in \code{data} are used. At least
-two numeric columns are required.}
+\item{measure_vars}{Columns to use for PCA. Supports:
+\itemize{
+\item unquoted selection, e.g. \code{c(x1, x2, x3)} or \code{.(x1, x2, x3)},
+\item a character vector of names, e.g. \code{c("x1","x2","x3")},
+\item or integer indices, e.g. \code{c(1,2,3)}.
+If missing, \strong{all numeric columns} in \code{data} are used. At least two
+numeric columns are required.
+}}
 
-\item{color_var}{Optional single column name (character) or single index
-(integer) in \code{data} used to color points. If supplied, it must exist in \code{data}.}
+\item{color_var}{Optional single column used to color points. Supports the
+same forms as \code{measure_vars} but must resolve to \strong{exactly one} column.}
 
 \item{x, y}{Principal component indices for the x- and y-axes (defaults:
 \code{x = 1}, \code{y = 2}). They must be different and within the number of PCs.}
@@ -71,8 +76,7 @@ marginal density panels (top/right) colored by group. Default \code{TRUE}.}
 
 \item{palette}{Discrete palette name for categorical \code{color_var}, forwarded to
 \code{\link[ggplot2:scale_brewer]{ggplot2::scale_color_brewer()}} and \code{\link[ggplot2:scale_brewer]{ggplot2::scale_fill_brewer()}}.
-Default \code{"Set1"}. Ignored when \code{color_var} is numeric.
-\code{\link[RColorBrewer:ColorBrewer]{RColorBrewer::display.brewer.all()}} for available palettes.}
+Default \code{"Set1"}. Ignored when \code{color_var} is numeric.}
 
 \item{title, subtitle, caption}{Plot title, subtitle, and caption. Passed to
 \code{\link[ggplot2:labs]{ggplot2::labs()}}.}
@@ -86,15 +90,18 @@ Default \code{"Set1"}. Ignored when \code{color_var} is numeric.
 A ggplot object.
 }
 \description{
-Draw a PCA plot from a data frame. The function computes \code{\link[stats:prcomp]{stats::prcomp()}}
-on selected numeric columns (\code{measure_vars}), plots scores on the requested
-principal components, and overlays loading (variable) arrows.
+Draw a PCA biplot-like figure from a data frame. The function computes
+\code{\link[stats:prcomp]{stats::prcomp()}} on selected numeric columns (\code{measure_vars}), plots scores
+on the requested principal components, and overlays loading (variable) arrows.
 }
 \details{
 \itemize{
+\item \strong{Selection helpers:} \code{measure_vars}/\code{color_var} are resolved via
+\code{capture_names()}, so \code{c(a,b)}, \code{.(a,b)}, character names, and indices
+are all supported.
 \item \strong{Coloring logic:} If \code{color_var} is categorical (factor/character/logical),
 a discrete Brewer palette (\code{palette}) is applied to points and densities.
-If \code{color_var} is numeric, a continuous gradient (blue -> red) is used and
+If \code{color_var} is numeric, a continuous gradient (blue → red) is used and
 \code{show_mean}/\code{show_ellipse}/\code{show_density} are ignored.
 \item \strong{Scaling:} With \code{scale != 0}, scores on the chosen PCs are divided by
 \code{sdev * sqrt(n)} and raised to \code{scale} to approximate classic biplot scaling.
@@ -107,7 +114,7 @@ Labels are styled via \code{label_args}.
 # Quick start: use all numeric columns (Species excluded automatically)
 pca_plot(iris, x = 1, y = 2)
 
-# Explicit variables + categorical coloring with ellipses & means
+# Explicit variables (character) + categorical coloring with ellipses & means
 pca_plot(
   iris,
   measure_vars = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
@@ -119,16 +126,20 @@ pca_plot(
   title = "Iris PCA (categorical coloring)"
 )
 
-# Numeric color variable -> continuous gradient; ellipses/means/density off
+# NSE selection (unquoted)
+pca_plot(
+  iris,
+  measure_vars = c(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width),
+  color_var = Species
+)
+
+# Integer indices
+pca_plot(iris, measure_vars = 1:4, color_var = 5)
+
+# Numeric color variable → continuous gradient; ellipses/means/density off
 df <- iris
 df$num_group <- df$Sepal.Length
-pca_plot(
-  df,
-  measure_vars = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
-  color_var = "num_group",
-  x = 1, y = 2,
-  title = "Iris PCA (numeric coloring)"
-)
+pca_plot(df, measure_vars = 1:4, color_var = num_group)
 }
 
 }

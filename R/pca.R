@@ -1,15 +1,18 @@
 #' PCA plot
 #'
-#' Draw a PCA plot from a data frame. The function computes [stats::prcomp()]
-#' on selected numeric columns (`measure_vars`), plots scores on the requested
-#' principal components, and overlays loading (variable) arrows.
+#' Draw a PCA biplot-like figure from a data frame. The function computes
+#' [stats::prcomp()] on selected numeric columns (`measure_vars`), plots scores
+#' on the requested principal components, and overlays loading (variable) arrows.
 #'
 #' @param data A data.frame containing the variables to be analyzed with PCA.
-#' @param measure_vars Character vector (or integer indices) of column(s) in `data`
-#'   to use for PCA. If missing, all numeric columns in `data` are used. At least
-#'   two numeric columns are required.
-#' @param color_var Optional single column name (character) or single index
-#'   (integer) in `data` used to color points. If supplied, it must exist in `data`.
+#' @param measure_vars Columns to use for PCA. Supports:
+#'   - unquoted selection, e.g. `c(x1, x2, x3)` or `.(x1, x2, x3)`,
+#'   - a character vector of names, e.g. `c("x1","x2","x3")`,
+#'   - or integer indices, e.g. `c(1,2,3)`.
+#'   If missing, **all numeric columns** in `data` are used. At least two
+#'   numeric columns are required.
+#' @param color_var Optional single column used to color points. Supports the
+#'   same forms as `measure_vars` but must resolve to **exactly one** column.
 #' @param x,y Principal component indices for the x- and y-axes (defaults:
 #'   `x = 1`, `y = 2`). They must be different and within the number of PCs.
 #' @param scale Scaling exponent applied to score axes; set `0` to disable.
@@ -35,7 +38,6 @@
 #' @param palette Discrete palette name for categorical `color_var`, forwarded to
 #'   [ggplot2::scale_color_brewer()] and [ggplot2::scale_fill_brewer()].
 #'   Default `"Set1"`. Ignored when `color_var` is numeric.
-#'   [RColorBrewer::display.brewer.all()] for available palettes.
 #' @param title,subtitle,caption Plot title, subtitle, and caption. Passed to
 #'   [ggplot2::labs()].
 #' @param theme A ggshort theme key passed to [switch_theme()]: one of
@@ -43,9 +45,12 @@
 #' @param ... Additional arguments forwarded to `switch_theme(theme = ...)`.
 #'
 #' @details
+#' - **Selection helpers:** `measure_vars`/`color_var` are resolved via
+#'   `capture_names()`, so `c(a,b)`, `.(a,b)`, character names, and indices
+#'   are all supported.
 #' - **Coloring logic:** If `color_var` is categorical (factor/character/logical),
 #'   a discrete Brewer palette (`palette`) is applied to points and densities.
-#'   If `color_var` is numeric, a continuous gradient (blue -> red) is used and
+#'   If `color_var` is numeric, a continuous gradient (blue → red) is used and
 #'   `show_mean`/`show_ellipse`/`show_density` are ignored.
 #' - **Scaling:** With `scale != 0`, scores on the chosen PCs are divided by
 #'   `sdev * sqrt(n)` and raised to `scale` to approximate classic biplot scaling.
@@ -59,7 +64,7 @@
 #' # Quick start: use all numeric columns (Species excluded automatically)
 #' pca_plot(iris, x = 1, y = 2)
 #'
-#' # Explicit variables + categorical coloring with ellipses & means
+#' # Explicit variables (character) + categorical coloring with ellipses & means
 #' pca_plot(
 #'   iris,
 #'   measure_vars = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
@@ -71,16 +76,20 @@
 #'   title = "Iris PCA (categorical coloring)"
 #' )
 #'
-#' # Numeric color variable -> continuous gradient; ellipses/means/density off
+#' # NSE selection (unquoted)
+#' pca_plot(
+#'   iris,
+#'   measure_vars = c(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width),
+#'   color_var = Species
+#' )
+#'
+#' # Integer indices
+#' pca_plot(iris, measure_vars = 1:4, color_var = 5)
+#'
+#' # Numeric color variable → continuous gradient; ellipses/means/density off
 #' df <- iris
 #' df$num_group <- df$Sepal.Length
-#' pca_plot(
-#'   df,
-#'   measure_vars = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
-#'   color_var = "num_group",
-#'   x = 1, y = 2,
-#'   title = "Iris PCA (numeric coloring)"
-#' )
+#' pca_plot(df, measure_vars = 1:4, color_var = num_group)
 #' }
 #'
 #' @export
@@ -107,7 +116,7 @@ pca_plot <- function(data, measure_vars, color_var,
     stop("`data` must be a data.frame.", call. = FALSE)
   theme <- match.arg(theme)
 
-  # resolve measure_vars
+  # resolve measure_vars: handle missing first, then resolve
   if (missing(measure_vars)) {
     measure_vars <- names(data)[vapply(data, is.numeric, logical(1L))]
     if (length(measure_vars) < 2L) {
@@ -115,40 +124,25 @@ pca_plot <- function(data, measure_vars, color_var,
            "No or only one numeric column detected.", call. = FALSE)
     }
   } else {
-    # allow integer indices
-    if (is.numeric(measure_vars)) {
-      if (any(measure_vars < 1L | measure_vars > ncol(data)))
-        stop("`measure_vars` index out of bounds for `data`.", call. = FALSE)
-      measure_vars <- names(data)[measure_vars]
-    }
-    if (!is.character(measure_vars) || length(measure_vars) < 2L)
-      stop("`measure_vars` must be a character vector of at least two column names ",
-           "or integer indices.", call. = FALSE)
-    if (!all(measure_vars %in% names(data))) {
-      missing_cols <- setdiff(measure_vars, names(data))
-      stop("`measure_vars` not found in `data`: ",
-           paste(missing_cols, collapse = ", "), call. = FALSE)
-    }
+    measure_vars <- jaid::capture_names(data, !!rlang::enquo(measure_vars))
+    if (length(measure_vars) < 2L)
+      stop("`measure_vars` must select at least two columns.", call. = FALSE)
     .assert_all_numeric(data[, measure_vars, drop = FALSE])
   }
 
   # resolve color_var (optional)
-  has_color <- !missing(color_var)
-  if (has_color) {
-    if (is.numeric(color_var)) {
-      if (length(color_var) != 1L || color_var < 1L || color_var > ncol(data))
-        stop("`color_var` must be a single valid column index in `data`.",
-             call. = FALSE)
-      color_var <- names(data)[color_var]
-    }
-    if (!is.character(color_var) || length(color_var) != 1L)
-      stop("`color_var` must be a single column name (character) or single index.",
-           call. = FALSE)
-    if (!color_var %in% names(data))
-      stop("`color_var` not found in `data`: ", color_var, call. = FALSE)
+  if (missing(color_var)) {
+    has_color <- FALSE
+    is_color_numeric <- FALSE
+  } else {
+    color_var <- jaid::capture_names(data, !!rlang::enquo(color_var))
+    if (length(color_var) != 1L)
+      stop("`color_var` must resolve to exactly one column.", call. = FALSE)
+    has_color <- TRUE
+    is_color_numeric <- is.numeric(data[[color_var]])
   }
 
-  # principle components
+  # principal components
   pc <- stats::prcomp(data[, measure_vars, drop = FALSE])
   scaled <- as.data.frame(pc$x)
   pc_names <- names(scaled)
@@ -177,7 +171,7 @@ pca_plot <- function(data, measure_vars, color_var,
   labs <- sprintf("%s (%.2f%%)", pc_xy, ve[c(x, y)] * 100)
   xlab <- labs[1L]; ylab <- labs[2L]
 
-  # score scailing
+  # score scaling
   lam <- sdev[c(x, y)] * sqrt(nrow(data))
   if (scale != 0) {
     lam <- lam^scale

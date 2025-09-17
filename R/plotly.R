@@ -36,51 +36,56 @@ plotly_treemap <- function(data, groups, values, path_labels = FALSE,
                            hoverinfo = "percent entry+percent parent+percent root") {
   if (!inherits(data, "data.frame"))
     stop("`data` must be a data.frame.", call. = FALSE)
-  if (!inherits(data, "data.table"))
-    data <- data.table::as.data.table(data)
+
+  env <- jaid::ensure_dt_env(data)
+  dt  <- env$dt
+
+  groups <- jaid::capture_names(dt, !!rlang::enquo(groups))
+  values <- jaid::capture_names(dt, !!rlang::enquo(values))
 
   # add parents
   if (add_parents)
-    data[, groups] <- lapply(seq_along(groups), function(x)
-      paste(rep(groups[x], nrow(data)), data[[groups[x]]]))
+    dt[, groups] <- lapply(seq_along(groups), function(x)
+      paste(rep(groups[x], nrow(dt)), dt[[groups[x]]]))
 
   # total
   dt_tot <- data.table::data.table(
     parents = "", ids = "", labels = "",
-    data[, lapply(.SD, sum), .SDcols = values]
+    dt[, lapply(.SD, sum), .SDcols = values]
   )
 
   # sum
   dt_sum_list <- lapply(seq_along(groups), function(x) {
     label_var <- groups[1:x]
-    dt <- data[, lapply(.SD, sum), by = label_var, .SDcols = values]
+    ds <- dt[, lapply(.SD, sum), by = label_var, .SDcols = values]
     if (x > 1) {
       parent_var <- groups[1:(x-1)]
-      parents <- .paste_list(dt[, .SD, .SDcols = parent_var], sep = path_sep)
-      ids     <- .paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
+      parents <- .paste_list(ds[, .SD, .SDcols = parent_var], sep = path_sep)
+      ids     <- .paste_list(ds[, .SD, .SDcols = label_var ], sep = path_sep)
       if (path_labels) {
         labels  <- ids
       } else {
-        labels  <- dt[[label_var[x]]]
+        labels  <- ds[[label_var[x]]]
       }
     } else {
       parents <- ""
-      ids     <- .paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
-      labels  <- .paste_list(dt[, .SD, .SDcols = label_var ], sep = path_sep)
+      ids     <- .paste_list(ds[, .SD, .SDcols = label_var ], sep = path_sep)
+      labels  <- .paste_list(ds[, .SD, .SDcols = label_var ], sep = path_sep)
       if (path_labels) {
         labels  <- ids
       } else {
-        labels  <- dt[[label_var[x]]]
+        labels  <- ds[[label_var[x]]]
       }
     }
     data.table(parents = parents, ids = ids, labels = labels,
-               dt[, .SD, .SDcols = values])
+               ds[, .SD, .SDcols = values])
   })
   dt_sum <- data.table::rbindlist(dt_sum_list)
 
   # all
   dt_all <- data.table::rbindlist(list(dt_tot, dt_sum), fill = TRUE)
   colors <- c("", rep(get_twelve_colors(), ceiling(nrow(dt_all)/12)))
+
   p <- plotly::plot_ly(
     type = "treemap",
     branchvalues = "total",
@@ -93,7 +98,8 @@ plotly_treemap <- function(data, groups, values, path_labels = FALSE,
     hoverinfo = hoverinfo,
     domain = list(column = 0)
   )
-  attr(p, "tree_data") <- as.data.frame(dt_all)
+  attr(p, "tree_data") <- env$restore(dt_all)
+
   p
 }
 
@@ -123,8 +129,14 @@ plotly_pie <- function(
     texttemplate = "%{label}<br>%{value}<br>(%{percent})",
     hovertemplate = "%{label}<br>%{value}<br>(%{percent})<extra></extra>"
     ) { # <extra></extra> is to remove trace label
+  if (!inherits(data, "data.frame"))
+    stop("`data` must be a data.frame.", call. = FALSE)
+
+  labels <- jaid::capture_names(data, !!rlang::enquo(labels))
+  values <- jaid::capture_names(data, !!rlang::enquo(values))
   labels <- formula(paste0("~", labels))
   values <- formula(paste0("~", values))
+
   plotly::plot_ly(
     data = data,
     type = "pie",

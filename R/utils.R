@@ -243,73 +243,82 @@ scale_y_limit_reverse <- function(x) {
 
 #' Pair color/fill scales for two-level groups
 #'
-#' Create consistent two-color scales for variables that take **two levels**.
+#' Create consistent two-color scales for variables that take **exactly two levels**.
+#' These are convenience wrappers around [ggplot2::scale_color_manual()] and
+#' [ggplot2::scale_fill_manual()] with predefined palettes from `get_two_colors()`.
 #'
-#' @param pair A vector containing the observed pair values.
-#' @param pair_levels A length-2 character vector giving level labels to expect.
+#' @param pair_levels A length-2 character vector giving the expected level labels.
 #'   Default: `c("1","2")`.
-#' @param color_type One of `"base"`, `"deep"`, `"base_inv"`, `"deep_inv"`.
+#' @param palette One of `"base"`, `"deep"`, `"base_inv"`, or `"deep_inv"`,
+#'   passed to `get_two_colors()` to choose the palette.
 #' @param guide A guide function or its name; passed to [ggplot2::guides()] via the scale.
+#' @param drop Logical. If `TRUE` (default), unused levels are dropped from the legend.
+#'   If `FALSE`, both levels are always shown even if only one is present.
+#' @param na.value Color used for missing values or values outside `pair_levels`.
 #'
-#' @return A one-element list containing a scale object (`scale_color_manual()` or
-#'   `scale_fill_manual()`), chosen based on the contents of `pair`. If a level
-#'   outside `pair_levels` is seen, a gray fallback is used.
+#' @return A `ScaleDiscrete` object from [ggplot2::scale_color_manual()] or
+#'   [ggplot2::scale_fill_manual()], suitable for use in ggplot.
 #'
-#' @seealso [scale_pair_fill_manual()]
+#' @seealso [ggplot2::scale_color_manual()], [ggplot2::scale_fill_manual()]
 #'
 #' @examples
 #' \donttest{
-#' dat <- expand.grid(agecat = 1:10, gender = c("1","2"))
-#' dat$n <- c(1:10, 2:11)
+#' data <- expand.grid(
+#'   gender = c("M","F"),
+#'   age_band = seq(from = 10 , to = 100, by = 10)
+#' )
+#' data$n <- c(1:10, 2:11)
 #'
-#' ggline(dat, x = agecat, y = n, color = gender) +
-#'   scale_pair_color_manual(dat$gender) +
+#' ggline(data, x = age_band, y = n, color = gender) +
+#'   scale_pair_color_manual(pair_levels = c("M","F"), palette = "base") +
 #'   theme_view()
 #'
-#' ggbar(dat, x = agecat, y = n, fill = gender) +
-#'   scale_pair_fill_manual(dat$gender, color_type = "deep") +
+#' ggbar(data, x = age_band, y = n, fill = gender) +
+#'   scale_pair_fill_manual(pair_levels = c("M","F"), palette = "deep") +
 #'   theme_view()
 #' }
 #'
 #' @export
 scale_pair_color_manual <- function(
-    pair, pair_levels = c("1", "2"),
-    color_type = c("base", "deep", "base_inv", "deep_inv"),
-    guide = "legend"
+    pair_levels = c("1", "2"),
+    palette     = c("base", "deep", "base_inv", "deep_inv"),
+    guide       = "legend",
+    drop        = TRUE,              # drop unused levels from legend
+    na.value    = "grey50"           # fallback color for missing/out-of-range values
 ) {
-  choice <- match.arg(color_type)
-  values <- get_two_colors(choice)
-  list(if (length(unique(pair)) == 2L) {
-    ggplot2::scale_color_manual(values = values, guide = guide)
-  } else if (unique(pair) == pair_levels[1L]) {
-    ggplot2::scale_color_manual(values = values[1L], guide = guide)
-  } else if (unique(pair) == pair_levels[2L]) {
-    ggplot2::scale_color_manual(values = values[2L], guide = guide)
-  } else {
-    ggplot2::scale_color_manual(values = "grey50", guide = guide)
-  })
+  choice <- match.arg(palette)
+  values <- get_two_colors(choice)              # returns a vector of two colors
+  named  <- stats::setNames(values, pair_levels)  # name colors according to pair_levels
+
+  ggplot2::scale_color_manual(
+    values   = named,                # mapping: level -> color
+    limits   = pair_levels,          # define allowed levels and their order
+    guide    = guide,
+    drop     = drop,
+    na.value = na.value
+  )
 }
 
 #' @rdname scale_pair_color_manual
 #' @export
 scale_pair_fill_manual <- function(
-    pair, pair_levels = c("1", "2"),
-    color_type = c("base", "deep", "base_inv", "deep_inv"),
-    guide = "legend"
+    pair_levels = c("1", "2"),
+    palette     = c("base", "deep", "base_inv", "deep_inv"),
+    guide       = "legend",
+    drop        = TRUE,
+    na.value    = "grey50"
 ) {
-  if (!inherits(pair, c("character", "factor")))
-    stop("pair must be a character or factor.")
-  choice <- match.arg(color_type)
+  choice <- match.arg(palette)
   values <- get_two_colors(choice)
-  list(if (length(unique(pair)) == 2L) {
-    ggplot2::scale_fill_manual(values = values, guide = guide)
-  } else if (unique(pair) == pair_levels[1L]) {
-    ggplot2::scale_fill_manual(values = values[1L], guide = guide)
-  } else if (unique(pair) == pair_levels[2L]) {
-    ggplot2::scale_fill_manual(values = values[2L], guide = guide)
-  } else {
-    ggplot2::scale_fill_manual(values = "grey50", guide = guide)
-  })
+  named  <- stats::setNames(values, pair_levels)
+
+  ggplot2::scale_fill_manual(
+    values   = named,
+    limits   = pair_levels,
+    guide    = guide,
+    drop     = drop,
+    na.value = na.value
+  )
 }
 
 #' Continuous Position Scale for X-Axis with Custom Breaks

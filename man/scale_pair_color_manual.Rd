@@ -6,52 +6,62 @@
 \title{Pair color/fill scales for two-level groups}
 \usage{
 scale_pair_color_manual(
-  pair,
   pair_levels = c("1", "2"),
-  color_type = c("base", "deep", "base_inv", "deep_inv"),
-  guide = "legend"
+  palette = c("base", "deep", "base_inv", "deep_inv"),
+  guide = "legend",
+  drop = TRUE,
+  na.value = "grey50"
 )
 
 scale_pair_fill_manual(
-  pair,
   pair_levels = c("1", "2"),
-  color_type = c("base", "deep", "base_inv", "deep_inv"),
-  guide = "legend"
+  palette = c("base", "deep", "base_inv", "deep_inv"),
+  guide = "legend",
+  drop = TRUE,
+  na.value = "grey50"
 )
 }
 \arguments{
-\item{pair}{A vector containing the observed pair values.}
-
-\item{pair_levels}{A length-2 character vector giving level labels to expect.
+\item{pair_levels}{A length-2 character vector giving the expected level labels.
 Default: \code{c("1","2")}.}
 
-\item{color_type}{One of \code{"base"}, \code{"deep"}, \code{"base_inv"}, \code{"deep_inv"}.}
+\item{palette}{One of \code{"base"}, \code{"deep"}, \code{"base_inv"}, or \code{"deep_inv"},
+passed to \code{get_two_colors()} to choose the palette.}
 
 \item{guide}{A guide function or its name; passed to \code{\link[ggplot2:guides]{ggplot2::guides()}} via the scale.}
+
+\item{drop}{Logical. If \code{TRUE} (default), unused levels are dropped from the legend.
+If \code{FALSE}, both levels are always shown even if only one is present.}
+
+\item{na.value}{Color used for missing values or values outside \code{pair_levels}.}
 }
 \value{
-A one-element list containing a scale object (\code{scale_color_manual()} or
-\code{scale_fill_manual()}), chosen based on the contents of \code{pair}. If a level
-outside \code{pair_levels} is seen, a gray fallback is used.
+A \code{ScaleDiscrete} object from \code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}} or
+\code{\link[ggplot2:scale_manual]{ggplot2::scale_fill_manual()}}, suitable for use in ggplot.
 }
 \description{
-Create consistent two-color scales for variables that take \strong{two levels}.
+Create consistent two-color scales for variables that take \strong{exactly two levels}.
+These are convenience wrappers around \code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}} and
+\code{\link[ggplot2:scale_manual]{ggplot2::scale_fill_manual()}} with predefined palettes from \code{get_two_colors()}.
 }
 \examples{
 \donttest{
-dat <- expand.grid(agecat = 1:10, gender = c("1","2"))
-dat$n <- c(1:10, 2:11)
+data <- expand.grid(
+  gender = c("M","F"),
+  age_band = seq(from = 10 , to = 100, by = 10)
+)
+data$n <- c(1:10, 2:11)
 
-ggline(dat, x = agecat, y = n, color = gender) +
-  scale_pair_color_manual(dat$gender) +
+ggline(data, x = age_band, y = n, color = gender) +
+  scale_pair_color_manual(pair_levels = c("M","F"), palette = "base") +
   theme_view()
 
-ggbar(dat, x = agecat, y = n, fill = gender) +
-  scale_pair_fill_manual(dat$gender, color_type = "deep") +
+ggbar(data, x = age_band, y = n, fill = gender) +
+  scale_pair_fill_manual(pair_levels = c("M","F"), palette = "deep") +
   theme_view()
 }
 
 }
 \seealso{
-\code{\link[=scale_pair_fill_manual]{scale_pair_fill_manual()}}
+\code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}}, \code{\link[ggplot2:scale_manual]{ggplot2::scale_fill_manual()}}
 }

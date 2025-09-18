@@ -110,8 +110,13 @@ hstack_plots <- function(left, right, widths = c(1, 1), draw = FALSE) {
 #'   (default `c(5, 5)` for `vstack_plots_with_legend()`).
 #' @param x_axis,y_axis Logical; if `FALSE`, hide x- or y-axis text/ticks for
 #'   both plots (useful for compact arrangements).
-#' @param title,subtitle,caption Optional plot annotations. Applied to `plot1`
-#'   (with blank text in `plot2` to avoid duplication).
+#' @param title,subtitle,caption Optional plot annotations.
+#'   - `title` and `subtitle` are applied to `plot1`, with blank text in `plot2`
+#'     to avoid duplication.
+#'   - `caption` is applied only to `plot2` (not to `plot1`).
+#'   If the title is too long, use [add_title()] instead. This helper is
+#'   **only for titles**; there are no equivalent functions for `subtitle`
+#'   or `caption`, so overly long text in those fields should be avoided.
 #'
 #' @return A ggplot object containing the combined plots and shared legend.
 #'
@@ -129,6 +134,8 @@ hstack_plots <- function(left, right, widths = c(1, 1), draw = FALSE) {
 #' vstack_plots_with_legend(p1, p2, heights = c(5, 5), widths = c(8.5, 1.5),
 #'                          y_axis = FALSE)
 #' }
+#'
+#' @seealso [add_title()]
 NULL
 
 #' @rdname stack_plots_with_legend

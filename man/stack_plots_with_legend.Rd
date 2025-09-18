@@ -44,8 +44,15 @@ from \code{plot1}.}
 \item{x_axis, y_axis}{Logical; if \code{FALSE}, hide x- or y-axis text/ticks for
 both plots (useful for compact arrangements).}
 
-\item{title, subtitle, caption}{Optional plot annotations. Applied to \code{plot1}
-(with blank text in \code{plot2} to avoid duplication).}
+\item{title, subtitle, caption}{Optional plot annotations.
+\itemize{
+\item \code{title} and \code{subtitle} are applied to \code{plot1}, with blank text in \code{plot2}
+to avoid duplication.
+\item \code{caption} is applied only to \code{plot2} (not to \code{plot1}).
+If the title is too long, use \code{\link[=add_title]{add_title()}} instead. This helper is
+\strong{only for titles}; there are no equivalent functions for \code{subtitle}
+or \code{caption}, so overly long text in those fields should be avoided.
+}}
 
 \item{heights}{Numeric vector of relative heights for vertical layout
 (default \code{c(5, 5)} for \code{vstack_plots_with_legend()}).}
@@ -81,4 +88,8 @@ hstack_plots_with_legend(p1, p2, widths = c(4.25, 4.25, 1.5))
 vstack_plots_with_legend(p1, p2, heights = c(5, 5), widths = c(8.5, 1.5),
                          y_axis = FALSE)
 }
+
+}
+\seealso{
+\code{\link[=add_title]{add_title()}}
 }

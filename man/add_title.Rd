@@ -39,7 +39,9 @@ vertically with the main plot.
 \examples{
 \donttest{
 p <- ggbar(mtcars, x = factor(cyl), y = mpg) + theme_view()
-add_title(p, "MPG by cylinder")
+
+add_title(p, "MPG by cylinder") # or
+p |> add_title(title = "MPG by cylinder")
 }
 
 }

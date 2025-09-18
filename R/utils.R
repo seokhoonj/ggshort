@@ -248,7 +248,7 @@ scale_y_limit_reverse <- function(x) {
 #' [ggplot2::scale_fill_manual()] with predefined palettes from `get_two_colors()`.
 #'
 #' @param pair_levels A length-2 character vector giving the expected level labels.
-#'   Default: `c("1","2")`.
+#'   Default: `c("0","1")`.
 #' @param palette One of `"base"`, `"deep"`, `"base_inv"`, or `"deep_inv"`,
 #'   passed to `get_two_colors()` to choose the palette.
 #' @param guide A guide function or its name; passed to [ggplot2::guides()] via the scale.
@@ -280,7 +280,7 @@ scale_y_limit_reverse <- function(x) {
 #'
 #' @export
 scale_pair_color_manual <- function(
-    pair_levels = c("1", "2"),
+    pair_levels = c("0", "1"),
     palette     = c("base", "deep", "base_inv", "deep_inv"),
     guide       = "legend",
     drop        = TRUE,              # drop unused levels from legend
@@ -305,7 +305,7 @@ scale_pair_color_manual <- function(
 #' @rdname scale_pair_color_manual
 #' @export
 scale_pair_fill_manual <- function(
-    pair_levels = c("1", "2"),
+    pair_levels = c("0", "1"),
     palette     = c("base", "deep", "base_inv", "deep_inv"),
     guide       = "legend",
     drop        = TRUE,
@@ -329,10 +329,10 @@ scale_pair_fill_manual <- function(
 
 #' @rdname scale_pair_color_manual
 #' @param gender_levels Length-2 character vector of expected gender labels
-#'   (alias of `pair_levels`), e.g. `c("1","2")` or `c("M","F")`.
+#'   (alias of `pair_levels`). Default: `c("M","F")`.
 #' @export
 scale_color_gender <- function(
-    gender_levels = c("1", "2"),
+    gender_levels = c("M", "F"),
     palette     = c("base", "deep"),
     guide       = "legend",
     drop        = TRUE,
@@ -346,10 +346,10 @@ scale_color_gender <- function(
 
 #' @rdname scale_pair_color_manual
 #' @param gender_levels Length-2 character vector of expected gender labels
-#'   (alias of `pair_levels`), e.g. `c("1","2")` or `c("M","F")`.
+#'   (alias of `pair_levels`). Default: `c("M","F")`.
 #' @export
 scale_fill_gender <- function(
-    gender_levels = c("1", "2"),
+    gender_levels = c("M", "F"),
     palette     = c("base", "deep"),
     guide       = "legend",
     drop        = TRUE,

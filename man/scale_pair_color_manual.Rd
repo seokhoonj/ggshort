@@ -8,7 +8,7 @@
 \title{Pair color/fill scales for two-level groups}
 \usage{
 scale_pair_color_manual(
-  pair_levels = c("1", "2"),
+  pair_levels = c("0", "1"),
   palette = c("base", "deep", "base_inv", "deep_inv"),
   guide = "legend",
   drop = TRUE,
@@ -16,7 +16,7 @@ scale_pair_color_manual(
 )
 
 scale_pair_fill_manual(
-  pair_levels = c("1", "2"),
+  pair_levels = c("0", "1"),
   palette = c("base", "deep", "base_inv", "deep_inv"),
   guide = "legend",
   drop = TRUE,
@@ -24,7 +24,7 @@ scale_pair_fill_manual(
 )
 
 scale_color_gender(
-  gender_levels = c("1", "2"),
+  gender_levels = c("M", "F"),
   palette = c("base", "deep"),
   guide = "legend",
   drop = TRUE,
@@ -32,7 +32,7 @@ scale_color_gender(
 )
 
 scale_fill_gender(
-  gender_levels = c("1", "2"),
+  gender_levels = c("M", "F"),
   palette = c("base", "deep"),
   guide = "legend",
   drop = TRUE,
@@ -41,7 +41,7 @@ scale_fill_gender(
 }
 \arguments{
 \item{pair_levels}{A length-2 character vector giving the expected level labels.
-Default: \code{c("1","2")}.}
+Default: \code{c("0","1")}.}
 
 \item{palette}{One of \code{"base"}, \code{"deep"}, \code{"base_inv"}, or \code{"deep_inv"},
 passed to \code{get_two_colors()} to choose the palette.}
@@ -54,7 +54,7 @@ If \code{FALSE}, both levels are always shown even if only one is present.}
 \item{na.value}{Color used for missing values or values outside \code{pair_levels}.}
 
 \item{gender_levels}{Length-2 character vector of expected gender labels
-(alias of \code{pair_levels}), e.g. \code{c("1","2")} or \code{c("M","F")}.}
+(alias of \code{pair_levels}). Default: \code{c("M","F")}.}
 }
 \value{
 A \code{ScaleDiscrete} object from \code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}} or

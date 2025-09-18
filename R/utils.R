@@ -322,31 +322,35 @@ scale_pair_fill_manual <- function(
 }
 
 #' @rdname scale_pair_color_manual
+#' @param gender_levels Length-2 character vector of expected gender labels
+#'   (alias of `pair_levels`), e.g. `c("1","2")` or `c("M","F")`.
 #' @export
 scale_color_gender <- function(
-    pair_levels = c("1", "2"),
+    gender_levels = c("1", "2"),
     palette     = c("base", "deep"),
     guide       = "legend",
     drop        = TRUE,
     na.value    = "grey50"
 ) {
   scale_pair_color_manual(
-    pair_levels = levels, palette = palette,
+    pair_levels = gender_levels, palette = palette,
     guide = guide, drop = drop, na.value = na.value
   )
 }
 
 #' @rdname scale_pair_color_manual
+#' @param gender_levels Length-2 character vector of expected gender labels
+#'   (alias of `pair_levels`), e.g. `c("1","2")` or `c("M","F")`.
 #' @export
 scale_fill_gender <- function(
-    pair_levels = c("1", "2"),
+    gender_levels = c("1", "2"),
     palette     = c("base", "deep"),
     guide       = "legend",
     drop        = TRUE,
     na.value    = "grey50"
 ) {
   scale_pair_fill_manual(
-    pair_levels = levels, palette = palette,
+    pair_levels = gender_levels, palette = palette,
     guide = guide, drop = drop, na.value = na.value
   )
 }

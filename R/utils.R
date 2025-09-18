@@ -321,6 +321,36 @@ scale_pair_fill_manual <- function(
   )
 }
 
+#' @rdname scale_pair_color_manual
+#' @export
+scale_color_gender <- function(
+    pair_levels = c("1", "2"),
+    palette     = c("base", "deep"),
+    guide       = "legend",
+    drop        = TRUE,
+    na.value    = "grey50"
+) {
+  scale_pair_color_manual(
+    pair_levels = levels, palette = palette,
+    guide = guide, drop = drop, na.value = na.value
+  )
+}
+
+#' @rdname scale_pair_color_manual
+#' @export
+scale_fill_gender <- function(
+    pair_levels = c("1", "2"),
+    palette     = c("base", "deep"),
+    guide       = "legend",
+    drop        = TRUE,
+    na.value    = "grey50"
+) {
+  scale_pair_fill_manual(
+    pair_levels = levels, palette = palette,
+    guide = guide, drop = drop, na.value = na.value
+  )
+}
+
 #' Continuous Position Scale for X-Axis with Custom Breaks
 #'
 #' `scale_x_break()` provides a continuous position scale for the x-axis,

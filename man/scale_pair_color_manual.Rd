@@ -3,6 +3,8 @@
 \name{scale_pair_color_manual}
 \alias{scale_pair_color_manual}
 \alias{scale_pair_fill_manual}
+\alias{scale_color_gender}
+\alias{scale_fill_gender}
 \title{Pair color/fill scales for two-level groups}
 \usage{
 scale_pair_color_manual(
@@ -16,6 +18,22 @@ scale_pair_color_manual(
 scale_pair_fill_manual(
   pair_levels = c("1", "2"),
   palette = c("base", "deep", "base_inv", "deep_inv"),
+  guide = "legend",
+  drop = TRUE,
+  na.value = "grey50"
+)
+
+scale_color_gender(
+  pair_levels = c("1", "2"),
+  palette = c("base", "deep"),
+  guide = "legend",
+  drop = TRUE,
+  na.value = "grey50"
+)
+
+scale_fill_gender(
+  pair_levels = c("1", "2"),
+  palette = c("base", "deep"),
   guide = "legend",
   drop = TRUE,
   na.value = "grey50"

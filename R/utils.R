@@ -286,6 +286,9 @@ scale_pair_color_manual <- function(
     drop        = TRUE,              # drop unused levels from legend
     na.value    = "grey50"           # fallback color for missing/out-of-range values
 ) {
+  if (is.numeric(pair_levels))
+    pair_levels <- as.character(pair_levels)
+
   choice <- match.arg(palette)
   values <- get_two_colors(choice)              # returns a vector of two colors
   named  <- stats::setNames(values, pair_levels)  # name colors according to pair_levels
@@ -308,6 +311,9 @@ scale_pair_fill_manual <- function(
     drop        = TRUE,
     na.value    = "grey50"
 ) {
+  if (is.numeric(pair_levels))
+    pair_levels <- as.character(pair_levels)
+
   choice <- match.arg(palette)
   values <- get_two_colors(choice)
   named  <- stats::setNames(values, pair_levels)

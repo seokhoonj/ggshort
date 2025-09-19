@@ -270,16 +270,16 @@ scale_y_limit_reverse <- function(x) {
 #' data$n <- c(1:10, 2:11)
 #'
 #' ggline(data, x = age_band, y = n, color = gender) +
-#'   scale_pair_color_manual(pair_levels = c("M","F"), palette = "base") +
+#'   scale_color_pair_manual(pair_levels = c("M","F"), palette = "base") +
 #'   theme_view()
 #'
 #' ggbar(data, x = age_band, y = n, fill = gender) +
-#'   scale_pair_fill_manual(pair_levels = c("M","F"), palette = "deep") +
+#'   scale_fill_pair_manual(pair_levels = c("M","F"), palette = "deep") +
 #'   theme_view()
 #' }
 #'
 #' @export
-scale_pair_color_manual <- function(
+scale_color_pair_manual <- function(
     pair_levels = c("0", "1"),
     palette     = c("base", "deep", "base_inv", "deep_inv"),
     guide       = "legend",
@@ -302,9 +302,9 @@ scale_pair_color_manual <- function(
   )
 }
 
-#' @rdname scale_pair_color_manual
+#' @rdname scale_color_pair_manual
 #' @export
-scale_pair_fill_manual <- function(
+scale_fill_pair_manual <- function(
     pair_levels = c("0", "1"),
     palette     = c("base", "deep", "base_inv", "deep_inv"),
     guide       = "legend",
@@ -327,7 +327,7 @@ scale_pair_fill_manual <- function(
   )
 }
 
-#' @rdname scale_pair_color_manual
+#' @rdname scale_color_pair_manual
 #' @param gender_levels Length-2 character vector of expected gender labels
 #'   (alias of `pair_levels`). Default: `c("M","F")`.
 #' @export
@@ -338,13 +338,14 @@ scale_color_gender <- function(
     drop        = TRUE,
     na.value    = "grey50"
 ) {
-  scale_pair_color_manual(
+  palette <- match.arg(palette)
+  scale_color_pair_manual(
     pair_levels = gender_levels, palette = palette,
     guide = guide, drop = drop, na.value = na.value
   )
 }
 
-#' @rdname scale_pair_color_manual
+#' @rdname scale_color_pair_manual
 #' @param gender_levels Length-2 character vector of expected gender labels
 #'   (alias of `pair_levels`). Default: `c("M","F")`.
 #' @export
@@ -355,7 +356,8 @@ scale_fill_gender <- function(
     drop        = TRUE,
     na.value    = "grey50"
 ) {
-  scale_pair_fill_manual(
+  palette <- match.arg(palette)
+  scale_fill_pair_manual(
     pair_levels = gender_levels, palette = palette,
     guide = guide, drop = drop, na.value = na.value
   )

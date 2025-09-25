@@ -10,12 +10,12 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.1)
 Remotes:
-    github::seokhoonj/jaid
+    github::seokhoonj/instead
 Imports:
     data.table (>= 1.13.0),
     ggplot2 (>= 3.3.3),
     gtable (>= 0.3.6),
-    jaid (>= 0.0.0.9001),
+    instead,
     lifecycle (>= 1.0.3),
     plotly (>= 4.10.1),
     rlang (>= 1.1.1),

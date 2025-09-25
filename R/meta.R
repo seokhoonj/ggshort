@@ -4,7 +4,7 @@
 #' a left panel with variable-level metadata (class, distinct, mode),
 #' and a right panel with bar charts of `prop`/`nzprop`.
 #'
-#' @param x A meta object created by [jaid::meta()].
+#' @param x A meta object created by [instead::meta()].
 #' @param widths Numeric vector of length 2 giving relative widths of the
 #'   left (table) and right (bars) panels. Default: `c(5, 5)`.
 #' @param title,subtitle,caption Plot title, subtitle, and caption. Passed to
@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' mt <- jaid::meta(mtcars)
+#' mt <- instead::meta(mtcars)
 #' meta_plot(mt)  # draws and returns a gtable
 #' }
 #'
@@ -27,9 +27,6 @@ meta_plot <- function(x, widths = c(5, 5),
                       title = NULL, subtitle = NULL, caption = NULL,
                       theme = c("view", "save", "shiny"),
                       ...) {
-  if (!requireNamespace("jaid", quietly = TRUE))
-    stop("Package 'jaid' is required for meta_plot(); install it with install.packages('jaid').",
-         call. = FALSE)
   if (!inherits(x, "meta"))
     stop("`x` must be a meta object.")
 
@@ -129,7 +126,7 @@ meta_plot <- function(x, widths = c(5, 5),
 #'
 #' @examples
 #' \dontrun{
-#' mt <- jaid::meta(mtcars)
+#' mt <- instead::meta(mtcars)
 #' plot(mt)  # equivalent to metaplot(mt)
 #' }
 #'

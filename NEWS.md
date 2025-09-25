@@ -1,6 +1,6 @@
-# jaid 0.0.0.9001
+# ggshort 0.0.0.9001
 
-* Overall Updated
+Updated overall.
 
 # ggshort 0.0.0.9000
 

@@ -15,7 +15,7 @@ meta_plot(
 )
 }
 \arguments{
-\item{x}{A meta object created by \code{\link[jaid:meta]{jaid::meta()}}.}
+\item{x}{A meta object created by \code{\link[instead:meta]{instead::meta()}}.}
 
 \item{widths}{Numeric vector of length 2 giving relative widths of the
 left (table) and right (bars) panels. Default: \code{c(5, 5)}.}
@@ -37,7 +37,7 @@ and a right panel with bar charts of \code{prop}/\code{nzprop}.
 }
 \examples{
 \dontrun{
-mt <- jaid::meta(mtcars)
+mt <- instead::meta(mtcars)
 meta_plot(mt)  # draws and returns a gtable
 }
 

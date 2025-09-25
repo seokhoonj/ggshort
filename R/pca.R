@@ -124,7 +124,7 @@ pca_plot <- function(data, measure_vars, color_var,
            "No or only one numeric column detected.", call. = FALSE)
     }
   } else {
-    measure_vars <- jaid::capture_names(data, !!rlang::enquo(measure_vars))
+    measure_vars <- instead::capture_names(data, !!rlang::enquo(measure_vars))
     if (length(measure_vars) < 2L)
       stop("`measure_vars` must select at least two columns.", call. = FALSE)
     .assert_all_numeric(data[, measure_vars, drop = FALSE])
@@ -135,7 +135,7 @@ pca_plot <- function(data, measure_vars, color_var,
     has_color <- FALSE
     is_color_numeric <- FALSE
   } else {
-    color_var <- jaid::capture_names(data, !!rlang::enquo(color_var))
+    color_var <- instead::capture_names(data, !!rlang::enquo(color_var))
     if (length(color_var) != 1L)
       stop("`color_var` must resolve to exactly one column.", call. = FALSE)
     has_color <- TRUE

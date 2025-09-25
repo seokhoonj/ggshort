@@ -14,7 +14,7 @@
 #' @importFrom grid arrow grid.draw gpar textGrob unit
 #' @importFrom gtable gtable gtable_add_grob gtable_add_rows
 #' @importFrom data.table `:=` `.SD` as.data.table data.table melt set setDT
-#' @importFrom jaid capture_names
+#' @importFrom instead capture_names meta
 #' @importFrom lifecycle badge deprecate_warn signal_stage
 #' @importFrom plotly ggplotly plot_ly
 #' @importFrom rlang .data enquo enquos quo_is_missing quo_is_null

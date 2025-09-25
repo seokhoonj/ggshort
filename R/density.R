@@ -82,8 +82,8 @@ density_plot <- function(data, x_var, color_var,
     stop("`data` must be a data.frame.", call. = FALSE)
   theme <- match.arg(theme)
 
-  x_var     <- jaid::capture_names(data, !!rlang::enquo(x_var))
-  color_var <- jaid::capture_names(data, !!rlang::enquo(color_var))
+  x_var     <- instead::capture_names(data, !!rlang::enquo(x_var))
+  color_var <- instead::capture_names(data, !!rlang::enquo(color_var))
 
   # resolve x_var
   if (is.numeric(x_var)) {
@@ -210,8 +210,8 @@ density_plot <- function(data, x_var, color_var,
 #         dt <- data[, .SD, .SDcols = .x]
 #       }
 #     } else {
-#      # .facet <- jaid::match_cols(data, sapply(rlang::enexpr(facets), rlang::as_name))
-#       .facet <- jaid::capture_names(data, !!rlang::enquo(facets))
+#      # .facet <- instead::match_cols(data, sapply(rlang::enexpr(facets), rlang::as_name))
+#       .facet <- instead::capture_names(data, !!rlang::enquo(facets))
 #       if (!inherits(data, "data.table")) {
 #         dt <- data.table::as.data.table(data[, c(.x, .facet)])
 #       } else {

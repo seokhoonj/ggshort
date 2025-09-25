@@ -37,11 +37,11 @@ plotly_treemap <- function(data, groups, values, path_labels = FALSE,
   if (!inherits(data, "data.frame"))
     stop("`data` must be a data.frame.", call. = FALSE)
 
-  env <- jaid::ensure_dt_env(data)
+  env <- instead::ensure_dt_env(data)
   dt  <- env$dt
 
-  groups <- jaid::capture_names(dt, !!rlang::enquo(groups))
-  values <- jaid::capture_names(dt, !!rlang::enquo(values))
+  groups <- instead::capture_names(dt, !!rlang::enquo(groups))
+  values <- instead::capture_names(dt, !!rlang::enquo(values))
 
   # add parents
   if (add_parents)
@@ -132,8 +132,8 @@ plotly_pie <- function(
   if (!inherits(data, "data.frame"))
     stop("`data` must be a data.frame.", call. = FALSE)
 
-  labels <- jaid::capture_names(data, !!rlang::enquo(labels))
-  values <- jaid::capture_names(data, !!rlang::enquo(values))
+  labels <- instead::capture_names(data, !!rlang::enquo(labels))
+  values <- instead::capture_names(data, !!rlang::enquo(values))
   labels <- formula(paste0("~", labels))
   values <- formula(paste0("~", values))
 

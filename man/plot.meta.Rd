@@ -7,7 +7,7 @@
 \method{plot}{meta}(x, widths = c(5, 5), theme = c("view", "save", "shiny"), ...)
 }
 \arguments{
-\item{x}{A meta object created by \code{\link[jaid:meta]{jaid::meta()}}.}
+\item{x}{A meta object created by \code{\link[instead:meta]{instead::meta()}}.}
 
 \item{widths}{Numeric vector of length 2 giving relative widths of the
 left (table) and right (bars) panels. Default: \code{c(5, 5)}.}
@@ -25,7 +25,7 @@ S3 method for \code{\link[=plot]{plot()}} that delegates to \code{\link[=meta_pl
 }
 \examples{
 \dontrun{
-mt <- jaid::meta(mtcars)
+mt <- instead::meta(mtcars)
 plot(mt)  # equivalent to metaplot(mt)
 }
 

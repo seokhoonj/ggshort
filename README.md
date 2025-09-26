@@ -350,6 +350,9 @@ p + switch_theme(theme = "view", x.size = 0, y.size = 0)
 
 ## 2. Simple Plot functions
 
+This section provides quick helper functions for common statistical plots.  
+Unlike the `ggplot2 shortly` wrappers (which simplify standard geoms), these functions focus on **analytical plots** that often involve preprocessing:
+
 ------------------------------------------------------------------------
 
 ### 1) `box_plot()`

@@ -34,7 +34,7 @@ either a column name (character string) or a single column index (integer).}
 either a column name (character string) or a single column index (integer).
 If supplied, it must exist in \code{data}.}
 
-\item{probs}{Numeric vector of probabilities in [0,1] for quantile guides
+\item{probs}{Numeric vector of probabilities in [0, 1] for quantile guides
 (used when \code{show_label = TRUE}). Default \code{0.95}.}
 
 \item{na.rm}{Logical; remove missing values silently if \code{TRUE}. Default \code{TRUE}.}

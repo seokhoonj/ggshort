@@ -63,8 +63,13 @@ set_ggshort_font <- function(family) {
   options(ggshort.font = family)
 
   os_type <- Sys.info()[["sysname"]]
-  if (os_type == "Windows")
-    showtext::showtext_auto(.mean_dpi())
+  if (os_type == "Windows") {
+    if (requireNamespace("showtext", quietly = TRUE)) {
+      showtext::showtext_auto(.mean_dpi())
+    } else {
+      message("showtext package not found -> skipping font auto-activation.")
+    }
+  }
 
   family
 }

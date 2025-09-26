@@ -20,11 +20,11 @@ Imports:
     plotly (>= 4.10.1),
     rlang (>= 1.1.1),
     scales (>= 1.2.1),
-    showtext (>= 0.9.7),
     systemfonts (>= 1.1.0)
 Suggests:
     gridExtra (>= 2.3),
     insuranceData (>= 1.0),
+    showtext (>= 0.9.7),
     sysfonts (>= 0.8.9)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

@@ -10,8 +10,11 @@ stat_density_quantile(
   probs = 0.95,
   na.rm = TRUE,
   y = Inf,
-  fmt = function(p, q) sprintf("\%.2f (\%.0f\%\%)", q, p * 100),
+  fmt = function(p, q) sprintf("\%.2f (\%.1f\%\%)", q, p * 100),
   family = getOption("ggshort.font"),
+  angle = 0,
+  hjust = 0.5,
+  vjust = 2,
   show.legend = FALSE,
   inherit.aes = TRUE,
   ...
@@ -46,7 +49,16 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{fmt}{Label formatter function (see \code{\link[=stat_density_quantile_text]{stat_density_quantile_text()}}).}
 
-\item{family}{Font family for labels (passed to \code{stat_density_quantile_text()}).}
+\item{family}{Font family for labels (passed to \code{\link[=stat_density_quantile_text]{stat_density_quantile_text()}}).}
+
+\item{angle}{Numeric. Rotation angle of the text label (in degrees).
+Default is \code{0} (horizontal).}
+
+\item{hjust}{Numeric in [0, 1]. Horizontal justification of the text label.
+Default is \code{0.5} (center).}
+
+\item{vjust}{Numeric. Vertical justification of the text label.
+Default is \code{2} (a bit above the line).}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
@@ -61,7 +73,8 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
 
-\item{...}{Additional arguments forwarded to both layers.}
+\item{...}{Additional arguments forwarded to \code{\link[=stat_density_quantile_text]{stat_density_quantile_text()}}
+layers.}
 }
 \value{
 A list of two ggplot layers.
@@ -72,8 +85,10 @@ label(s) at the same probabilities.
 }
 \examples{
 \donttest{
-ggdensity(iris, x = Sepal.Length, fill = Species) +
-  stat_density_quantile(probs = c(.05, .95))
+ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, fill = Species)) +
+  ggplot2::geom_density(alpha = .6) +
+  stat_density_quantile(probs = .5, vjust = 2) +
+  theme_view()
 }
 
 }

@@ -10,7 +10,7 @@ stat_chull(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  alpha = 0.3,
+  alpha = 0,
   ...
 )
 }
@@ -51,7 +51,7 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
 
-\item{alpha}{Fill transparency in \verb{[0, 1]}.}
+\item{alpha}{Fill transparency in [0, 1].}
 
 \item{...}{Additional arguments passed to \code{\link[ggplot2:geom_polygon]{ggplot2::geom_polygon()}}.}
 }

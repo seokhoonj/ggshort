@@ -10,7 +10,7 @@ stat_density_quantile_text(
   probs = 0.95,
   na.rm = TRUE,
   y = Inf,
-  fmt = function(p, q) sprintf("\%.2f(\%.f\%\%)", q, p * 100),
+  fmt = function(p, q) sprintf("\%.2f(\%.1f\%\%)", q, p * 100),
   family = getOption("ggshort.font"),
   show.legend = FALSE,
   inherit.aes = TRUE,
@@ -73,8 +73,10 @@ Place text labels at quantile location(s) of \code{x}. Use with
 }
 \examples{
 \donttest{
-ggdensity(iris, x = Sepal.Length, fill = Species) +
-  stat_density_quantile_text(probs = c(.5, .9))
+ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, fill = Species)) +
+  ggplot2::geom_density(alpha = .6) +
+  stat_density_quantile_text(probs = .5, vjust = 2) +
+  theme_view()
 }
 
 }

@@ -177,16 +177,16 @@ hstack_plots_with_legend <- function(plot1, plot2, legend,
   }
 
   if (!is.null(title)) {
-    p1 <- p1 + labs(title = title)
-    p2 <- p2 + labs(title = "")
+    p1 <- p1 + ggplot2::labs(title = title)
+    p2 <- p2 + ggplot2::labs(title = "")
   }
   if (!is.null(subtitle)) {
-    p1 <- p1 + labs(subtitle = subtitle)
-    p2 <- p2 + labs(subtitle = "")
+    p1 <- p1 + ggplot2::labs(subtitle = subtitle)
+    p2 <- p2 + ggplot2::labs(subtitle = "")
   }
   if (!is.null(caption)) {
-    p1 <- p1 + labs(caption = "")
-    p2 <- p2 + labs(caption = caption)
+    p1 <- p1 + ggplot2::labs(caption = "")
+    p2 <- p2 + ggplot2::labs(caption = caption)
   }
 
   widths1 <- widths[1:2]
@@ -235,21 +235,21 @@ vstack_plots_with_legend <- function(plot1, plot2, legend,
   }
 
   if (!is.null(title)) {
-    p1 <- p1 + labs(title = title)
-    p2 <- p2 + labs(title = "")
+    p1 <- p1 + ggplot2::labs(title = title)
+    p2 <- p2 + ggplot2::labs(title = "")
   }
 
   if (!is.null(title)) {
-    p1 <- p1 + labs(title = title)
-    p2 <- p2 + labs(title = "")
+    p1 <- p1 + ggplot2::labs(title = title)
+    p2 <- p2 + ggplot2::labs(title = "")
   }
   if (!is.null(subtitle)) {
-    p1 <- p1 + labs(subtitle = subtitle)
-    p2 <- p2 + labs(subtitle = "")
+    p1 <- p1 + ggplot2::labs(subtitle = subtitle)
+    p2 <- p2 + ggplot2::labs(subtitle = "")
   }
   if (!is.null(caption)) {
-    p1 <- p1 + labs(caption = "")
-    p2 <- p2 + labs(caption = caption)
+    p1 <- p1 + ggplot2::labs(caption = "")
+    p2 <- p2 + ggplot2::labs(caption = caption)
   }
 
   p <- vstack_plots(p1, p2, heights = heights)

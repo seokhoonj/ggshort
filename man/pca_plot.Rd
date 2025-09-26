@@ -19,6 +19,7 @@ pca_plot(
   show_mean = TRUE,
   show_median = TRUE,
   show_ellipse = TRUE,
+  show_chull = FALSE,
   show_density = FALSE,
   palette = "Set1",
   title = NULL,
@@ -50,7 +51,7 @@ same forms as \code{measure_vars} but must resolve to \strong{exactly one} colum
 Internally the scores on PCs \code{x} and \code{y} are divided by \code{sdev * sqrt(n)}
 and then raised to \code{scale} (biplot-like scaling). Default: \code{1}.}
 
-\item{alpha}{Point transparency in \verb{[0, 1]}. Default: \code{0.3}.}
+\item{alpha}{Point transparency in [0, 1]. Default: \code{0.3}.}
 
 \item{show_arrow}{Logical; if \code{TRUE}, draw loading arrows. Default: \code{TRUE}.}
 
@@ -70,6 +71,10 @@ median points (shape: X). Ignored for numeric \code{color_var}. Default \code{FA
 
 \item{show_ellipse}{Logical; if \code{TRUE} and \code{color_var} is provided, draw
 normal-theory ellipses by group at 0.90 level. Default: \code{TRUE}.}
+
+\item{show_chull}{Logical; if \code{TRUE} and \code{color_var} is categorical,
+draw per-group convex hull outlines (via \code{\link[=stat_chull]{stat_chull()}}).
+Default: \code{FALSE}.}
 
 \item{show_density}{Logical; if \code{TRUE} and \code{color_var} is categorical, attach
 marginal density panels (top/right) colored by group. Default \code{TRUE}.}
@@ -101,7 +106,7 @@ on the requested principal components, and overlays loading (variable) arrows.
 are all supported.
 \item \strong{Coloring logic:} If \code{color_var} is categorical (factor/character/logical),
 a discrete Brewer palette (\code{palette}) is applied to points and densities.
-If \code{color_var} is numeric, a continuous gradient (blue → red) is used and
+If \code{color_var} is numeric, a continuous gradient (blue -> red) is used and
 \code{show_mean}/\code{show_ellipse}/\code{show_density} are ignored.
 \item \strong{Scaling:} With \code{scale != 0}, scores on the chosen PCs are divided by
 \code{sdev * sqrt(n)} and raised to \code{scale} to approximate classic biplot scaling.
@@ -136,7 +141,7 @@ pca_plot(
 # Integer indices
 pca_plot(iris, measure_vars = 1:4, color_var = 5)
 
-# Numeric color variable → continuous gradient; ellipses/means/density off
+# Numeric color variable -> continuous gradient; ellipses/means/density off
 df <- iris
 df$num_group <- df$Sepal.Length
 pca_plot(df, measure_vars = 1:4, color_var = num_group)

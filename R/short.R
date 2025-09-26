@@ -473,7 +473,7 @@ ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' @param x Unquoted column mapped to the x aesthetic.
 #' @param color,fill,group Optional columns mapped to the corresponding
 #'   aesthetics.
-#' @param probs Numeric vector of probabilities in \[0,1\] for quantile guides
+#' @param probs Numeric vector of probabilities in \[0, 1] for quantile guides
 #'   (used when `show_vline`/`show_label` are `TRUE`). Default `0.95`.
 #' @param na.rm Logical; remove missing values silently if `TRUE`. Default `TRUE`.
 #' @param y Numeric y position for quantile labels (used by `show_label`).
@@ -536,7 +536,7 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
     args <- .modify_label_args(label_args)
     p <- p + stat_density_quantile_text(
       probs = probs, na.rm = na.rm, y = y,
-      fmt = function(p, q) sprintf("%.2f (%.0f%%)", q, p * 100),
+      fmt = function(p, q) sprintf("%.2f (%.1f%%)", q, p * 100),
       family = args$family, angle = args$angle,
       hjust  = args$hjust,  vjust = args$vjust
     )

@@ -22,7 +22,7 @@ dat <- expand.grid(x = c("A","B","C"), fill = c("X","Y","Z"))
 dat$y <- sample(1:10, size = 9, replace = TRUE)
 g <- ggbar(dat, x = x, y = y, fill = fill, label = y,
            label_args = list(vjust = -0.25)) +
-     theme_view(family = NULL)
+       theme_view(family = NULL)
 get_legend(g)
 }
 

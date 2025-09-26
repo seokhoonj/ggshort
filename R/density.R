@@ -10,7 +10,7 @@
 #' @param color_var Optional column for grouping/coloring densities. May be
 #'   either a column name (character string) or a single column index (integer).
 #'   If supplied, it must exist in `data`.
-#' @param probs Numeric vector of probabilities in \[0,1\] for quantile guides
+#' @param probs Numeric vector of probabilities in \[0, 1] for quantile guides
 #'   (used when `show_label = TRUE`). Default `0.95`.
 #' @param na.rm Logical; remove missing values silently if `TRUE`. Default `TRUE`.
 #' @param y Numeric y position for quantile labels. Default `Inf` (top of panel).

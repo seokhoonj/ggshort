@@ -18,7 +18,7 @@
 #' @param scale Scaling exponent applied to score axes; set `0` to disable.
 #'   Internally the scores on PCs `x` and `y` are divided by `sdev * sqrt(n)`
 #'   and then raised to `scale` (biplot-like scaling). Default: `1`.
-#' @param alpha Point transparency in `[0, 1]`. Default: `0.3`.
+#' @param alpha Point transparency in \[0, 1]. Default: `0.3`.
 #' @param show_arrow Logical; if `TRUE`, draw loading arrows. Default: `TRUE`.
 #' @param show_label Logical; if `TRUE`, draw variable names at arrow tips.
 #'   Default: `TRUE`.
@@ -33,6 +33,9 @@
 #'   median points (shape: X). Ignored for numeric `color_var`. Default `FALSE`.
 #' @param show_ellipse Logical; if `TRUE` and `color_var` is provided, draw
 #'   normal-theory ellipses by group at 0.90 level. Default: `TRUE`.
+#' @param show_chull Logical; if `TRUE` and `color_var` is categorical,
+#'   draw per-group convex hull outlines (via [stat_chull()]).
+#'   Default: `FALSE`.
 #' @param show_density Logical; if `TRUE` and `color_var` is categorical, attach
 #'   marginal density panels (top/right) colored by group. Default `TRUE`.
 #' @param palette Discrete palette name for categorical `color_var`, forwarded to
@@ -50,7 +53,7 @@
 #'   are all supported.
 #' - **Coloring logic:** If `color_var` is categorical (factor/character/logical),
 #'   a discrete Brewer palette (`palette`) is applied to points and densities.
-#'   If `color_var` is numeric, a continuous gradient (blue → red) is used and
+#'   If `color_var` is numeric, a continuous gradient (blue -> red) is used and
 #'   `show_mean`/`show_ellipse`/`show_density` are ignored.
 #' - **Scaling:** With `scale != 0`, scores on the chosen PCs are divided by
 #'   `sdev * sqrt(n)` and raised to `scale` to approximate classic biplot scaling.
@@ -86,7 +89,7 @@
 #' # Integer indices
 #' pca_plot(iris, measure_vars = 1:4, color_var = 5)
 #'
-#' # Numeric color variable → continuous gradient; ellipses/means/density off
+#' # Numeric color variable -> continuous gradient; ellipses/means/density off
 #' df <- iris
 #' df$num_group <- df$Sepal.Length
 #' pca_plot(df, measure_vars = 1:4, color_var = num_group)
@@ -108,6 +111,7 @@ pca_plot <- function(data, measure_vars, color_var,
                      show_mean = TRUE,
                      show_median = TRUE,
                      show_ellipse = TRUE,
+                     show_chull = FALSE,
                      show_density = FALSE,
                      palette = "Set1",
                      title = NULL, subtitle = NULL, caption = NULL,
@@ -261,8 +265,14 @@ pca_plot <- function(data, measure_vars, color_var,
     )
   }
 
+  if (show_chull && has_color && !is_color_numeric) {
+    p <- p + stat_chull(
+      ggplot2::aes(group = .data[[color_var]], color = .data[[color_var]])
+    )
+  }
+
   p <- p + xlab(xlab) + ylab(ylab) +
-    labs(title = title, subtitle = subtitle, caption = caption) +
+    ggplot2::labs(title = title, subtitle = subtitle, caption = caption) +
     switch_theme(theme = theme, ...)
 
   if (show_density && has_color && !is_color_numeric) {

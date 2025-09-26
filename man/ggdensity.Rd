@@ -29,7 +29,7 @@ ggdensity(
 \item{color, fill, group}{Optional columns mapped to the corresponding
 aesthetics.}
 
-\item{probs}{Numeric vector of probabilities in [0,1] for quantile guides
+\item{probs}{Numeric vector of probabilities in [0, 1] for quantile guides
 (used when \code{show_vline}/\code{show_label} are \code{TRUE}). Default \code{0.95}.}
 
 \item{na.rm}{Logical; remove missing values silently if \code{TRUE}. Default \code{TRUE}.}

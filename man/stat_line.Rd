@@ -5,8 +5,8 @@
 \alias{stat_mean_hline}
 \alias{stat_median_hline}
 \alias{stat_mean_vline}
-\alias{stat_mean_line}
 \alias{stat_median_vline}
+\alias{stat_mean_line}
 \alias{stat_median_line}
 \title{Crosshair lines at mean/median}
 \usage{
@@ -43,7 +43,7 @@ stat_mean_vline(
   ...
 )
 
-stat_mean_line(
+stat_median_vline(
   mapping = NULL,
   data = NULL,
   na.rm = FALSE,
@@ -54,7 +54,7 @@ stat_mean_line(
   ...
 )
 
-stat_median_vline(
+stat_mean_line(
   mapping = NULL,
   data = NULL,
   na.rm = FALSE,

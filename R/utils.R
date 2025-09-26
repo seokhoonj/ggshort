@@ -56,16 +56,20 @@ grob_to_ggplot <- function(grob) {
 #' dat$y <- sample(1:10, size = 9, replace = TRUE)
 #' g <- ggbar(dat, x = x, y = y, fill = fill, label = y,
 #'            label_args = list(vjust = -0.25)) +
-#'      theme_view(family = NULL)
+#'        theme_view(family = NULL)
 #' get_legend(g)
 #' }
 #'
 #' @export
 get_legend <- function(plot) {
-  gtable <- ggplot2::ggplot_gtable(ggplot_build(plot))
-  guide <- which(sapply(gtable$grobs, function(x) x$name) == "guide-box")
-  if (length(guide)) {
-    return(gtable$grobs[[guide]])
+  if (!ggplot2::is_ggplot(plot))
+    stop("`plot` must be a ggplot object (class 'gg'/'ggplot').", call. = FALSE)
+  gt <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(plot))
+  idx <- which(
+    vapply(gt$grobs, function(x) x$name, character(1L)) == "guide-box"
+  )
+  if (length(idx)) {
+    return(gt$grobs[[idx]])
   } else {
     return(
       gtable::gtable(

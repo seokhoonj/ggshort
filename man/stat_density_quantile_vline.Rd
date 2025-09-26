@@ -67,8 +67,10 @@ grouping/color/fill aesthetic is mapped.
 }
 \examples{
 \donttest{
-ggdensity(iris, x = Sepal.Length, fill = Species) +
-  stat_density_quantile_vline(probs = c(.5, .9))
+ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, fill = Species)) +
+  ggplot2::geom_density(alpha = .6) +
+  stat_density_quantile_vline(probs = c(.5, .9)) +
+  theme_view()
 }
 
 }

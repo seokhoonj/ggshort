@@ -55,7 +55,7 @@ cor_plot <- function(x, display = c("lower", "upper"),
   display <- match.arg(display)
   if (display == "lower") {
     x[lower.tri(x, diag = FALSE)] <- NA_real_
-  } else {
+  } else if (display == "upper") {
     x[upper.tri(x, diag = FALSE)] <- NA_real_
   }
 
@@ -94,6 +94,7 @@ cor_plot <- function(x, display = c("lower", "upper"),
     )
   }
 
-  p + labs(title = title, subtitle = subtitle, caption = caption) +
-    switch_theme(theme = theme, x.angle = 90, x.hjust = 1, ...)
+  p +
+    ggplot2::labs(title = title, subtitle = subtitle, caption = caption) +
+    switch_theme(theme = theme, ...)
 }

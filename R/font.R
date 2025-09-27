@@ -8,13 +8,13 @@
 #'   option value is restored and a warning is issued.
 #' - `get_ggshort_font()` retrieves the currently set option.
 #'
-#' @param family A character string giving the font family to use.
-#'   - Use `""` (empty string) to reset to system default.
-#'   - Must match a font available in [systemfonts::system_fonts()].
+#' @param family Character or NULL.
+#'   - Use `NULL` or `""` to reset to system default (stored as `""`).
+#'   - Otherwise must match a family in [systemfonts::system_fonts()].
 #'
 #' @return
-#' - `set_ggshort_font()`: the font family (character scalar) that was set.
-#' - `get_ggshort_font()`: the current font family (character scalar).
+#' - `set_ggshort_font()`: the font family string that was set (or `""` if reset).
+#' - `get_ggshort_font()`: the current font family string (default `""`).
 #'
 #' @examples
 #' \dontrun{
@@ -23,6 +23,7 @@
 #'
 #' # Reset to system default
 #' set_ggshort_font("")
+#' set_ggshort_font(NULL)
 #'
 #' # Get current font
 #' get_ggshort_font()
@@ -30,30 +31,29 @@
 #'
 #' @export
 set_ggshort_font <- function(family) {
-  pf <- getOption("ggshort.font", default = "")
+  prev <- getOption("ggshort.font", default = "")
 
-  if (identical(family, "")) {
+  # Treat both NULL and "" as reset -> store "" as the canonical default
+  if (is.null(family) || identical(family, "")) {
     options(ggshort.font = "")
     return("")
   }
 
-  # system fonts
-  sf <- tryCatch(
-    systemfonts::system_fonts(),
-    error = function(e) NULL
-  )
+  # Validate availability
+  sf <- tryCatch(systemfonts::system_fonts(), error = function(e) NULL)
   has_font <- !is.null(sf) && any(tolower(sf$family) == tolower(family))
   if (!has_font) {
-    options(ggshort.font = pf)
+    options(ggshort.font = prev)
     stop(
       sprintf("Font '%s' not found. Reverting to previous option '%s'.",
-              family, pf),
+              family, prev),
       call. = FALSE
     )
   }
 
+  # Best-effort register with sysfonts (if available)
   if (requireNamespace("sysfonts", quietly = TRUE)) {
-    row <- sf[match(tolower(family), tolower(sf$family)), , drop = FALSE]
+    row  <- sf[match(tolower(family), tolower(sf$family)), , drop = FALSE]
     path <- row$path[1L]
     if (is.character(path) && nzchar(path) && file.exists(path)) {
       try(sysfonts::font_add(family, path), silent = TRUE)
@@ -62,8 +62,8 @@ set_ggshort_font <- function(family) {
 
   options(ggshort.font = family)
 
-  os_type <- Sys.info()[["sysname"]]
-  if (os_type == "Windows") {
+  # Optional: enable showtext on Windows if available
+  if (identical(Sys.info()[["sysname"]], "Windows")) {
     if (requireNamespace("showtext", quietly = TRUE)) {
       showtext::showtext_auto(.mean_dpi())
     } else {
@@ -76,8 +76,9 @@ set_ggshort_font <- function(family) {
 
 #' @rdname set_ggshort_font
 #' @export
-get_ggshort_font <- function()
+get_ggshort_font <- function() {
   getOption("ggshort.font", default = "")
+}
 
 # Internal helper function ------------------------------------------------
 

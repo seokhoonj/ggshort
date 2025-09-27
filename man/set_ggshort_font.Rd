@@ -10,16 +10,16 @@ set_ggshort_font(family)
 get_ggshort_font()
 }
 \arguments{
-\item{family}{A character string giving the font family to use.
+\item{family}{Character or NULL.
 \itemize{
-\item Use \code{""} (empty string) to reset to system default.
-\item Must match a font available in \code{\link[systemfonts:system_fonts]{systemfonts::system_fonts()}}.
+\item Use \code{NULL} or \code{""} to reset to system default (stored as \code{""}).
+\item Otherwise must match a family in \code{\link[systemfonts:system_fonts]{systemfonts::system_fonts()}}.
 }}
 }
 \value{
 \itemize{
-\item \code{set_ggshort_font()}: the font family (character scalar) that was set.
-\item \code{get_ggshort_font()}: the current font family (character scalar).
+\item \code{set_ggshort_font()}: the font family string that was set (or \code{""} if reset).
+\item \code{get_ggshort_font()}: the current font family string (default \code{""}).
 }
 }
 \description{
@@ -41,6 +41,7 @@ set_ggshort_font("Comic Sans MS")
 
 # Reset to system default
 set_ggshort_font("")
+set_ggshort_font(NULL)
 
 # Get current font
 get_ggshort_font()

@@ -86,6 +86,7 @@ IndustryAuto$Incurral.Year <- as.character(IndustryAuto$Incurral.Year)
 
 ggline(IndustryAuto, x = Development.Year, y = Claim, group = Incurral.Year, 
        color = Incurral.Year) + 
+  scale_y_comma() +
   ggplot2::labs(title = "Industry Auto Claims") +
   theme_view()
 ```

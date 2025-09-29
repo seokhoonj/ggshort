@@ -309,25 +309,18 @@ ggtable(IndustryAuto, x = Development.Year, y = Incurral.Year,
 
 #### **What they are**
 
--   **`theme_view()`** – a clean, on-screen theme for quick exploration.\
-    Transparent panel background, black panel border, configurable axis/legend/strip text.\
-    If you set `x.size` or `y.size` to `0`, the corresponding axis ticks are hidden.
-
--   **`theme_save()`** – a print/export-friendly theme (e.g., images, Excel).\
-    Comes with sensible text size defaults (`x.size = y.size = 12`, `t.size = 14`) for crisp output.
-
--   **`theme_shiny()`** – a dashboard-ready theme for Shiny.\
-    Transparent overall background by default; control with `plot.background.fill`.
-
+-   **`theme_view()`** – a clean, on-screen theme for quick exploration. Transparent panel background, black panel border, configurable axis/legend/strip text. If you set `x.size` or `y.size` to `0`, the corresponding axis ticks are hidden.
+-   **`theme_save()`** – a print/export-friendly theme (e.g., images, Excel). Comes with sensible text size defaults (`x.size = y.size = 12`, `t.size = 14`) for crisp output.
+-   **`theme_shiny()`** – a dashboard-ready theme for Shiny. Transparent overall background by default; control with `plot.background.fill`.
 -   **`switch_theme(theme, ...)`** – convenience wrapper to pick one of the above.
 
 #### **Common controls (all three themes)**
 
--   `family` – font family (defaults to `getOption("ggshort.font")`).\
--   `x.size, y.size, t.size, s.size, l.size` – font sizes for axis/title/strip/legend.\
--   `x.face, y.face, t.face, s.face, l.face` – font faces (`"plain"`, `"bold"`, `"italic"`, `"bold.italic"`).\
--   `x.angle, y.angle`, `x.hjust/x.vjust`, `y.hjust/y.vjust` – axis label orientation & alignment.\
--   `legend.key.height/legend.key.width`, `legend.position` (`"none"`, `"left"`, `"right"`, `"bottom"`, `"top"`, `"inside"`), `legend.justification`.\
+-   `family` – font family (defaults to `getOption("ggshort.font")`).
+-   `x.size, y.size, t.size, s.size, l.size` – font sizes for axis/title/strip/legend.
+-   `x.face, y.face, t.face, s.face, l.face` – font faces (`"plain"`, `"bold"`, `"italic"`, `"bold.italic"`).
+-   `x.angle, y.angle`, `x.hjust/x.vjust`, `y.hjust/y.vjust` – axis label orientation & alignment.
+-   `legend.key.height/legend.key.width`, `legend.position` (`"none"`, `"left"`, `"right"`, `"bottom"`, `"top"`, `"inside"`), `legend.justification`.
 -   Panel/strip styling: black border, transparent panel by default.
 
 ``` r
@@ -351,8 +344,7 @@ p + switch_theme(theme = "view", x.size = 0, y.size = 0)
 
 ## 2. Simple Plot functions
 
-This section provides quick helper functions for common statistical plots.  
-Unlike the `ggplot2 shortly` wrappers (which simplify standard geoms), these functions focus on **analytical plots** that often involve preprocessing:
+This section provides quick helper functions for common statistical plots. Unlike the `ggplot2 shortly` wrappers (which simplify standard geoms), these functions focus on **analytical plots** that often involve preprocessing:
 
 ------------------------------------------------------------------------
 
@@ -507,9 +499,7 @@ ggpoint(iris, x = Sepal.Length, y = Petal.Length, color = Species) +
 
 ### 5) `stat_density_qunatile_vline()`, `stat_density_quantile_text()`
 
-These two functions are already supported internally in `ggdensity`,\
-but **ggshort** provides them as explicit `stat_` layers so that they can be reused\
-directly in custom `ggplot2` workflows.
+These two functions are already supported internally in `ggdensity`, but **ggshort** provides them as explicit `stat_` layers so that they can be reused directly in custom `ggplot2` workflows.
 
 ``` r
 library(ggplot2)
@@ -597,8 +587,7 @@ Combine two ggplot objects into a single figure with one shared legend. These he
 -   **Title/Subtitle/Caption** handling:
     -   `title` and `subtitle` are applied to **plot1** only (blanked in `plot2`).
     -   `caption` is applied to **plot2** only (blanked in `plot1`).
-    -   Because of this split, you **cannot use long text** in these fields (it will get truncated, expecially, `vstack_plots_with_legend()`).\
-        -\> For long titles, use `add_title()` instead.
+    -   Because of this split, you **cannot use long text** in these fields (it will get truncated, expecially, `vstack_plots_with_legend()`). For long titles, use `add_title()` instead.
 -   **Size control** via `widths`/`heights` (relative units).
 
 ``` r
@@ -681,15 +670,11 @@ get_legend(p)
 
 ### 5) `add_title()`
 
-Place a custom title grob **above a plot** (ggplot or gtable) by stacking it vertically.\
-This is useful when a long or complex title doesn’t fit well inside `labs(title = ...)`,\
-especially in combined layouts with shared legends.
+Place a custom title grob **above a plot** (ggplot or gtable) by stacking it vertically. This is useful when a long or complex title doesn’t fit well inside `labs(title = ...)`, especially in combined layouts with shared legends.
 
 **When to use:**
 
--   In functions like `hstack_plots_with_legend()` or `vstack_plots_with_legend()`,\
-    `title` and `subtitle` are forced into **plot1** and `caption` into **plot2**,\
-    which makes long text awkward. In such cases, use `add_title()` instead.
+-   In functions like `hstack_plots_with_legend()` or `vstack_plots_with_legend()`, `title` and `subtitle` are forced into **plot1** and `caption` into **plot2**, which makes long text awkward. In such cases, use `add_title()` instead.
 
 **Key features:**
 
@@ -736,13 +721,13 @@ Manage the **default font family** used across `ggshort` themes and label helper
 #### Parameters
 
 -   **family**: Character string giving the font family.
-    -   Use `""` (empty string) to reset to system default.
+    -   Use `""` (empty string) or `NULL` to reset to system default.
     -   Must match a font listed in `systemfonts::system_fonts()`.
 
 #### Return values
 
--   `set_ggshort_font()` -\> the font family (character scalar) that was set.
--   `get_ggshort_font()` -\> the current font family (character scalar).
+-   `set_ggshort_font()`: the font family (character scalar) that was set.
+-   `get_ggshort_font()`: the current font family (character scalar).
 
 ``` r
 library(ggshort)

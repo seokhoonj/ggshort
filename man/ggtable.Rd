@@ -63,5 +63,5 @@ ggtable(df, x = x, y = y, label = label,
 }
 \seealso{
 \code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
-\code{\link[=ggdensity]{ggdensity()}}, \link{ggbox}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}
+\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=gghistogram]{gghistogram()}}, \link{ggbox}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}
 }

@@ -48,5 +48,5 @@ ggpie(df, group = group, value = value,
 }
 \seealso{
 \code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
-\code{\link[=ggdensity]{ggdensity()}}, \link{ggbox}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=gghistogram]{gghistogram()}}, \link{ggbox}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
 }

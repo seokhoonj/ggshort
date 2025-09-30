@@ -83,7 +83,10 @@ density_plot <- function(data, x_var, color_var,
   theme <- match.arg(theme)
 
   x_var     <- instead::capture_names(data, !!rlang::enquo(x_var))
-  color_var <- instead::capture_names(data, !!rlang::enquo(color_var))
+
+  has_color <- !missing(color_var)
+  if (has_color)
+    color_var <- instead::capture_names(data, !!rlang::enquo(color_var))
 
   # resolve x_var
   if (is.numeric(x_var)) {
@@ -97,7 +100,6 @@ density_plot <- function(data, x_var, color_var,
     stop("`x_var` not found in `data`: ", x_var, call. = FALSE)
 
   # resolve color_var (optional)
-  has_color <- !missing(color_var)
   if (has_color) {
     if (is.numeric(color_var)) {
       if (length(color_var) != 1L || color_var < 1L || color_var > ncol(data))

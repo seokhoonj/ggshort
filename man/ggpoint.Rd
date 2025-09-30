@@ -152,5 +152,5 @@ ggscatter(iris, x = Sepal.Length, y = Petal.Width,
 }
 \seealso{
 \code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}}, \code{\link[=ggdensity]{ggdensity()}},
-\code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=gghistogram]{gghistogram()}}, \code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}
 }

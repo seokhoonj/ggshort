@@ -68,5 +68,5 @@ ggmix(
 }
 \seealso{
 \code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
-\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=ggpie]{ggpie()}}, \link{ggbox}, \code{\link[=ggtable]{ggtable()}}
+\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=gghistogram]{gghistogram()}}, \code{\link[=ggpie]{ggpie()}}, \link{ggbox}, \code{\link[=ggtable]{ggtable()}}
 }

@@ -17,7 +17,7 @@
 #' @return A ggplot object.
 #'
 #' @seealso [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggdensity()],
-#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()]
 #'
 #' @examples
 #' \donttest{
@@ -103,7 +103,7 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggpoint()], [ggjitter()], [ggscatter()], [ggdensity()],
-#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()]
 #'
 #' @examples
 #' \donttest{
@@ -203,7 +203,7 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggjitter()], [ggscatter()], [ggdensity()],
-#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()]
 #'
 #' @examples
 #' \donttest{
@@ -544,6 +544,95 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
   p
 }
 
+#' ggplot histogram helper (frequently used arguments)
+#'
+#' Quickly draw histograms with common options. Supply **unquoted**
+#' column names for aesthetics. Supports optional mean/median guides and
+#' quantile lines/labels.
+#'
+#' @param data A data.frame.
+#' @param x Unquoted column mapped to the x aesthetic.
+#' @param color,fill,group Optional columns mapped to the corresponding
+#'   aesthetics.
+#' @param probs Numeric vector of probabilities in \[0, 1] for quantile guides
+#'   (used when `show_vline`/`show_label` are `TRUE`). Default `0.95`.
+#' @param na.rm Logical; remove missing values silently if `TRUE`. Default `TRUE`.
+#' @param y Numeric y position for quantile labels (used by `show_label`).
+#'   Default `Inf` (top of panel).
+#' @param show_mean,show_median Logical; add mean/median vertical guides
+#'   (via `stat_mean_vline()` / `stat_median_vline()`). Defaults `FALSE`.
+#' @param show_vline Logical; draw vertical quantile line(s) at `probs`
+#'   (via `stat_density_quantile_vline()`). Default `TRUE`.
+#' @param show_label Logical; add quantile label(s) at `probs`
+#'   (via `stat_density_quantile_text()`). Default `TRUE`.
+#' @param bins Number of bins for the histogram. Ignored if `binwidth` is
+#'   specified. Default `30`.
+#' @param binwidth Width of each histogram bin. Overrides `bins` if provided.
+#'   Should be a single numeric value.
+#' @param label_args A named list of `geom_text()` style options.
+#'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#'
+#' @return A ggplot object.
+#'
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
+#'   [ggdensity()], [ggbox()], [ggpie()], [ggmix()], [ggtable()],
+#'   [stat_density_quantile_vline()], [stat_density_quantile_text()]
+#'
+#' @examples
+#' \donttest{
+#' # Basic histogram with 95% quantile line and label
+#' gghistogram(iris, x = Sepal.Length, fill = Species,
+#'             probs = 0.95, show_vline = TRUE, show_label = TRUE) +
+#'   theme_view()
+#'
+#' # Use custom binwidth instead of fixed bins
+#' gghistogram(iris, x = Sepal.Length, binwidth = 0.2)
+#' }
+#'
+#' @export
+gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
+                        probs = .95, na.rm = TRUE, y = Inf,
+                        show_mean = FALSE,
+                        show_median = FALSE,
+                        show_vline = TRUE,
+                        show_label = TRUE,
+                        bins = 30, binwidth = NULL,
+                        label_args = list(
+                          family = getOption("ggshort.font"),
+                          size  = 4,
+                          angle = 90,
+                          hjust = 2,
+                          vjust = 0.5,
+                          color = "black"
+                        )) {
+  quos_map <- .valid_enquos(rlang::enquos(
+    x = x, color = color, fill = fill, group = group
+  ))
+
+  p <- ggplot2::ggplot(data, ggplot2::aes(!!!quos_map)) +
+    ggplot2::geom_histogram(alpha = .6, bins = bins, binwidth = binwidth)
+
+  if (show_mean)
+    p <- p + stat_mean_vline(na.rm = na.rm, linetype = "dotdash")
+
+  if (show_median)
+    p <- p + stat_median_vline(na.rm = na.rm, linetype = "solid")
+
+  if (show_vline)
+    p <- p + stat_density_quantile_vline(probs = probs, na.rm = na.rm)
+
+  if (show_label) {
+    args <- .modify_label_args(label_args)
+    p <- p + stat_density_quantile_text(
+      probs = probs, na.rm = na.rm, y = y,
+      fmt = function(p, q) sprintf("%.2f (%.1f%%)", q, p * 100),
+      family = args$family, angle = args$angle,
+      hjust  = args$hjust,  vjust = args$vjust
+    )
+  }
+  p
+}
+
 #' ggplot boxplot helper (frequently used arguments)
 #'
 #' Quickly draw boxplots with common options. Supply **unquoted**
@@ -570,7 +659,7 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [ggpie()], [ggmix()], [ggtable()]
+#'   [ggdensity()], [gghistogram()], [ggpie()], [ggmix()], [ggtable()]
 #'
 #' @examples
 #' \donttest{
@@ -660,7 +749,7 @@ ggbox <- function(data, x, y,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [ggbox], [ggmix()], [ggtable()]
+#'   [ggdensity()], [gghistogram()], [ggbox], [ggmix()], [ggtable()]
 #'
 #' @examples
 #' \donttest{
@@ -733,7 +822,7 @@ ggpie <- function(data, group, value, text,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [ggpie()], [ggbox], [ggtable()]
+#'   [ggdensity()], [gghistogram()], [ggpie()], [ggbox], [ggtable()]
 #'
 #' @examples
 #' \donttest{
@@ -816,7 +905,7 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' @return A ggplot object representing a table-like plot.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [ggbox], [ggpie()], [ggmix()]
+#'   [ggdensity()], [gghistogram()], [ggbox], [ggpie()], [ggmix()]
 #'
 #' @examples
 #' \donttest{

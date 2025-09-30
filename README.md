@@ -151,7 +151,23 @@ ggdensity(data = warpbreaks, x = breaks, fill = tension, prob = c(.975)) +
 
 <img src="man/figures/ggdensity-warpbreaks.png"/>
 
-### 5) `ggbox()`
+### 5) `gghistogram()`
+
+Histograms of a continuous variable. `fill` compares groups, `prob` adds quantile markers (shown as vertical lines and/or labels). Useful for visualizing distributions across categories or combined with facets.
+
+``` r
+library(ggplot2)
+library(ggshort)
+
+gghistogram(data = iris, x = Sepal.Length, color = Species, fill = Species,
+            prob = c(.975)) + 
+  ggplot2::labs(title = "Sepal.Length of iris") +
+  theme_view()
+```
+
+<img src="man/figures/gghistogram-iris.png"/>
+
+### 6) `ggbox()`
 
 Boxplot with quartiles, median, and outliers. label option overlays group labels on top. Handy for group distribution comparisons.
 
@@ -176,7 +192,7 @@ ggbox(data = iris, x = Species, y = Sepal.Length, fill = Species,
 
 <img src="man/figures/ggbox-iris-sepal-length.png"/>
 
-### 6) `ggpie()`
+### 7) `ggpie()`
 
 Pie chart for proportions. Includes theme_void() by default for a clean look. Works best with a small number of categories.
 
@@ -203,7 +219,7 @@ ggpie(data, group = Vehicle_Use, value = Claim_Count, label = Claim_Count) +
 
 <img src="man/figures/ggpie-auto-collision-age-h.png"/>
 
-### 7) `ggmix()`
+### 8) `ggmix()`
 
 Mixed stacked/grouped bar chart helper. Supports flip (horizontal/vertical) and reverse (reverse group order).
 
@@ -239,7 +255,7 @@ ggmix(IndustryAuto, x = Incurral.Year, y = Claim, fill = Development.Year,
 
 <img src="man/figures/ggmix-industry-auto-claims.png"/>
 
-### 7-2) `ggmix()` with reveresed group order
+### 8-2) `ggmix()` with reveresed group order
 
 ``` r
 if (!require("insuranceData")) install.packages("insuranceData")
@@ -271,7 +287,7 @@ ggmix(IndustryAuto, x = Incurral.Year, y = Claim, fill = Development.Year,
 
 <img src="man/figures/ggmix-industry-auto-claims-reverse.png"/>
 
-### 8) `ggtable()`
+### 9) `ggtable()`
 
 Renders discrete × discrete layouts as table-like plots with labels. xlab_position moves axis labels to top/bottom.
 
@@ -305,7 +321,7 @@ ggtable(IndustryAuto, x = Development.Year, y = Incurral.Year,
 
 <img src="man/figures/ggtable-industry-auto.png"/>
 
-### 9) `theme_view()`, `theme_save()`, `theme_shiny()`, `switch_theme()`
+### 10) `theme_view()`, `theme_save()`, `theme_shiny()`, `switch_theme()`
 
 #### **What they are**
 
@@ -359,7 +375,7 @@ Supports variable selection in three ways:
 ``` r
 # Character vector selection
 box_plot(
-    iris, measure_var = Species, y_var = "Sepal.Length", color_var = "Species",  
+    iris, x_var = "Sepal.Length", color_var = "Species",  
     flip = TRUE, show_density = TRUE,
     palette = "Set1",
     title = "Boxplot of Sepal.Length"
@@ -374,15 +390,29 @@ Supports variable selection in three ways (character, NSE, numeric index). Usefu
 
 ``` r
 # Basic density by species with quantile labels
-density_plot(iris, measure_var = "Sepal.Length", color_var = "Species",
+density_plot(iris, x_var = "Sepal.Length", color_var = "Species",
              probs = 0.9, show_label = TRUE,
              palette = "Set1",
              title = "Density plot of Sepal.Length")
 ```
 
-<img src="man/figures/pca-plot.png"/>
+<img src="man/figures/density-plot.png"/>
 
-### 3) `pca_plot()`
+### 3) `histogram_plot()`
+
+Histograms of a continuous variable with optional grouping and quantile/mean/median guides. Can also show a small density panel (show_density = TRUE).
+
+``` r
+# Basic histogram by species with quantile labels
+histogram_plot(iris, x_var = "Sepal.Length", color_var = "Species",
+               probs = 0.9, show_label = TRUE,
+               palette = "Set1",
+               title = "Histogram of Sepal.Length")
+```
+
+<img src="man/figures/histogram-plot.png"/>
+
+### 4) `pca_plot()`
 
 Supports variable selection in three ways (character, NSE, numeric index). Accepts multiple measurement variables for PCA.
 
@@ -396,9 +426,9 @@ pca_plot(
 )
 ```
 
-<img src="man/figures/cor-plot.png"/>
+<img src="man/figures/pca-plot.png"/>
 
-### 4) `cor_plot()` (`cor(x)`)
+### 5) `cor_plot()`
 
 Takes a **correlation matrix** (e.g., from `cor()`), and visualizes it with options to show the lower/upper triangle, diagonal, and value labels.
 
@@ -410,9 +440,9 @@ cor_plot(x, display = "lower",  show_diag = TRUE, show_label = TRUE,
          title = "Correlation of mtcars")
 ```
 
-<img src="man/figures/density-plot.png"/>
+<img src="man/figures/cor-plot.png"/>
 
-### 5) `meta_plot()`
+### 6) `meta_plot()`
 
 Takes a meta object created by instead::meta(). Summarizes metadata visually (variable class, distinct count, mode, etc.).
 

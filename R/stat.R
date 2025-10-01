@@ -374,10 +374,25 @@ StatDensityQuantileText <- ggplot2::ggproto(
   required_aes = c("x"),
   compute_group = function(data, scales, probs = .95, na.rm = TRUE,
                            y = Inf, fmt, family) {
-    qs  <- stats::quantile(data$x, probs = probs, na.rm = na.rm, names = FALSE)
-    label <- mapply(fmt, probs, qs)
-    data.frame(x = qs, y = y, label = label, prob = probs,
-               stringsAsFactors = FALSE)
+    # 1) Get inverse transformation of x scale (fallback = identity)
+    inv_x <- tryCatch({
+      inv <- scales$x$trans$inverse
+      if (is.null(inv)) identity else inv
+    }, error = function(e) identity)
+
+    # 2) Compute quantiles on transformed x (position in transformed space, e.g. log-space)
+    qs_trans <- stats::quantile(data$x, probs = probs, na.rm = na.rm, names = FALSE)
+
+    # 3) Back-transform quantiles to raw/original scale for label display
+    qs_raw <- inv_x(qs_trans)
+
+    # 4) Format label text using raw values, but keep x coordinate in transformed space
+    label <- mapply(fmt, probs, qs_raw)
+
+    data.frame(
+      x = qs_trans, y = y, label = label, prob = probs,
+      stringsAsFactors = FALSE
+    )
   }
 )
 

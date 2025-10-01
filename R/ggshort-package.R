@@ -19,7 +19,7 @@
 #' @importFrom lifecycle badge deprecate_warn signal_stage
 #' @importFrom plotly ggplotly plot_ly
 #' @importFrom rlang .data enquo enquos quo_is_missing quo_is_null
-#' @importFrom scales comma log_trans log1p_trans
+#' @importFrom scales comma label_comma log_trans log1p_trans
 #' @importFrom stats density formula median prcomp quantile setNames
 #' @importFrom systemfonts system_fonts
 #' @importFrom utils globalVariables head modifyList tail

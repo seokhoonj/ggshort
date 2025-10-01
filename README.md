@@ -776,6 +776,7 @@ Apply a **logarithmic axis** with a **custom base**. Defaults to the natural log
 -   Natural log by default (`base = exp(1)`).
 -   Works on either axis: `scale_x_log()` or `scale_y_log()`.
 -   Accepts all arguments of `scale_x_continuous()` / `scale_y_continuous()` (e.g., `breaks`, `labels`, `limits`).
+-   Default labels are comma-formatted integers (`1,000`, `10,000`).
 
 ``` r
 library(ggplot2)

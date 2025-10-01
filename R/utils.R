@@ -180,16 +180,21 @@ geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
 #'
 #' @return A ggproto scale object.
 #'
-#' @seealso [scales::comma()], [ggplot2::scale_x_continuous()], [ggplot2::scale_y_continuous()]
+#' @seealso [ggplot2::scale_x_continuous()], [ggplot2::scale_y_continuous()],
+#'   [scales::label_comma()]
 #'
 #' @export
 scale_x_comma <- function()
-  ggplot2::scale_x_continuous(labels = scales::comma(accuracy = 1))
+  ggplot2::scale_x_continuous(
+    labels = scales::label_comma(accuracy = 1, trim = TRUE)
+  )
 
 #' @rdname scale_x_comma
 #' @export
 scale_y_comma <- function()
-  ggplot2::scale_y_continuous(labels = scales::comma(accuracy = 1))
+  ggplot2::scale_y_continuous(
+    labels = scales::label_comma(accuracy = 1, trim = TRUE)
+  )
 
 #' @rdname scale_x_comma
 #' @return A list of two scales: `scale_x_comma()` and `scale_y_comma()`.
@@ -498,26 +503,34 @@ scale_y_log <- function(base = exp(1), ...) {
 #' }
 #'
 #' @export
-scale_x_log_stay <- function(..., breaks = ggplot2::waiver()) {
+scale_x_log_stay <- function(...,
+                             breaks = ggplot2::waiver(),
+                             labels = scales::label_comma(accuracy = 1, trim = TRUE)) {
   if (ggplot2::is_waiver(breaks)) {
     breaks <- .log_stay_breaks()
   }
   ggplot2::scale_x_continuous(
     ...,
     breaks    = breaks,
+    labels    = labels,
     transform = scales::log1p_trans()
   )
 }
 
 #' @rdname scale_x_log_stay
 #' @export
-scale_y_log_stay <- function(..., breaks = ggplot2::waiver()) {
+scale_y_log_stay <- function(...,
+                             breaks = ggplot2::waiver(),
+                             labels = scales::label_comma(
+                               accuracy = 1, trim = TRUE
+                             )) {
   if (ggplot2::is_waiver(breaks)) {
     breaks <- .log_stay_breaks()
   }
   ggplot2::scale_y_continuous(
     ...,
     breaks    = breaks,
+    labels    = labels,
     transform = scales::log1p_trans()
   )
 }

@@ -5,9 +5,17 @@
 \alias{scale_y_log_stay}
 \title{Stay-scale axis transformation (log1p with custom breaks)}
 \usage{
-scale_x_log_stay(..., breaks = ggplot2::waiver())
+scale_x_log_stay(
+  ...,
+  breaks = ggplot2::waiver(),
+  labels = scales::label_comma(accuracy = 1, trim = TRUE)
+)
 
-scale_y_log_stay(..., breaks = ggplot2::waiver())
+scale_y_log_stay(
+  ...,
+  breaks = ggplot2::waiver(),
+  labels = scales::label_comma(accuracy = 1, trim = TRUE)
+)
 }
 \arguments{
 \item{...}{Other arguments passed on to \verb{scale_(x|y)_continuous()}}
@@ -16,6 +24,20 @@ scale_y_log_stay(..., breaks = ggplot2::waiver())
 \code{.log_stay_breaks()} which returns 0–90 plus doubling thereafter.
 Can be replaced by any numeric vector or function as accepted by
 ggplot2 scales.}
+
+\item{labels}{One of the options below. Please note that when \code{labels} is a
+vector, it is highly recommended to also set the \code{breaks} argument as a
+vector to protect against unintended mismatches.
+\itemize{
+\item \code{NULL} for no labels
+\item \code{waiver()} for the default labels computed by the
+transformation object
+\item A character vector giving labels (must be same length as \code{breaks})
+\item An expression vector (must be the same length as breaks). See ?plotmath for details.
+\item A function that takes the breaks as input and returns labels
+as output. Also accepts rlang \link[rlang:as_function]{lambda} function
+notation.
+}}
 }
 \value{
 A ggplot2 scale object.

@@ -21,5 +21,6 @@ A list of two scales: \code{scale_x_comma()} and \code{scale_y_comma()}.
 Convenience scales that format numeric axis labels with commas.
 }
 \seealso{
-\code{\link[scales:comma]{scales::comma()}}, \code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}, \code{\link[ggplot2:scale_continuous]{ggplot2::scale_y_continuous()}}
+\code{\link[ggplot2:scale_continuous]{ggplot2::scale_x_continuous()}}, \code{\link[ggplot2:scale_continuous]{ggplot2::scale_y_continuous()}},
+\code{\link[scales:label_number]{scales::label_comma()}}
 }

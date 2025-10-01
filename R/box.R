@@ -10,6 +10,9 @@
 #'   (e.g., `"Sepal.Length"`).
 #' @param color_var Character. Grouping/color column name (typically a factor;
 #'   e.g., `"Species"`).
+#' @param alpha Numeric in \[0,1]. Transparency for fills/points (used in
+#'   `geom_boxplot()`, jitter points, and the optional side density).
+#'   Default `0.6`.
 #' @param width Numeric box width passed to [ggplot2::geom_boxplot()] (default `0.6`).
 #' @param varwidth Logical; if `TRUE`, draw boxes with widths proportional to
 #'   the square-root of group sample sizes.
@@ -67,6 +70,7 @@
 #'
 #' @export
 box_plot <- function(data, x_var, color_var,
+                     alpha = 0.6,
                      width = 0.6,
                      varwidth = FALSE,
                      flip = FALSE,
@@ -79,7 +83,7 @@ box_plot <- function(data, x_var, color_var,
                        size   = 4,
                        angle  = 0,
                        hjust  = 0.5,
-                       vjust  = 0.5,
+                       vjust  = -0.25,
                        color  = "black"
                      ),
                      palette = "Set1",
@@ -89,81 +93,110 @@ box_plot <- function(data, x_var, color_var,
     stop("`data` must be a data.frame.", call. = FALSE)
   theme <- match.arg(theme)
 
-  x_var     <- instead::capture_names(data, !!rlang::enquo(x_var))
-  color_var <- instead::capture_names(data, !!rlang::enquo(color_var))
+  # resolve var names
+  x_var <- instead::capture_names(data, !!rlang::enquo(x_var))
+  has_color <- !missing(color_var)
+  if (has_color)
+    color_var <- instead::capture_names(data, !!rlang::enquo(color_var))
 
-  p <- ggplot2::ggplot(
-    data = data,
-    ggplot2::aes(
-      x = .data[[color_var]], y = .data[[x_var]], fill = .data[[color_var]])
+  # build main boxplot via ggbox
+  if (has_color) {
+    # grouped boxplot: x = color_var, y = x_var
+    p <- ggbox(
+      data = data,
+      x    = .data[[color_var]],
+      y    = .data[[x_var]],
+      fill  = .data[[color_var]],
+      alpha = alpha,
+      label_args = label_args,
+      width = width,
+      varwidth = varwidth,
+      show_point = show_point,
+      show_mean  = show_mean,
+      show_label = show_label
     ) +
-    ggplot2::geom_boxplot(
-      width = width, varwidth = varwidth,
-      outlier.shape = if (show_point) NA else 19,
-      alpha = .7
+      switch_theme(theme = theme, ...)
+  } else {
+    p <- ggbox(
+      data = data,
+      x    = "",
+      y    = .data[[x_var]],
+      fill = "",
+      alpha = alpha,
+      label_args = label_args,
+      width = width,
+      varwidth = varwidth,
+      show_point = show_point,
+      show_mean  = show_mean,
+      show_label = show_label
     ) +
-    ggplot2::scale_color_brewer(palette = palette) +
-    ggplot2::scale_fill_brewer(palette = palette)
-
-  if (show_point)
-    p <- p + ggplot2::geom_jitter(
-      ggplot2::aes(group = .data[[color_var]]),
-      width = width * .4, height = 0, alpha = .5
-    )
-
-  if (show_label) {
-    args <- .modify_label_args(label_args)
-    # add labels at median
-    p <- p + ggplot2::stat_summary(
-      ggplot2::aes(label = .data[[color_var]]),
-      fun = stats::median, geom = "text",
-      family = args$family, size = args$size, angle = args$angle,
-      hjust  = args$hjust,  vjust = args$vjust, color = args$color
-    )
+      switch_theme(theme = theme, legend.position = "none", ...)
   }
 
-  if (show_mean)
-    p <- p +
-      stat_mean_point(stroke = 1.5) +
-      stat_mean_point(
-        ggplot2::aes(group = .data[[color_var]]),
-        color = "red", stroke = 1
-      )
-
   p <- p +
-    labs(title = title, subtitle = subtitle, caption = caption) +
-    switch_theme(theme = theme, ...)
+    ggplot2::scale_color_brewer(palette = palette) +
+    ggplot2::scale_fill_brewer(palette  = palette) +
+    ggplot2::labs(title = title, subtitle = subtitle, caption = caption)
 
+  # flip if requested
   if (flip)
     p <- p + ggplot2::coord_flip()
 
-  if (show_density && !flip) {
+  # optional side density panel
+  if (show_density) {
     args <- .modify_label_args(label_args)
-    p_y <- ggplot2::ggplot(
-      data = data,
-      ggplot2::aes(x = .data[[x_var]], fill = .data[[color_var]])
-    ) +
-      ggplot2::geom_density(alpha = .7, linewidth = .3) +
-      ggplot2::theme_void(base_family = args$family) +
-      ggplot2::theme(legend.position = "none",
-                     plot.margin = ggplot2::margin(0, 0, 0, 0)) +
-      ggplot2::coord_flip() +
-      ggplot2::scale_fill_brewer(palette = palette)
-    p <- .add_plot_axis(p, p_y, position = "right")
-    p <- grob_to_ggplot(p)
-  } else if (show_density && flip) {
-    args <- .modify_label_args(label_args)
-    p_x <- ggplot2::ggplot(
-      data = data,
-      ggplot2::aes(x = .data[[x_var]], fill = .data[[color_var]])
-    ) +
-      ggplot2::geom_density(alpha = .7, linewidth = .3) +
-      ggplot2::theme_void(base_family = args$family) +
-      ggplot2::theme(legend.position = "none",
-                     plot.margin = ggplot2::margin(0, 0, 0, 0)) +
-      ggplot2::scale_fill_brewer(palette = palette)
-    p <- .add_plot_axis(p, p_x, position = "top")
-    p <- grob_to_ggplot(p)
+
+    if (!flip) {
+      if (has_color) {
+        p_den <- ggplot2::ggplot(
+          data = data,
+          ggplot2::aes(x = .data[[x_var]], fill = .data[[color_var]])
+        ) +
+          ggplot2::geom_density(alpha = .7, linewidth = .3) +
+          ggplot2::theme_void(base_family = args$family) +
+          ggplot2::theme(legend.position = "none",
+                         plot.margin = ggplot2::margin(0, 0, 0, 0)) +
+          ggplot2::coord_flip() +
+          ggplot2::scale_fill_brewer(palette = palette)
+      } else {
+        p_den <- ggplot2::ggplot(
+          data = data,
+          ggplot2::aes(x = .data[[x_var]], fill = "")
+        ) +
+          ggplot2::geom_density(alpha = .7, linewidth = .3) +
+          ggplot2::theme_void(base_family = args$family) +
+          ggplot2::theme(legend.position = "none",
+                         plot.margin = ggplot2::margin(0, 0, 0, 0)) +
+          ggplot2::coord_flip() +
+          ggplot2::scale_fill_brewer(palette = palette)
+      }
+      p <- .add_plot_axis(p, p_den, position = "right")
+      p <- grob_to_ggplot(p)
+    } else {
+      if (has_color) {
+        p_den <- ggplot2::ggplot(
+          data = data,
+          ggplot2::aes(x = .data[[x_var]], fill = .data[[color_var]])
+        ) +
+          ggplot2::geom_density(alpha = .7, linewidth = .3) +
+          ggplot2::theme_void(base_family = args$family) +
+          ggplot2::theme(legend.position = "none",
+                         plot.margin = ggplot2::margin(0, 0, 0, 0)) +
+          ggplot2::scale_fill_brewer(palette = palette)
+      } else {
+        p_den <- ggplot2::ggplot(
+          data = data,
+          ggplot2::aes(x = .data[[x_var]], fill = "")
+        ) +
+          ggplot2::geom_density(alpha = .7, linewidth = .3) +
+          ggplot2::theme_void(base_family = args$family) +
+          ggplot2::theme(legend.position = "none",
+                         plot.margin = ggplot2::margin(0, 0, 0, 0)) +
+          ggplot2::scale_fill_brewer(palette = palette)
+      }
+      p <- .add_plot_axis(p, p_den, position = "top")
+      p <- grob_to_ggplot(p)
+    }
   }
 
   p

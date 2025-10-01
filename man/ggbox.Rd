@@ -12,13 +12,14 @@ ggbox(
   fill = NULL,
   group = NULL,
   text = NULL,
-  label,
-  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
-    vjust = 0.5, color = "black"),
-  width = 0.6,
-  varwidth = FALSE,
+  alpha = 0.6,
   show_point = TRUE,
-  show_mean = TRUE
+  show_mean = TRUE,
+  show_label = FALSE,
+  label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
+    vjust = -0.25, color = "black"),
+  width = 0.6,
+  varwidth = FALSE
 )
 }
 \arguments{
@@ -31,8 +32,17 @@ ggbox(
 
 \item{text}{Optional column/expression used for tooltip text (e.g., plotly).}
 
-\item{label}{Optional unquoted column/expression used for text labels
-(placed at the box middle by default).}
+\item{alpha}{Numeric in [0,1]; transparency for the box layer
+(passed to \code{\link[ggplot2:geom_boxplot]{ggplot2::geom_boxplot()}}). Default \code{0.6}.}
+
+\item{show_point}{Logical; if \code{TRUE}, overlay jittered points
+(\code{\link[ggplot2:geom_jitter]{ggplot2::geom_jitter()}}) on top of the boxplots.}
+
+\item{show_mean}{Logical; if \code{TRUE}, add mean markers
+using \code{\link[=stat_mean_point]{stat_mean_point()}}}
+
+\item{show_label}{Logical; if \code{TRUE}, print the \strong{x group label} at the
+box \strong{median} (added via \code{stat_summary(geom = "text")}). Default \code{FALSE}.}
 
 \item{label_args}{A named list of \code{geom_text()} style options.
 Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
@@ -41,12 +51,6 @@ Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vj
 
 \item{varwidth}{Logical; if \code{TRUE}, boxes are drawn with widths proportional
 to the square-roots of the number of observations in the groups.}
-
-\item{show_point}{Logical; if \code{TRUE}, overlay jittered points
-(\code{\link[ggplot2:geom_jitter]{ggplot2::geom_jitter()}}) on top of the boxplots.}
-
-\item{show_mean}{Logical; if \code{TRUE}, add mean markers
-using \code{\link[=stat_mean_point]{stat_mean_point()}}}
 }
 \value{
 A ggplot object.
@@ -65,7 +69,7 @@ ggbox(iris, x = Species, y = Sepal.Length, fill = Species,
 
 # Add labels at the middle of each box (here, the group name)
 ggbox(iris, x = Species, y = Sepal.Length, fill = Species,
-      label = Species, label_args = list(vjust = -0.4)) +
+      label_args = list(vjust = -0.4), show_label = TRUE) +
   theme_view()
 }
 

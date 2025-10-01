@@ -109,7 +109,6 @@ histogram_plot <- function(data, x_var, color_var,
     stop("`x_var` not found in `data`: ", x_var, call. = FALSE)
 
   # resolve color_var (optional)
-  has_color <- !missing(color_var)
   if (has_color) {
     if (is.numeric(color_var)) {
       if (length(color_var) != 1L || color_var < 1L || color_var > ncol(data))
@@ -142,7 +141,6 @@ histogram_plot <- function(data, x_var, color_var,
     p <- gghistogram(
       data = data,
       x = .data[[x_var]],
-      fill = "",
       probs = probs, na.rm = na.rm, y = y,
       label_args = label_args,
       show_mean = show_mean,
@@ -174,10 +172,18 @@ histogram_plot <- function(data, x_var, color_var,
 
   if (show_density) {
     args <- .modify_label_args(label_args)
-    p_y <- ggplot2::ggplot(
-      data = data,
-      ggplot2::aes(x = .data[[x_var]], fill = .data[[color_var]])
-    ) +
+    if (has_color) {
+      p_y <- ggplot2::ggplot(
+        data = data,
+        ggplot2::aes(x = .data[[x_var]], fill = .data[[color_var]])
+      )
+    } else {
+      p_y <- ggplot2::ggplot(
+        data = data,
+        ggplot2::aes(x = .data[[x_var]])
+      )
+    }
+    p_y <- p_y +
       ggplot2::geom_density(alpha = .7, linewidth = .3) +
       ggplot2::theme_void(base_family = args$family) +
       ggplot2::theme(legend.position = "none",

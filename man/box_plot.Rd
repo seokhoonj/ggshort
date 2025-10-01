@@ -8,6 +8,7 @@ box_plot(
   data,
   x_var,
   color_var,
+  alpha = 0.6,
   width = 0.6,
   varwidth = FALSE,
   flip = FALSE,
@@ -16,7 +17,7 @@ box_plot(
   show_density = FALSE,
   show_label = FALSE,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
-    vjust = 0.5, color = "black"),
+    vjust = -0.25, color = "black"),
   palette = "Set1",
   title = NULL,
   subtitle = NULL,
@@ -33,6 +34,10 @@ box_plot(
 
 \item{color_var}{Character. Grouping/color column name (typically a factor;
 e.g., \code{"Species"}).}
+
+\item{alpha}{Numeric in [0,1]. Transparency for fills/points (used in
+\code{geom_boxplot()}, jitter points, and the optional side density).
+Default \code{0.6}.}
 
 \item{width}{Numeric box width passed to \code{\link[ggplot2:geom_boxplot]{ggplot2::geom_boxplot()}} (default \code{0.6}).}
 

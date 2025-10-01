@@ -13,6 +13,7 @@ ggdensity(
   probs = 0.95,
   na.rm = TRUE,
   y = Inf,
+  alpha = 0.6,
   show_mean = FALSE,
   show_median = FALSE,
   show_vline = TRUE,
@@ -36,6 +37,9 @@ aesthetics.}
 
 \item{y}{Numeric y position for quantile labels (used by \code{show_label}).
 Default \code{Inf} (top of panel).}
+
+\item{alpha}{Numeric in [0,1]; transparency for the box layer
+(passed to \code{\link[ggplot2:geom_boxplot]{ggplot2::geom_boxplot()}}). Default \code{0.6}.}
 
 \item{show_mean, show_median}{Logical; add mean/median vertical guides
 (via \code{stat_mean_vline()} / \code{stat_median_vline()}). Defaults \code{FALSE}.}

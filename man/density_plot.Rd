@@ -48,7 +48,7 @@ Default \code{FALSE}.}
 Default \code{FALSE}.}
 
 \item{show_label}{Logical; if \code{TRUE}, add quantile label(s) at \code{probs}.
-Default \code{TRUE}.}
+(via \code{stat_density_quantile_text()}). Default \code{TRUE}.}
 
 \item{label_args}{A named list of text styling options for quantile labels
 (\code{geom_text()}): \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.
@@ -67,6 +67,9 @@ See \code{\link[RColorBrewer:ColorBrewer]{RColorBrewer::display.brewer.all()}} f
 \code{"view"}, \code{"save"}, or \code{"shiny"}.}
 
 \item{...}{Additional arguments forwarded to \code{switch_theme(theme = ...)}.}
+
+\item{show_vline}{Logical; draw vertical quantile line(s) at \code{probs}
+(via \code{stat_density_quantile_vline()}). Default \code{TRUE}.}
 }
 \value{
 A ggplot object.

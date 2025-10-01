@@ -18,8 +18,10 @@
 #'   Default `FALSE`.
 #' @param show_median Logical; if `TRUE`, add vertical median line(s).
 #'   Default `FALSE`.
+#' @param show_vline Logical; draw vertical quantile line(s) at `probs`
+#'   (via `stat_density_quantile_vline()`). Default `TRUE`.
 #' @param show_label Logical; if `TRUE`, add quantile label(s) at `probs`.
-#'   Default `TRUE`.
+#'   (via `stat_density_quantile_text()`). Default `TRUE`.
 #' @param label_args A named list of text styling options for quantile labels
 #'   (`geom_text()`): `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #'   Default:

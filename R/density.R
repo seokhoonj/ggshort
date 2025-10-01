@@ -67,6 +67,7 @@ density_plot <- function(data, x_var, color_var,
                          probs = .95, na.rm = TRUE, y = Inf,
                          show_mean = FALSE,
                          show_median = FALSE,
+                         show_vline = TRUE,
                          show_label = TRUE,
                          label_args = list(
                            family = getOption("ggshort.font"),
@@ -126,6 +127,7 @@ density_plot <- function(data, x_var, color_var,
       label_args = label_args,
       show_mean = show_mean,
       show_median = show_median,
+      show_vline = show_vline,
       show_label = show_label
     ) +
       switch_theme(theme = theme, legend.position = "right", ...)
@@ -138,6 +140,7 @@ density_plot <- function(data, x_var, color_var,
       label_args = label_args,
       show_mean = show_mean,
       show_median = show_median,
+      show_vline = show_vline,
       show_label = show_label
     ) +
       switch_theme(theme = theme, legend.position = "none", ...)

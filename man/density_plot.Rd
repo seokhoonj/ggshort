@@ -13,6 +13,7 @@ density_plot(
   y = Inf,
   show_mean = FALSE,
   show_median = FALSE,
+  show_vline = TRUE,
   show_label = TRUE,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 90, hjust = 2,
     vjust = 0.5, color = "black"),
@@ -47,6 +48,9 @@ Default \code{FALSE}.}
 \item{show_median}{Logical; if \code{TRUE}, add vertical median line(s).
 Default \code{FALSE}.}
 
+\item{show_vline}{Logical; draw vertical quantile line(s) at \code{probs}
+(via \code{stat_density_quantile_vline()}). Default \code{TRUE}.}
+
 \item{show_label}{Logical; if \code{TRUE}, add quantile label(s) at \code{probs}.
 (via \code{stat_density_quantile_text()}). Default \code{TRUE}.}
 
@@ -67,9 +71,6 @@ See \code{\link[RColorBrewer:ColorBrewer]{RColorBrewer::display.brewer.all()}} f
 \code{"view"}, \code{"save"}, or \code{"shiny"}.}
 
 \item{...}{Additional arguments forwarded to \code{switch_theme(theme = ...)}.}
-
-\item{show_vline}{Logical; draw vertical quantile line(s) at \code{probs}
-(via \code{stat_density_quantile_vline()}). Default \code{TRUE}.}
 }
 \value{
 A ggplot object.

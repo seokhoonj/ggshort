@@ -424,6 +424,42 @@ scale_y_break <- function(break_interval, ...) {
   )
 }
 
+#' Logarithmic scale with custom base
+#'
+#' Shortcut for applying a logarithmic transformation to the x- or y-axis.
+#' Defaults to the natural log (`base = exp(1)`).
+#'
+#' @param base Logarithm base. Default is `exp(1)` (natural log).
+#' @param ... Additional arguments passed to [ggplot2::scale_x_continuous()]
+#'   or [ggplot2::scale_y_continuous()].
+#'
+#' @return A ggplot2 scale object.
+#'
+#' @examples
+#' library(ggplot2)
+#' ggplot(mtcars, aes(mpg, wt)) +
+#'   geom_point() +
+#'   scale_x_log()                 # natural log on x
+#'
+#' ggplot(mtcars, aes(mpg, wt)) +
+#'   geom_point() +
+#'   scale_y_log(base = 10)        # log10 on y
+#'
+#' ggplot(mtcars, aes(mpg, wt)) +
+#'   geom_point() +
+#'   scale_x_log(base = 2)         # log base 2 on x
+#'
+#' @export
+scale_x_log <- function(base = exp(1), ...) {
+  ggplot2::scale_x_continuous(..., trans = scales::log_trans(base = base))
+}
+
+#' @rdname scale_x_log
+#' @export
+scale_y_log <- function(base = exp(1), ...) {
+  ggplot2::scale_y_continuous(..., trans = scales::log_trans(base = base))
+}
+
 # Color functions ---------------------------------------------------------
 
 get_two_colors <- function(choice = c("base", "deep", "base_inv", "deep_inv")) {

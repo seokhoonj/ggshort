@@ -23,17 +23,15 @@ Shortcut for applying a logarithmic transformation to the x- or y-axis.
 Defaults to the natural log (\code{base = exp(1)}).
 }
 \examples{
-library(ggplot2)
-ggplot(mtcars, aes(mpg, wt)) +
-  geom_point() +
+\dontrun{
+ggpoint(mtcars, mpg, wt) +
   scale_x_log()                 # natural log on x
 
-ggplot(mtcars, aes(mpg, wt)) +
-  geom_point() +
+ggpoint(mtcars, mpg, wt) +
   scale_y_log(base = 10)        # log10 on y
 
-ggplot(mtcars, aes(mpg, wt)) +
-  geom_point() +
+ggpoint(mtcars, mpg, wt) +
   scale_x_log(base = 2)         # log base 2 on x
+}
 
 }

@@ -184,12 +184,12 @@ geom_hline1 <- function(logscale = FALSE, yintercept = 1, color = "red",
 #'
 #' @export
 scale_x_comma <- function()
-  ggplot2::scale_x_continuous(labels = scales::comma)
+  ggplot2::scale_x_continuous(labels = scales::comma(accuracy = 1))
 
 #' @rdname scale_x_comma
 #' @export
 scale_y_comma <- function()
-  ggplot2::scale_y_continuous(labels = scales::comma)
+  ggplot2::scale_y_continuous(labels = scales::comma(accuracy = 1))
 
 #' @rdname scale_x_comma
 #' @return A list of two scales: `scale_x_comma()` and `scale_y_comma()`.
@@ -436,28 +436,90 @@ scale_y_break <- function(break_interval, ...) {
 #' @return A ggplot2 scale object.
 #'
 #' @examples
-#' library(ggplot2)
-#' ggplot(mtcars, aes(mpg, wt)) +
-#'   geom_point() +
+#' \dontrun{
+#' ggpoint(mtcars, mpg, wt) +
 #'   scale_x_log()                 # natural log on x
 #'
-#' ggplot(mtcars, aes(mpg, wt)) +
-#'   geom_point() +
+#' ggpoint(mtcars, mpg, wt) +
 #'   scale_y_log(base = 10)        # log10 on y
 #'
-#' ggplot(mtcars, aes(mpg, wt)) +
-#'   geom_point() +
+#' ggpoint(mtcars, mpg, wt) +
 #'   scale_x_log(base = 2)         # log base 2 on x
+#' }
 #'
 #' @export
 scale_x_log <- function(base = exp(1), ...) {
-  ggplot2::scale_x_continuous(..., trans = scales::log_trans(base = base))
+  ggplot2::scale_x_continuous(
+    ...,
+    transform = scales::log_trans(base = base)
+  )
 }
 
 #' @rdname scale_x_log
 #' @export
 scale_y_log <- function(base = exp(1), ...) {
-  ggplot2::scale_y_continuous(..., trans = scales::log_trans(base = base))
+  ggplot2::scale_y_continuous(
+    ...,
+    transform = scales::log_trans(base = base)
+  )
+}
+
+#' Stay-scale axis transformation (log1p with custom breaks)
+#'
+#' Convenience scales for plotting length-of-stay or similar count variables
+#' on a `log1p` scale (i.e. \eqn{log(1+x)}), while providing more interpretable
+#' breaks. By default, breaks are fixed at common stay durations up to 90
+#' (0, 1, 2, 3, 5, 7, 10, 14, 21, 28, 42, 60, 90), then continue doubling
+#' (180, 360, 720, ...) until the maximum data value.
+#'
+#' These functions wrap [ggplot2::scale_x_continuous()] and
+#' [ggplot2::scale_y_continuous()] with a predefined transform and breaks.
+#'
+#' @inheritParams ggplot2::scale_x_continuous
+#' @param breaks Break specification. By default, a function from
+#'   `.log_stay_breaks()` which returns 0–90 plus doubling thereafter.
+#'   Can be replaced by any numeric vector or function as accepted by
+#'   ggplot2 scales.
+#'
+#' @return A ggplot2 scale object.
+#'
+#' @seealso [ggplot2::scale_x_continuous()], [scales::log1p_trans()]
+#'
+#' @examples
+#' \dontrun{
+#' library(tweedie)
+#'
+#' tw <- tweedie::rtweedie(n = 1000, mu = 7, phi = 2, power = 1.5)
+#' set.seed(123)
+#' df <- data.frame(x = round(tw))
+#' gghistogram(df, x = x, probs = .5) +
+#'   scale_x_log_stay() +
+#'   theme_view()
+#' }
+#'
+#' @export
+scale_x_log_stay <- function(..., breaks = ggplot2::waiver()) {
+  if (ggplot2::is_waiver(breaks)) {
+    breaks <- .log_stay_breaks()
+  }
+  ggplot2::scale_x_continuous(
+    ...,
+    breaks    = breaks,
+    transform = scales::log1p_trans()
+  )
+}
+
+#' @rdname scale_x_log_stay
+#' @export
+scale_y_log_stay <- function(..., breaks = ggplot2::waiver()) {
+  if (ggplot2::is_waiver(breaks)) {
+    breaks <- .log_stay_breaks()
+  }
+  ggplot2::scale_y_continuous(
+    ...,
+    breaks    = breaks,
+    transform = scales::log1p_trans()
+  )
 }
 
 # Color functions ---------------------------------------------------------
@@ -520,6 +582,46 @@ get_twelve_colors <- function() {
     return(gtable::gtable_add_grob(gt, x, t = 1, l = 1))
   }
   stop("x must be a ggplot, gtable or grob.", call. = FALSE)
+}
+
+#' Stay scale break generator
+#'
+#' Generate a sequence of breaks suitable for stay/day variables
+#' on a log1p scale. Returns the fixed base breaks up to 90,
+#' and then continues doubling (180, 360, 720, ...) until the
+#' maximum of the data range.
+#'
+#' Designed to be used as a `breaks` function inside
+#' [ggplot2::scale_x_continuous()] or [ggplot2::scale_y_continuous()].
+#'
+#' @param breaks Numeric vector of initial break values
+#'   to use before the doubling scheme starts. Default is
+#'   common stay/day cutoffs (0, 1, 2, 3, 5, 7, 10, 14, 21, 28, 42, 60, 90).
+#'
+#' @return A function that takes a numeric vector `x`
+#'   (the axis data range, provided by ggplot2) and returns
+#'   a sorted numeric vector of break positions.
+#'
+#' @keywords internal
+#' @noRd
+.log_stay_breaks <- function(breaks = c(0, 1, 2, 3, 5, 7, 10, 14, 21, 28, 42, 60, 90)) {
+  force(breaks)
+  breaks <- sort(unique(breaks))
+  function(x) {
+    rng <- range(x, finite = TRUE)
+    if (!is.finite(rng[2L])) return(breaks)
+
+    brks <- breaks
+    last <- max(breaks)
+
+    # 2 times after 90
+    while (last * 2 <= rng[2L]) {
+      last <- last * 2
+      brks <- c(brks, last)
+    }
+
+    sort(unique(brks[brks >= rng[1L] & brks <= rng[2L]]))
+  }
 }
 
 #' Suppress PostScript font database warnings

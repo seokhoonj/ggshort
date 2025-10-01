@@ -798,6 +798,29 @@ ggpoint(mtcars, disp, hp) +
   theme_view()
 ```
 
+### 8) `scale_x_log_stay()`, `scale_y_log_stay()`
+
+Apply a **log1p axis** (i.e., `log(1 + x)`) with **stay-specific breaks**. Designed for *length-of-stay* or similar right-skewed count data.
+
+**Key features:**
+
+-   Uses `log1p` transformation -> keeps 0 safely on the axis.
+-   Default breaks: common LOS cutoffs up to 90 days (`0, 1, 2, 3, 5, 7, 10, 14, 21, 28, 42, 60, 90`), then doubles thereafter (`180, 360, 720, …`) until the data max.
+-   Works on either axis: `scale_x_log_stay()` or `scale_y_log_stay()`.
+-   Accepts all arguments of `scale_x_continuous()` / `scale_y_continuous()` (e.g., `labels`, `limits`, `expand`).
+
+``` r
+library(ggshort)
+library(tweedie)
+
+tw <- tweedie::rtweedie(n = 1000, mu = 7, phi = 2, power = 1.5)
+set.seed(123)
+df <- data.frame(days = round(tw))
+gghistogram(df, x = days, probs = .5) +
+  scale_x_log_stay() +
+  theme_view()
+```
+
 ## 5. `Plotly` (Optional)
 
 ### 1) `plotly_pie()`

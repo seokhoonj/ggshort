@@ -563,16 +563,16 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #'   Default `Inf` (top of panel).
 #' @param alpha Numeric in \[0,1]; transparency for the box layer
 #'   (passed to [ggplot2::geom_boxplot()]). Default `0.6`.
+#' @param bins Number of bins for the histogram. Ignored if `binwidth` is
+#'   specified. Default `30`.
+#' @param binwidth Width of each histogram bin. Overrides `bins` if provided.
+#'   Should be a single numeric value.
 #' @param show_mean,show_median Logical; add mean/median vertical guides
 #'   (via `stat_mean_vline()` / `stat_median_vline()`). Defaults `FALSE`.
 #' @param show_vline Logical; draw vertical quantile line(s) at `probs`
 #'   (via `stat_density_quantile_vline()`). Default `TRUE`.
 #' @param show_label Logical; add quantile label(s) at `probs`
 #'   (via `stat_density_quantile_text()`). Default `TRUE`.
-#' @param bins Number of bins for the histogram. Ignored if `binwidth` is
-#'   specified. Default `30`.
-#' @param binwidth Width of each histogram bin. Overrides `bins` if provided.
-#'   Should be a single numeric value.
 #' @param label_args A named list of `geom_text()` style options.
 #'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #'
@@ -596,11 +596,11 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #' @export
 gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
                         probs = .95, na.rm = TRUE, y = Inf, alpha = .6,
+                        bins = 30, binwidth = NULL,
                         show_mean = FALSE,
                         show_median = FALSE,
                         show_vline = TRUE,
                         show_label = TRUE,
-                        bins = 30, binwidth = NULL,
                         label_args = list(
                           family = getOption("ggshort.font"),
                           size  = 4,

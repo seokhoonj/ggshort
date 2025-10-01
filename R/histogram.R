@@ -16,6 +16,10 @@
 #'   guides/labels when those layers are enabled. Default `0.95`.
 #' @param na.rm Logical; silently drop missing values if `TRUE`. Default `TRUE`.
 #' @param y Numeric y-position for quantile labels. Default `Inf` (top of panel).
+#' @param bins Number of bins for the histogram. Ignored if `binwidth` is
+#'   specified. Default `30`.
+#' @param binwidth Width of each histogram bin. Overrides `bins` if provided.
+#'   Should be a single numeric value.
 #' @param show_mean Logical; add vertical mean line(s) if `TRUE`. Default `FALSE`.
 #' @param show_median Logical; add vertical median line(s) if `TRUE`. Default `FALSE`.
 #' @param show_vline Logical; draw vertical quantile line(s) at `probs`
@@ -70,6 +74,7 @@
 #' @export
 histogram_plot <- function(data, x_var, color_var,
                            probs = .95, na.rm = TRUE, y = Inf,
+                           bins = 30, binwidth = NULL,
                            show_mean = FALSE,
                            show_median = FALSE,
                            show_vline = TRUE,
@@ -130,11 +135,12 @@ histogram_plot <- function(data, x_var, color_var,
       fill  = .data[[color_var]],
       group = .data[[color_var]],
       probs = probs, na.rm = na.rm, y = y,
-      label_args = label_args,
+      bins = bins, binwidth = binwidth,
       show_mean = show_mean,
       show_median = show_median,
       show_vline = show_vline,
-      show_label = show_label
+      show_label = show_label,
+      label_args = label_args
     ) +
       switch_theme(theme = theme, legend.position = "right", ...)
   } else {
@@ -142,11 +148,12 @@ histogram_plot <- function(data, x_var, color_var,
       data = data,
       x = .data[[x_var]],
       probs = probs, na.rm = na.rm, y = y,
-      label_args = label_args,
+      bins = bins, binwidth = binwidth,
       show_mean = show_mean,
       show_median = show_median,
       show_vline  = show_vline,
-      show_label = show_label
+      show_label = show_label,
+      label_args = label_args
     ) +
       switch_theme(theme = theme, legend.position = "none", ...)
   }

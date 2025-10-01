@@ -11,6 +11,8 @@ histogram_plot(
   probs = 0.95,
   na.rm = TRUE,
   y = Inf,
+  bins = 30,
+  binwidth = NULL,
   show_mean = FALSE,
   show_median = FALSE,
   show_vline = TRUE,
@@ -42,6 +44,12 @@ guides/labels when those layers are enabled. Default \code{0.95}.}
 \item{na.rm}{Logical; silently drop missing values if \code{TRUE}. Default \code{TRUE}.}
 
 \item{y}{Numeric y-position for quantile labels. Default \code{Inf} (top of panel).}
+
+\item{bins}{Number of bins for the histogram. Ignored if \code{binwidth} is
+specified. Default \code{30}.}
+
+\item{binwidth}{Width of each histogram bin. Overrides \code{bins} if provided.
+Should be a single numeric value.}
 
 \item{show_mean}{Logical; add vertical mean line(s) if \code{TRUE}. Default \code{FALSE}.}
 

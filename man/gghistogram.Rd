@@ -14,12 +14,12 @@ gghistogram(
   na.rm = TRUE,
   y = Inf,
   alpha = 0.6,
+  bins = 30,
+  binwidth = NULL,
   show_mean = FALSE,
   show_median = FALSE,
   show_vline = TRUE,
   show_label = TRUE,
-  bins = 30,
-  binwidth = NULL,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 90, hjust = 2,
     vjust = 0.5, color = "black")
 )
@@ -43,6 +43,12 @@ Default \code{Inf} (top of panel).}
 \item{alpha}{Numeric in [0,1]; transparency for the box layer
 (passed to \code{\link[ggplot2:geom_boxplot]{ggplot2::geom_boxplot()}}). Default \code{0.6}.}
 
+\item{bins}{Number of bins for the histogram. Ignored if \code{binwidth} is
+specified. Default \code{30}.}
+
+\item{binwidth}{Width of each histogram bin. Overrides \code{bins} if provided.
+Should be a single numeric value.}
+
 \item{show_mean, show_median}{Logical; add mean/median vertical guides
 (via \code{stat_mean_vline()} / \code{stat_median_vline()}). Defaults \code{FALSE}.}
 
@@ -51,12 +57,6 @@ Default \code{Inf} (top of panel).}
 
 \item{show_label}{Logical; add quantile label(s) at \code{probs}
 (via \code{stat_density_quantile_text()}). Default \code{TRUE}.}
-
-\item{bins}{Number of bins for the histogram. Ignored if \code{binwidth} is
-specified. Default \code{30}.}
-
-\item{binwidth}{Width of each histogram bin. Overrides \code{bins} if provided.
-Should be a single numeric value.}
 
 \item{label_args}{A named list of \code{geom_text()} style options.
 Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}

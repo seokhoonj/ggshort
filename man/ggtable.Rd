@@ -8,7 +8,7 @@ ggtable(
   data,
   x,
   y,
-  linetype = c("dashed"),
+  linetype = "solid",
   text = NULL,
   label,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,

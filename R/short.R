@@ -478,6 +478,8 @@ ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' @param na.rm Logical; remove missing values silently if `TRUE`. Default `TRUE`.
 #' @param y Numeric y position for quantile labels (used by `show_label`).
 #'   Default `Inf` (top of panel).
+#' @param alpha Numeric in \[0,1]; transparency for the box layer
+#'   (passed to [ggplot2::geom_boxplot()]). Default `0.6`.
 #' @param show_mean,show_median Logical; add mean/median vertical guides
 #'   (via `stat_mean_vline()` / `stat_median_vline()`). Defaults `FALSE`.
 #' @param show_vline Logical; draw vertical quantile line(s) at `probs`
@@ -503,7 +505,7 @@ ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL,
 #'
 #' @export
 ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
-                      probs = .95, na.rm = TRUE, y = Inf,
+                      probs = .95, na.rm = TRUE, y = Inf, alpha = .6,
                       show_mean = FALSE,
                       show_median = FALSE,
                       show_vline = TRUE,
@@ -521,13 +523,13 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
   ))
 
   p <- ggplot2::ggplot(data, ggplot2::aes(!!!quos_map)) +
-    ggplot2::geom_density(alpha = .6)
+    ggplot2::geom_density(alpha = alpha)
 
   if (show_mean)
-    p <- p + stat_mean_vline(na.rm = na.rm, linetype = "dotdash")
+    p <- p + stat_mean_vline(na.rm = na.rm, linetype = "solid")
 
   if (show_median)
-    p <- p + stat_median_vline(na.rm = na.rm, linetype = "solid")
+    p <- p + stat_median_vline(na.rm = na.rm, linetype = "dotdash")
 
   if (show_vline)
     p <- p + stat_density_quantile_vline(probs = probs, na.rm = na.rm)
@@ -559,6 +561,8 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #' @param na.rm Logical; remove missing values silently if `TRUE`. Default `TRUE`.
 #' @param y Numeric y position for quantile labels (used by `show_label`).
 #'   Default `Inf` (top of panel).
+#' @param alpha Numeric in \[0,1]; transparency for the box layer
+#'   (passed to [ggplot2::geom_boxplot()]). Default `0.6`.
 #' @param show_mean,show_median Logical; add mean/median vertical guides
 #'   (via `stat_mean_vline()` / `stat_median_vline()`). Defaults `FALSE`.
 #' @param show_vline Logical; draw vertical quantile line(s) at `probs`
@@ -591,7 +595,7 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #'
 #' @export
 gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
-                        probs = .95, na.rm = TRUE, y = Inf,
+                        probs = .95, na.rm = TRUE, y = Inf, alpha = .6,
                         show_mean = FALSE,
                         show_median = FALSE,
                         show_vline = TRUE,
@@ -610,13 +614,13 @@ gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
   ))
 
   p <- ggplot2::ggplot(data, ggplot2::aes(!!!quos_map)) +
-    ggplot2::geom_histogram(alpha = .6, bins = bins, binwidth = binwidth)
+    ggplot2::geom_histogram(alpha = alpha, bins = bins, binwidth = binwidth)
 
   if (show_mean)
-    p <- p + stat_mean_vline(na.rm = na.rm, linetype = "dotdash")
+    p <- p + stat_mean_vline(na.rm = na.rm, linetype = "solid")
 
   if (show_median)
-    p <- p + stat_median_vline(na.rm = na.rm, linetype = "solid")
+    p <- p + stat_median_vline(na.rm = na.rm, linetype = "dotdash")
 
   if (show_vline)
     p <- p + stat_density_quantile_vline(probs = probs, na.rm = na.rm)
@@ -644,8 +648,8 @@ gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #' @param color,fill,group Optional columns mapped to the `color`, `fill` and
 #'   `group` aesthetics.
 #' @param text Optional column/expression used for tooltip text (e.g., plotly).
-#' @param label Optional unquoted column/expression used for text labels
-#'   (placed at the box middle by default).
+#' @param alpha Numeric in \[0,1]; transparency for the box layer
+#'   (passed to [ggplot2::geom_boxplot()]). Default `0.6`.
 #' @param label_args A named list of `geom_text()` style options.
 #'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #' @param width Box width passed to [ggplot2::geom_boxplot()] (default `0.6`).
@@ -655,6 +659,8 @@ gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #'   ([ggplot2::geom_jitter()]) on top of the boxplots.
 #' @param show_mean Logical; if `TRUE`, add mean markers
 #'   using [stat_mean_point()]
+#' @param show_label Logical; if `TRUE`, print the **x group label** at the
+#'   box **median** (added via `stat_summary(geom = "text")`). Default `FALSE`.
 #'
 #' @return A ggplot object.
 #'
@@ -670,27 +676,27 @@ gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #'
 #' # Add labels at the middle of each box (here, the group name)
 #' ggbox(iris, x = Species, y = Sepal.Length, fill = Species,
-#'       label = Species, label_args = list(vjust = -0.4)) +
+#'       label_args = list(vjust = -0.4), show_label = TRUE) +
 #'   theme_view()
 #' }
 #'
 #' @export
 ggbox <- function(data, x, y,
                   color = NULL, fill = NULL, group = NULL,
-                  text = NULL,
-                  label,
+                  text = NULL, alpha = .6,
+                  show_point = TRUE,
+                  show_mean = TRUE,
+                  show_label = FALSE,
                   label_args = list(
                     family = getOption("ggshort.font"),
                     size   = 4,
                     angle  = 0,
-                    hjust  = 0.5,
-                    vjust  = 0.5,
+                    hjust  = .5,
+                    vjust  = -.25,
                     color  = "black"
                   ),
-                  width = 0.6,
-                  varwidth = FALSE,
-                  show_point = TRUE,
-                  show_mean = TRUE) {
+                  width = .6,
+                  varwidth = FALSE) {
   quos_map <- .valid_enquos(rlang::enquos(
     x = x, y = y,
     color = color, fill = fill, group = group,
@@ -699,7 +705,8 @@ ggbox <- function(data, x, y,
 
   p <- ggplot2::ggplot(data = data, ggplot2::aes(!!!quos_map)) +
     ggplot2::geom_boxplot(width = width, varwidth = varwidth,
-                          outlier.shape = if (show_point) NA else 19)
+                          outlier.shape = if (show_point) NA else 19,
+                          alpha = alpha)
 
   if (show_point) {
     quos_point <- .valid_enquos(rlang::enquos(
@@ -711,9 +718,9 @@ ggbox <- function(data, x, y,
     )
   }
 
-  if (!missing(label)) {
+  if (show_label) {
     args <- .modify_label_args(label_args)
-    quos_label <- .valid_enquos(rlang::enquos(label = label))
+    quos_label <- .valid_enquos(rlang::enquos(label = x))
     # add labels at median
     p <- p + ggplot2::stat_summary(
       ggplot2::aes(!!!quos_label),
@@ -920,7 +927,7 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' }
 #'
 #' @export
-ggtable <- function(data, x, y, linetype = c("dashed"), text = NULL,
+ggtable <- function(data, x, y, linetype = "solid", text = NULL,
                     label,
                     label_args = list(
                       family = getOption("ggshort.font"),
@@ -932,13 +939,13 @@ ggtable <- function(data, x, y, linetype = c("dashed"), text = NULL,
                     ),
                     xlab_position = c("bottom", "top"),
                     ylab_position = c("left", "right")) {
-  dx <- rlang::as_string(rlang::ensym(x))
-  dy <- rlang::as_string(rlang::ensym(y))
+  dx <- instead::capture_names(data, !!rlang::enquo(x))
+  dy <- instead::capture_names(data, !!rlang::enquo(y))
 
-  if (is.character(data[[dx]]))
-    data[[dx]] <- as.factor(data[[dx]])
-  if (is.character(data[[dy]]))
-    data[[dy]] <- as.factor(data[[dy]])
+  if (is.character(data[[dx]]) | is.numeric(data[[dx]]))
+    data[[dx]] <- factor(data[[dx]], levels = sort(unique(data[[dx]])))
+  if (is.character(data[[dy]]) | is.numeric(data[[dy]]))
+    data[[dy]] <- factor(data[[dy]], levels = sort(unique(data[[dy]])))
 
   if (!is.factor(data[[dx]]))
     stop(dx, " is not an object of type: factor")

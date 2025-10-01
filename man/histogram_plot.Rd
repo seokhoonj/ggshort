@@ -13,8 +13,9 @@ histogram_plot(
   y = Inf,
   show_mean = FALSE,
   show_median = FALSE,
+  show_vline = TRUE,
   show_label = TRUE,
-  show_density = TRUE,
+  show_density = FALSE,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 90, hjust = 2,
     vjust = 0.5, color = "black"),
   palette = "Set1",
@@ -46,11 +47,14 @@ guides/labels when those layers are enabled. Default \code{0.95}.}
 
 \item{show_median}{Logical; add vertical median line(s) if \code{TRUE}. Default \code{FALSE}.}
 
-\item{show_label}{Logical; add quantile label(s) at \code{probs} if \code{TRUE}.
-Default \code{TRUE}.}
+\item{show_vline}{Logical; draw vertical quantile line(s) at \code{probs}
+(via \code{stat_density_quantile_vline()}). Default \code{TRUE}.}
+
+\item{show_label}{Logical; if \code{TRUE}, add quantile label(s) at \code{probs}.
+(via \code{stat_density_quantile_text()}). Default \code{TRUE}.}
 
 \item{show_density}{Logical; if \code{TRUE}, add a small density panel of \code{x_var}
-(by \code{color_var}, when present) above the histogram. Default \code{TRUE}.}
+(by \code{color_var}, when present) above the histogram. Default \code{FALSE}.}
 
 \item{label_args}{A named list of text styling options for quantile labels
 (\code{geom_text()}): \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.
@@ -101,7 +105,8 @@ histogram_plot(iris, x_var = "Sepal.Length", color_var = "Species",
 
 # Using column indices and adding mean/median guides
 histogram_plot(iris, x_var = 1, color_var = 5,
-               show_mean = TRUE, show_median = TRUE)
+               show_mean = TRUE, show_median = TRUE,
+               show_density = TRUE)
 }
 
 }

@@ -18,10 +18,12 @@
 #' @param y Numeric y-position for quantile labels. Default `Inf` (top of panel).
 #' @param show_mean Logical; add vertical mean line(s) if `TRUE`. Default `FALSE`.
 #' @param show_median Logical; add vertical median line(s) if `TRUE`. Default `FALSE`.
-#' @param show_label Logical; add quantile label(s) at `probs` if `TRUE`.
-#'   Default `TRUE`.
+#' @param show_vline Logical; draw vertical quantile line(s) at `probs`
+#'   (via `stat_density_quantile_vline()`). Default `TRUE`.
+#' @param show_label Logical; if `TRUE`, add quantile label(s) at `probs`.
+#'   (via `stat_density_quantile_text()`). Default `TRUE`.
 #' @param show_density Logical; if `TRUE`, add a small density panel of `x_var`
-#'   (by `color_var`, when present) above the histogram. Default `TRUE`.
+#'   (by `color_var`, when present) above the histogram. Default `FALSE`.
 #' @param label_args A named list of text styling options for quantile labels
 #'   (`geom_text()`): `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #'   Default:
@@ -58,7 +60,8 @@
 #'
 #' # Using column indices and adding mean/median guides
 #' histogram_plot(iris, x_var = 1, color_var = 5,
-#'                show_mean = TRUE, show_median = TRUE)
+#'                show_mean = TRUE, show_median = TRUE,
+#'                show_density = TRUE)
 #' }
 #'
 #' @seealso [gghistogram()], [ggdensity()], [stat_density_quantile_vline()],
@@ -69,8 +72,9 @@ histogram_plot <- function(data, x_var, color_var,
                            probs = .95, na.rm = TRUE, y = Inf,
                            show_mean = FALSE,
                            show_median = FALSE,
+                           show_vline = TRUE,
                            show_label = TRUE,
-                           show_density = TRUE,
+                           show_density = FALSE,
                            label_args = list(
                              family = getOption("ggshort.font"),
                              size  = 4,
@@ -130,6 +134,7 @@ histogram_plot <- function(data, x_var, color_var,
       label_args = label_args,
       show_mean = show_mean,
       show_median = show_median,
+      show_vline = show_vline,
       show_label = show_label
     ) +
       switch_theme(theme = theme, legend.position = "right", ...)
@@ -142,6 +147,7 @@ histogram_plot <- function(data, x_var, color_var,
       label_args = label_args,
       show_mean = show_mean,
       show_median = show_median,
+      show_vline  = show_vline,
       show_label = show_label
     ) +
       switch_theme(theme = theme, legend.position = "none", ...)

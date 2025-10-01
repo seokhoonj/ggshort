@@ -776,6 +776,37 @@ ggbar(iris, x = Species, y = Sepal.Length, fill = Species) +
   theme_view()
 ```
 
+### 7) `scale_x_log()`, `scale_y_log()`
+
+Apply a **logarithmic axis** with a **custom base**. Defaults to the natural log (`base = exp(1)`), but you can set any base (e.g., 2 or 10).
+
+**Key features:**
+
+-   Natural log by default (`base = exp(1)`).
+-   Works on either axis: `scale_x_log()` or `scale_y_log()`.
+-   Accepts all arguments of `scale_x_continuous()` / `scale_y_continuous()` (e.g., `breaks`, `labels`, `limits`).
+
+``` r
+library(ggplot2)
+library(ggshort)
+
+# Natural log on X
+ggpoint(mtcars, disp, mpg) +
+  scale_x_log() +
+  theme_view()
+
+# Log base 2 on Y
+ggpoint(mtcars, mpg, wt) +
+  scale_y_log(base = 2) +
+  theme_view()
+
+# Log base 10 on both axes + custom breaks
+ggpoint(mtcars, disp, hp) +
+  scale_x_log(base = 10, breaks = c(100, 200, 400)) +
+  scale_y_log(base = 10) +
+  theme_view()
+```
+
 ## 5. `Plotly` (Optional)
 
 ### 1) `plotly_pie()`

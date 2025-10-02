@@ -551,6 +551,55 @@ get_twelve_colors <- function() {
   return(local(.TWELVE_COLORS, envir = .GGSHORT_COLORS_ENV))
 }
 
+
+# Suppress warnings functions ---------------------------------------------
+
+#' Suppress "Removed rows" warnings in ggplot2
+#'
+#' Evaluates an expression while silencing the common ggplot2 warnings:
+#' \itemize{
+#'   \item `"Removed n row(s) containing missing values"`
+#'   \item `"Removed n row(s) containing missing values or values outside the scale range"`
+#' }
+#'
+#' Such warnings are typically emitted by `geom_*()` layers (e.g.,
+#' `geom_point()`, `geom_bar()`, `geom_text()`) when data contain `NA`s
+#' or values outside the axis limits. In exploratory plots or expected-data
+#' scenarios, these warnings may be considered harmless.
+#'
+#' @param expr An expression to evaluate, usually a ggplot2 plotting call
+#'   (e.g., `print(p)` or a `ggplot` expression).
+#'
+#' @return The result of evaluating `expr`. If `expr` itself returns
+#'   invisibly, the result will also be invisible.
+#'
+#' @examples
+#' \dontrun{
+#' df <- data.frame(x = c("A", "B", NA), y = c(1, 2, NA))
+#'
+#' p <- ggbar(df, x = x, y = y)
+#'
+#' # Normally produces warnings about removed rows
+#' print(p)
+#'
+#' # Suppress those warnings
+#' suppress_geom_removed_warnings(print(p))
+#' }
+#'
+#' @export
+suppress_geom_removed_warnings <- function(expr) {
+  withCallingHandlers(
+    expr,
+    warning = function(w) {
+      msg <- conditionMessage(w)
+      if (grepl("^Removed \\d+ row[s]? containing missing values", msg) ||
+          grepl("values outside the scale range", msg)) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
+}
+
 # Internal helper functions -----------------------------------------------
 
 #' Convert objects to gtable
@@ -635,27 +684,4 @@ get_twelve_colors <- function() {
 
     sort(unique(brks[brks >= rng[1L] & brks <= rng[2L]]))
   }
-}
-
-#' Suppress PostScript font database warnings
-#'
-#' Run an expression while ignoring warnings of the form
-#' "font family ... not found in PostScript font database".
-#' Other warnings are passed through as usual.
-#'
-#' @param expr Expression to evaluate.
-#'
-#' @return The result of evaluating `expr`.
-#'
-#' @keywords internal
-#' @noRd
-.suppress_ps_font_warnings <- function(expr) {
-  withCallingHandlers(
-    expr,
-    warning = function(w) {
-      if (grepl("PostScript font database", conditionMessage(w))) {
-        invokeRestart("muffleWarning")
-      }
-    }
-  )
 }

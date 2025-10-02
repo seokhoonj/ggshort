@@ -617,7 +617,7 @@ get_twelve_colors <- function() {
 #'
 #' @keywords internal
 #' @noRd
-.log_stay_breaks <- function(breaks = c(0, 1, 2, 3, 5, 7, 10, 14, 21, 28, 42, 60, 90)) {
+.log_stay_breaks <- function(breaks = c(0, 1, 2, 3, 5, 7, 10, 14, 21, 30, 45, 60, 90, 180, 365)) {
   force(breaks)
   breaks <- sort(unique(breaks))
   function(x) {
@@ -627,7 +627,7 @@ get_twelve_colors <- function() {
     brks <- breaks
     last <- max(breaks)
 
-    # 2 times after 90
+    # 2 times after 365
     while (last * 2 <= rng[2L]) {
       last <- last * 2
       brks <- c(brks, last)

@@ -10,7 +10,7 @@ stat_density_quantile_text(
   probs = 0.95,
   na.rm = TRUE,
   y = Inf,
-  fmt = function(p, q) sprintf("\%.2f(\%.1f\%\%)", q, p * 100),
+  fmt = function(p, q) sprintf("\%.1f (\%.1f\%\%)", q, p * 100),
   family = getOption("ggshort.font"),
   show.legend = FALSE,
   inherit.aes = TRUE,

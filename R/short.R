@@ -486,6 +486,8 @@ ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL,
 #'   (via `stat_density_quantile_vline()`). Default `FALSE`.
 #' @param show_label Logical; add quantile label(s) at `probs`
 #'   (via `stat_density_quantile()`). Default `TRUE`.
+#' @param label_digits Integer; number of decimal digits for quantile labels.
+#'   Default `1`.
 #' @param label_args A named list of `geom_text()` style options.
 #'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #'
@@ -510,6 +512,7 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
                       show_median = FALSE,
                       show_vline = TRUE,
                       show_label = TRUE,
+                      label_digits = 1,
                       label_args = list(
                         family = getOption("ggshort.font"),
                         size  = 4,
@@ -536,9 +539,10 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 
   if (show_label) {
     args <- .modify_label_args(label_args)
+    fmt <- sprintf("%%.%df (%%.1f%%%%)", label_digits)
     p <- p + stat_density_quantile_text(
       probs = probs, na.rm = na.rm, y = y,
-      fmt = function(p, q) sprintf("%.2f (%.1f%%)", q, p * 100),
+      fmt = function(p, q) sprintf(fmt, q, p * 100),
       family = args$family, angle = args$angle,
       hjust  = args$hjust,  vjust = args$vjust
     )
@@ -573,6 +577,8 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #'   (via `stat_density_quantile_vline()`). Default `TRUE`.
 #' @param show_label Logical; add quantile label(s) at `probs`
 #'   (via `stat_density_quantile_text()`). Default `TRUE`.
+#' @param label_digits Integer; number of decimal digits for quantile labels.
+#'   Default `1`.
 #' @param label_args A named list of `geom_text()` style options.
 #'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #'
@@ -590,7 +596,8 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #'   theme_view()
 #'
 #' # Use custom binwidth instead of fixed bins
-#' gghistogram(iris, x = Sepal.Length, binwidth = 0.2)
+#' gghistogram(iris, x = Sepal.Length, binwidth = 0.2) +
+#'   theme_view()
 #' }
 #'
 #' @export
@@ -601,6 +608,7 @@ gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
                         show_median = FALSE,
                         show_vline = TRUE,
                         show_label = TRUE,
+                        label_digits = 1,
                         label_args = list(
                           family = getOption("ggshort.font"),
                           size  = 4,
@@ -627,9 +635,10 @@ gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
 
   if (show_label) {
     args <- .modify_label_args(label_args)
+    fmt <- sprintf("%%.%df (%%.1f%%%%)", label_digits)
     p <- p + stat_density_quantile_text(
       probs = probs, na.rm = na.rm, y = y,
-      fmt = function(p, q) sprintf("%.2f (%.1f%%)", q, p * 100),
+      fmt = function(p, q) sprintf(fmt, q, p * 100),
       family = args$family, angle = args$angle,
       hjust  = args$hjust,  vjust = args$vjust
     )

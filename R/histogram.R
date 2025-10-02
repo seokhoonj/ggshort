@@ -22,12 +22,14 @@
 #'   Should be a single numeric value.
 #' @param show_mean Logical; add vertical mean line(s) if `TRUE`. Default `FALSE`.
 #' @param show_median Logical; add vertical median line(s) if `TRUE`. Default `FALSE`.
+#' @param show_density Logical; if `TRUE`, add a small density panel of `x_var`
+#'   (by `color_var`, when present) above the histogram. Default `FALSE`.
 #' @param show_vline Logical; draw vertical quantile line(s) at `probs`
 #'   (via `stat_density_quantile_vline()`). Default `TRUE`.
 #' @param show_label Logical; if `TRUE`, add quantile label(s) at `probs`.
 #'   (via `stat_density_quantile_text()`). Default `TRUE`.
-#' @param show_density Logical; if `TRUE`, add a small density panel of `x_var`
-#'   (by `color_var`, when present) above the histogram. Default `FALSE`.
+#' @param label_digits Integer; number of decimal digits for quantile labels.
+#'   Default `1`.
 #' @param label_args A named list of text styling options for quantile labels
 #'   (`geom_text()`): `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #'   Default:
@@ -77,9 +79,10 @@ histogram_plot <- function(data, x_var, color_var,
                            bins = 30, binwidth = NULL,
                            show_mean = FALSE,
                            show_median = FALSE,
+                           show_density = FALSE,
                            show_vline = TRUE,
                            show_label = TRUE,
-                           show_density = FALSE,
+                           label_digits = 1,
                            label_args = list(
                              family = getOption("ggshort.font"),
                              size  = 4,
@@ -153,6 +156,7 @@ histogram_plot <- function(data, x_var, color_var,
       show_median = show_median,
       show_vline  = show_vline,
       show_label = show_label,
+      label_digits = label_digits,
       label_args = label_args
     ) +
       switch_theme(theme = theme, legend.position = "none", ...)

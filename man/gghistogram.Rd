@@ -20,6 +20,7 @@ gghistogram(
   show_median = FALSE,
   show_vline = TRUE,
   show_label = TRUE,
+  label_digits = 1,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 90, hjust = 2,
     vjust = 0.5, color = "black")
 )
@@ -58,6 +59,9 @@ Should be a single numeric value.}
 \item{show_label}{Logical; add quantile label(s) at \code{probs}
 (via \code{stat_density_quantile_text()}). Default \code{TRUE}.}
 
+\item{label_digits}{Integer; number of decimal digits for quantile labels.
+Default \code{1}.}
+
 \item{label_args}{A named list of \code{geom_text()} style options.
 Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
 }
@@ -77,7 +81,8 @@ gghistogram(iris, x = Sepal.Length, fill = Species,
   theme_view()
 
 # Use custom binwidth instead of fixed bins
-gghistogram(iris, x = Sepal.Length, binwidth = 0.2)
+gghistogram(iris, x = Sepal.Length, binwidth = 0.2) +
+  theme_view()
 }
 
 }

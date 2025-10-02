@@ -351,7 +351,7 @@ stat_density_quantile_text <- function(mapping = NULL, data = NULL,
                                        probs = .95, na.rm = TRUE,
                                        y = Inf,
                                        fmt = function(p, q)
-                                         sprintf("%.2f(%.1f%%)", q, p * 100),
+                                         sprintf("%.1f (%.1f%%)", q, p * 100),
                                        family = getOption("ggshort.font"),
                                        show.legend = FALSE, inherit.aes = TRUE,
                                        ...) {
@@ -429,7 +429,7 @@ stat_density_quantile <- function(mapping = NULL, data = NULL,
                                   probs = .95, na.rm = TRUE,
                                   y = Inf,
                                   fmt = function(p, q)
-                                    sprintf("%.2f (%.1f%%)", q, p * 100),
+                                    sprintf("%.1f (%.1f%%)", q, p * 100),
                                   family = getOption("ggshort.font"),
                                   angle = 0, hjust = .5, vjust = 2,
                                   show.legend = FALSE, inherit.aes = TRUE,

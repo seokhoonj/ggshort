@@ -18,6 +18,7 @@ ggdensity(
   show_median = FALSE,
   show_vline = TRUE,
   show_label = TRUE,
+  label_digits = 1,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 90, hjust = 2,
     vjust = 0.5, color = "black")
 )
@@ -49,6 +50,9 @@ Default \code{Inf} (top of panel).}
 
 \item{show_label}{Logical; add quantile label(s) at \code{probs}
 (via \code{stat_density_quantile()}). Default \code{TRUE}.}
+
+\item{label_digits}{Integer; number of decimal digits for quantile labels.
+Default \code{1}.}
 
 \item{label_args}{A named list of \code{geom_text()} style options.
 Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}

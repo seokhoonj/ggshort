@@ -15,9 +15,10 @@ histogram_plot(
   binwidth = NULL,
   show_mean = FALSE,
   show_median = FALSE,
+  show_density = FALSE,
   show_vline = TRUE,
   show_label = TRUE,
-  show_density = FALSE,
+  label_digits = 1,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 90, hjust = 2,
     vjust = 0.5, color = "black"),
   palette = "Set1",
@@ -55,14 +56,17 @@ Should be a single numeric value.}
 
 \item{show_median}{Logical; add vertical median line(s) if \code{TRUE}. Default \code{FALSE}.}
 
+\item{show_density}{Logical; if \code{TRUE}, add a small density panel of \code{x_var}
+(by \code{color_var}, when present) above the histogram. Default \code{FALSE}.}
+
 \item{show_vline}{Logical; draw vertical quantile line(s) at \code{probs}
 (via \code{stat_density_quantile_vline()}). Default \code{TRUE}.}
 
 \item{show_label}{Logical; if \code{TRUE}, add quantile label(s) at \code{probs}.
 (via \code{stat_density_quantile_text()}). Default \code{TRUE}.}
 
-\item{show_density}{Logical; if \code{TRUE}, add a small density panel of \code{x_var}
-(by \code{color_var}, when present) above the histogram. Default \code{FALSE}.}
+\item{label_digits}{Integer; number of decimal digits for quantile labels.
+Default \code{1}.}
 
 \item{label_args}{A named list of text styling options for quantile labels
 (\code{geom_text()}): \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.

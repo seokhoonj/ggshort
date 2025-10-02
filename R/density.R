@@ -22,6 +22,8 @@
 #'   (via `stat_density_quantile_vline()`). Default `TRUE`.
 #' @param show_label Logical; if `TRUE`, add quantile label(s) at `probs`.
 #'   (via `stat_density_quantile_text()`). Default `TRUE`.
+#' @param label_digits Integer; number of decimal digits for quantile labels.
+#'   Default `1`.
 #' @param label_args A named list of text styling options for quantile labels
 #'   (`geom_text()`): `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #'   Default:
@@ -69,6 +71,7 @@ density_plot <- function(data, x_var, color_var,
                          show_median = FALSE,
                          show_vline = TRUE,
                          show_label = TRUE,
+                         label_digits = 1,
                          label_args = list(
                            family = getOption("ggshort.font"),
                            size  = 4,
@@ -124,11 +127,12 @@ density_plot <- function(data, x_var, color_var,
       fill  = .data[[color_var]],
       group = .data[[color_var]],
       probs = probs, na.rm = na.rm, y = y,
-      label_args = label_args,
       show_mean = show_mean,
       show_median = show_median,
       show_vline = show_vline,
-      show_label = show_label
+      show_label = show_label,
+      label_digits = label_digits,
+      label_args = label_args
     ) +
       switch_theme(theme = theme, legend.position = "right", ...)
   } else {
@@ -137,11 +141,12 @@ density_plot <- function(data, x_var, color_var,
       x = .data[[x_var]],
       fill = "",
       probs = probs, na.rm = na.rm, y = y,
-      label_args = label_args,
       show_mean = show_mean,
       show_median = show_median,
       show_vline = show_vline,
-      show_label = show_label
+      show_label = show_label,
+      label_digits = label_digits,
+      label_args = label_args
     ) +
       switch_theme(theme = theme, legend.position = "none", ...)
   }

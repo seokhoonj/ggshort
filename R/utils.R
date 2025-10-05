@@ -542,8 +542,10 @@ scale_y_log_stay <- function(...,
 #'
 #' @param by_month Integer; interval in months between colorbar ticks.
 #'   Default is `6`.
-#' @param palette Color palette function or vector. Default is
-#'   [grDevices::hcl.colors()] with "YlGnBu" palette.
+#' @param palette Either a palette function, a vector of colors, or a preset name
+#'   (case-insensitive). Supported presets include:
+#'   `"viridis"`, `"spectral"`, `"ylgnbu"`, `"zissou"`, `"roma"`, `"vik"`,
+#'   `"cividis"`, `"berlin"`.
 #' @param n Integer; number of colors sampled from the palette. Default `256`.
 #' @param include_endpoints Logical; include the min/max dates as ticks if `TRUE`.
 #'   Default `FALSE` (to avoid label overlap).
@@ -561,12 +563,36 @@ scale_y_log_stay <- function(...,
 #'
 #' @export
 scale_color_by_month_gradientn <- function(by_month = 6,
-                                           palette = function(n)
-                                             grDevices::hcl.colors(n, "YlGnBu"),
+                                           palette = "viridis",
                                            n = 256,
                                            include_endpoints = FALSE,
                                            ...) {
-  cols <- if (is.function(palette)) palette(n) else palette
+  # Palette preset handler
+  get_palette <- function(p, n) {
+    if (is.function(p)) return(p(n))
+    if (is.character(p) && length(p) == 1L) {
+      pname <- tolower(p)
+      pals <- list(
+        viridis  = "Viridis",
+        spectral = "Spectral",
+        ylgnbu   = "YlGnBu",
+        zissou   = "Zissou 1",
+        roma     = "Roma",
+        vik      = "Vik",
+        cividis  = "Cividis",
+        berlin   = "Berlin"
+      )
+      key <- match(pname, names(pals))
+      if (!is.na(key))
+        return(grDevices::hcl.colors(n, pals[[key]]))
+      else
+        stop(sprintf("Unknown palette name '%s'.", p), call. = FALSE)
+    }
+    if (is.vector(p)) return(p)
+    stop("Invalid palette argument. Must be a name, vector, or function.", call. = FALSE)
+  }
+
+  cols <- get_palette(palette, n)
 
   # Compute colorbar breaks from numeric limits (ggplot passes Dates as numbers)
   breaks_from_numeric_date <- function(lims) {
@@ -616,11 +642,35 @@ scale_color_by_month_gradientn <- function(by_month = 6,
 #'
 #' @export
 scale_fill_by_month_gradientn <- function(by_month = 6,
-                                          palette = function(n) grDevices::hcl.colors(n, "YlGnBu"),
+                                          palette = "viridis",
                                           n = 256,
                                           include_endpoints = FALSE,
                                           ...) {
-  cols <- if (is.function(palette)) palette(n) else palette
+  get_palette <- function(p, n) {
+    if (is.function(p)) return(p(n))
+    if (is.character(p) && length(p) == 1L) {
+      pname <- tolower(p)
+      pals <- list(
+        viridis  = "Viridis",
+        spectral = "Spectral",
+        ylgnbu   = "YlGnBu",
+        zissou   = "Zissou 1",
+        roma     = "Roma",
+        vik      = "Vik",
+        cividis  = "Cividis",
+        berlin   = "Berlin"
+      )
+      key <- match(pname, names(pals))
+      if (!is.na(key))
+        return(grDevices::hcl.colors(n, pals[[key]]))
+      else
+        stop(sprintf("Unknown palette name '%s'.", p), call. = FALSE)
+    }
+    if (is.vector(p)) return(p)
+    stop("Invalid palette argument. Must be a name, vector, or function.", call. = FALSE)
+  }
+
+  cols <- get_palette(palette, n)
 
   breaks_from_numeric_date <- function(lims) {
     if (length(lims) != 2L || any(!is.finite(lims))) return(NULL)

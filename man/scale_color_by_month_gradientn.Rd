@@ -6,7 +6,7 @@
 \usage{
 scale_color_by_month_gradientn(
   by_month = 6,
-  palette = function(n) grDevices::hcl.colors(n, "YlGnBu"),
+  palette = "viridis",
   n = 256,
   include_endpoints = FALSE,
   ...
@@ -16,8 +16,10 @@ scale_color_by_month_gradientn(
 \item{by_month}{Integer; interval in months between colorbar ticks.
 Default is \code{6}.}
 
-\item{palette}{Color palette function or vector. Default is
-\code{\link[grDevices:palettes]{grDevices::hcl.colors()}} with "YlGnBu" palette.}
+\item{palette}{Either a palette function, a vector of colors, or a preset name
+(case-insensitive). Supported presets include:
+\code{"viridis"}, \code{"spectral"}, \code{"ylgnbu"}, \code{"zissou"}, \code{"roma"}, \code{"vik"},
+\code{"cividis"}, \code{"berlin"}.}
 
 \item{n}{Integer; number of colors sampled from the palette. Default \code{256}.}
 

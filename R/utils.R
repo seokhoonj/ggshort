@@ -535,6 +535,126 @@ scale_y_log_stay <- function(...,
   )
 }
 
+#' Continuous color gradient by month (for Date variables)
+#'
+#' A ggplot2 continuous color scale for Date variables. It generates
+#' colorbar breaks every N months and formats labels as "YYYY-MM".
+#'
+#' @param by_month Integer; interval in months between colorbar ticks.
+#'   Default is `6`.
+#' @param palette Color palette function or vector. Default is
+#'   [grDevices::hcl.colors()] with "YlGnBu" palette.
+#' @param n Integer; number of colors sampled from the palette. Default `256`.
+#' @param include_endpoints Logical; include the min/max dates as ticks if `TRUE`.
+#'   Default `FALSE` (to avoid label overlap).
+#' @param ... Additional args passed to [ggplot2::scale_color_gradientn()].
+#'
+#' @return A ggplot2 color scale for month-based Date aesthetics.
+#'
+#' @examples
+#' \dontrun{
+#' # A/E Ratio
+#' ggline(aer_data, x = elpm, y = ratio, color = uym, group = uym) +
+#'   scale_color_by_month_gradientn(by_month = 6) +
+#'   theme_view()
+#' }
+#'
+#' @export
+scale_color_by_month_gradientn <- function(by_month = 6,
+                                           palette = function(n)
+                                             grDevices::hcl.colors(n, "YlGnBu"),
+                                           n = 256,
+                                           include_endpoints = FALSE,
+                                           ...) {
+  cols <- if (is.function(palette)) palette(n) else palette
+
+  # Compute colorbar breaks from numeric limits (ggplot passes Dates as numbers)
+  breaks_from_numeric_date <- function(lims) {
+    if (length(lims) != 2L || any(!is.finite(lims))) return(NULL)
+
+    lo_date <- as.Date(lims[1], origin = "1970-01-01")
+    hi_date <- as.Date(lims[2], origin = "1970-01-01")
+
+    # Anchor: start at Jan or Jul depending on the first month (keeps labels tidy)
+    start_year  <- as.integer(format(lo_date, "%Y"))
+    start_month <- as.integer(format(lo_date, "%m"))
+    anchor_month <- if (start_month <= 6) 1L else 7L
+    start_date <- as.Date(sprintf("%04d-%02d-01", start_year, anchor_month))
+
+    break_dates <- seq(from = start_date, to = hi_date, by = paste(by_month, "months"))
+    break_dates <- break_dates[break_dates >= lo_date & break_dates <= hi_date]
+
+    if (include_endpoints)
+      break_dates <- unique(sort(c(lo_date, break_dates, hi_date)))
+
+    as.numeric(break_dates)  # gradientn expects numeric breaks
+  }
+
+  # Label formatter: restore to Date then format as "YYYY-MM"
+  labels_ym <- function(x) format(as.Date(x, origin = "1970-01-01"), "%Y-%m")
+
+  ggplot2::scale_color_gradientn(
+    colours = cols,
+    breaks  = breaks_from_numeric_date,
+    labels  = labels_ym,
+    guide   = ggplot2::guide_colorbar(
+      nbin = 256, ticks = TRUE, draw.ulim = TRUE, draw.llim = TRUE
+    ),
+    ...
+  )
+}
+
+#' Continuous fill gradient by month (for Date variables)
+#'
+#' A ggplot2 continuous fill scale for Date variables.
+#' Generates colorbar breaks every N months (default: 6 months),
+#' labeled as "YYYY-MM".
+#'
+#' @inheritParams scale_color_by_month_gradientn
+#'
+#' @return A ggplot2 fill scale for month-based Date aesthetics.
+#'
+#' @export
+scale_fill_by_month_gradientn <- function(by_month = 6,
+                                          palette = function(n) grDevices::hcl.colors(n, "YlGnBu"),
+                                          n = 256,
+                                          include_endpoints = FALSE,
+                                          ...) {
+  cols <- if (is.function(palette)) palette(n) else palette
+
+  breaks_from_numeric_date <- function(lims) {
+    if (length(lims) != 2L || any(!is.finite(lims))) return(NULL)
+
+    lo_date <- as.Date(lims[1], origin = "1970-01-01")
+    hi_date <- as.Date(lims[2], origin = "1970-01-01")
+
+    start_year  <- as.integer(format(lo_date, "%Y"))
+    start_month <- as.integer(format(lo_date, "%m"))
+    anchor_month <- if (start_month <= 6) 1L else 7L
+    start_date <- as.Date(sprintf("%04d-%02d-01", start_year, anchor_month))
+
+    break_dates <- seq(from = start_date, to = hi_date, by = paste(by_month, "months"))
+    break_dates <- break_dates[break_dates >= lo_date & break_dates <= hi_date]
+
+    if (include_endpoints)
+      break_dates <- unique(sort(c(lo_date, break_dates, hi_date)))
+
+    as.numeric(break_dates)
+  }
+
+  labels_ym <- function(x) format(as.Date(x, origin = "1970-01-01"), "%Y-%m")
+
+  ggplot2::scale_fill_gradientn(
+    colours = cols,
+    breaks  = breaks_from_numeric_date,
+    labels  = labels_ym,
+    guide   = ggplot2::guide_colorbar(
+      nbin = 256, ticks = TRUE, draw.ulim = TRUE, draw.llim = TRUE
+    ),
+    ...
+  )
+}
+
 # Color functions ---------------------------------------------------------
 
 get_two_colors <- function(choice = c("base", "deep", "base_inv", "deep_inv")) {

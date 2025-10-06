@@ -6,7 +6,7 @@
 \usage{
 scale_fill_by_month_gradientn(
   by_month = 6,
-  palette = "viridis",
+  palette = "ylgnbu",
   n = 256,
   include_endpoints = FALSE,
   ...
@@ -18,8 +18,8 @@ Default is \code{6}.}
 
 \item{palette}{Either a palette function, a vector of colors, or a preset name
 (case-insensitive). Supported presets include:
-\code{"viridis"}, \code{"spectral"}, \code{"ylgnbu"}, \code{"zissou"}, \code{"roma"}, \code{"vik"},
-\code{"cividis"}, \code{"berlin"}.}
+\code{"rainbow"}, \code{"viridis"}, \code{"spectral"}, \code{"ylgnbu"}, \code{"zissou"}, \code{"roma"},
+\code{"vik"}, \code{"cividis"}, \code{"berlin"}.}
 
 \item{n}{Integer; number of colors sampled from the palette. Default \code{256}.}
 

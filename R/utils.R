@@ -544,8 +544,8 @@ scale_y_log_stay <- function(...,
 #'   Default is `6`.
 #' @param palette Either a palette function, a vector of colors, or a preset name
 #'   (case-insensitive). Supported presets include:
-#'   `"viridis"`, `"spectral"`, `"ylgnbu"`, `"zissou"`, `"roma"`, `"vik"`,
-#'   `"cividis"`, `"berlin"`.
+#'   `"rainbow"`, `"viridis"`, `"spectral"`, `"ylgnbu"`, `"zissou"`, `"roma"`,
+#'   `"vik"`, `"cividis"`, `"berlin"`.
 #' @param n Integer; number of colors sampled from the palette. Default `256`.
 #' @param include_endpoints Logical; include the min/max dates as ticks if `TRUE`.
 #'   Default `FALSE` (to avoid label overlap).
@@ -563,7 +563,7 @@ scale_y_log_stay <- function(...,
 #'
 #' @export
 scale_color_by_month_gradientn <- function(by_month = 6,
-                                           palette = "viridis",
+                                           palette = "ylgnbu",
                                            n = 256,
                                            include_endpoints = FALSE,
                                            ...) {
@@ -572,6 +572,8 @@ scale_color_by_month_gradientn <- function(by_month = 6,
     if (is.function(p)) return(p(n))
     if (is.character(p) && length(p) == 1L) {
       pname <- tolower(p)
+      if (pname == "rainbow")
+        return(grDevices::rainbow(n, start = .05, end = .65))
       pals <- list(
         viridis  = "Viridis",
         spectral = "Spectral",
@@ -583,10 +585,11 @@ scale_color_by_month_gradientn <- function(by_month = 6,
         berlin   = "Berlin"
       )
       key <- match(pname, names(pals))
-      if (!is.na(key))
+      if (!is.na(key)) {
         return(grDevices::hcl.colors(n, pals[[key]]))
-      else
+      } else {
         stop(sprintf("Unknown palette name '%s'.", p), call. = FALSE)
+      }
     }
     if (is.vector(p)) return(p)
     stop("Invalid palette argument. Must be a name, vector, or function.", call. = FALSE)
@@ -642,7 +645,7 @@ scale_color_by_month_gradientn <- function(by_month = 6,
 #'
 #' @export
 scale_fill_by_month_gradientn <- function(by_month = 6,
-                                          palette = "viridis",
+                                          palette = "ylgnbu",
                                           n = 256,
                                           include_endpoints = FALSE,
                                           ...) {
@@ -650,6 +653,8 @@ scale_fill_by_month_gradientn <- function(by_month = 6,
     if (is.function(p)) return(p(n))
     if (is.character(p) && length(p) == 1L) {
       pname <- tolower(p)
+      if (pname == "rainbow")
+        return(grDevices::rainbow(n, start = .05, end = .65))
       pals <- list(
         viridis  = "Viridis",
         spectral = "Spectral",
@@ -661,10 +666,11 @@ scale_fill_by_month_gradientn <- function(by_month = 6,
         berlin   = "Berlin"
       )
       key <- match(pname, names(pals))
-      if (!is.na(key))
+      if (!is.na(key)) {
         return(grDevices::hcl.colors(n, pals[[key]]))
-      else
+      } else {
         stop(sprintf("Unknown palette name '%s'.", p), call. = FALSE)
+      }
     }
     if (is.vector(p)) return(p)
     stop("Invalid palette argument. Must be a name, vector, or function.", call. = FALSE)

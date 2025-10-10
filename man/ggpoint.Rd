@@ -10,6 +10,8 @@ ggpoint(
   data,
   x,
   y,
+  xmin = NULL,
+  xmax = NULL,
   ymin = NULL,
   ymax = NULL,
   color = NULL,
@@ -32,6 +34,8 @@ ggjitter(
   data,
   x,
   y,
+  xmin = NULL,
+  xmax = NULL,
   ymin = NULL,
   ymax = NULL,
   color = NULL,
@@ -54,6 +58,8 @@ ggscatter(
   data,
   x,
   y,
+  xmin = NULL,
+  xmax = NULL,
   ymin = NULL,
   ymax = NULL,
   color = NULL,
@@ -77,6 +83,8 @@ ggscatter(
 \item{data}{A data.frame.}
 
 \item{x, y}{Unquoted column names mapped to x and y.}
+
+\item{xmin, xmax}{Optional lower/upper x bounds (rarelx used for pure points).}
 
 \item{ymin, ymax}{Optional lower/upper y bounds (rarely used for pure points).}
 

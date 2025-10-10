@@ -181,6 +181,7 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #'
 #' @param data A data.frame.
 #' @param x,y Unquoted column names mapped to x and y.
+#' @param xmin,xmax Optional lower/upper x bounds (rarelx used for pure points).
 #' @param ymin,ymax Optional lower/upper y bounds (rarely used for pure points).
 #' @param color,fill,group Optional columns mapped to the `color`, `fill` and
 #'   `group` aesthetics.
@@ -228,7 +229,10 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #'
 #' @name ggpoint
 #' @export
-ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL,
+ggpoint <- function(data,
+                    x, y,
+                    xmin = NULL, xmax = NULL,
+                    ymin = NULL, ymax = NULL,
                     color = NULL, fill = NULL, group = NULL,
                     shape = NULL, size = NULL, alpha = NULL,
                     text = NULL,
@@ -304,7 +308,10 @@ ggpoint <- function(data, x, y, ymin = NULL, ymax = NULL,
 
 #' @rdname ggpoint
 #' @export
-ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL,
+ggjitter <- function(data,
+                     x, y,
+                     xmin = NULL, xmax = NULL,
+                     ymin = NULL, ymax = NULL,
                      color = NULL, fill = NULL, group = NULL,
                      shape = NULL, size = NULL, alpha = NULL,
                      text = NULL,
@@ -382,7 +389,10 @@ ggjitter <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' @rdname ggpoint
 #' @param jitter For `ggscatter()` only: logical; if `TRUE`, use jittered points.
 #' @export
-ggscatter <- function(data, x, y, ymin = NULL, ymax = NULL,
+ggscatter <- function(data,
+                      x, y,
+                      xmin = NULL, xmax = NULL,
+                      ymin = NULL, ymax = NULL,
                       color = NULL, fill = NULL, group = NULL,
                       shape = NULL, size = NULL, alpha = NULL, text = NULL,
                       label,
@@ -999,7 +1009,8 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
     )
 }
 
-# Helper functions --------------------------------------------------------
+
+# Internal helper functions -----------------------------------------------
 
 #' Keep only valid quosures (not missing, not NULL)
 #'

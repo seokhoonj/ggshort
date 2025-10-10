@@ -34,29 +34,27 @@ theme_view <- function(family = getOption("ggshort.font"),
   ticks_y <- if (!is.null(y.size) && identical(y.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
 
-  list(
-    theme(
-      text  = ggplot2::element_text(family = family),
-      title = ggplot2::element_text(
-        family = family, size = t.size, face = t.face
-      ),
-      strip.text.x = ggplot2::element_text(size = s.size, face = s.face),
-      axis.text.x  = .element_axis_text(x.size, x.face, x.angle, x.hjust, x.vjust, family),
-      axis.text.y  = .element_axis_text(y.size, y.face, y.angle, y.hjust, y.vjust, family),
-      axis.ticks.x = ticks_x,
-      axis.ticks.y = ticks_y,
-      legend.title = ggplot2::element_text(size = l.size, face = l.face),
-      legend.text  = ggplot2::element_text(size = l.size, face = l.face),
-      legend.key.height = legend.key.height,
-      legend.key.width = legend.key.width,
-      legend.position = legend.position,
-      legend.justification = legend.justification,
-      panel.border = ggplot2::element_rect(
-        colour = "black", fill = "transparent"
-      ),
-      panel.background = ggplot2::element_rect(fill = "transparent"),
-      strip.background = ggplot2::element_rect(colour = "black")
-    )
+  ggplot2::theme(
+    text  = ggplot2::element_text(family = family),
+    title = ggplot2::element_text(
+      family = family, size = t.size, face = t.face
+    ),
+    strip.text.x = ggplot2::element_text(size = s.size, face = s.face),
+    axis.text.x  = .element_axis_text(x.size, x.face, x.angle, x.hjust, x.vjust, family),
+    axis.text.y  = .element_axis_text(y.size, y.face, y.angle, y.hjust, y.vjust, family),
+    axis.ticks.x = ticks_x,
+    axis.ticks.y = ticks_y,
+    legend.title = ggplot2::element_text(size = l.size, face = l.face),
+    legend.text  = ggplot2::element_text(size = l.size, face = l.face),
+    legend.key.height = legend.key.height,
+    legend.key.width = legend.key.width,
+    legend.position = legend.position,
+    legend.justification = legend.justification,
+    panel.border = ggplot2::element_rect(
+      colour = "black", fill = "transparent"
+    ),
+    panel.background = ggplot2::element_rect(fill = "transparent"),
+    strip.background = ggplot2::element_rect(colour = "black")
   )
 }
 
@@ -82,33 +80,31 @@ theme_save <- function(family = getOption("ggshort.font"),
   ticks_y <- if (!is.null(y.size) && identical(y.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
 
-  list(
-    theme(
-      text  = ggplot2::element_text(family = family),
-      title = ggplot2::element_text(
-        family = family, size = t.size, face = t.face
-      ),
-      strip.text.x = ggplot2::element_text(size = s.size, face = s.face),
-      axis.text.x  = ggplot2::element_text(
-        size = x.size, face = x.face, angle = x.angle,
-        hjust = x.hjust, vjust = x.vjust
-      ),
-      axis.text.y  = ggplot2::element_text(
-        size = y.size, face = y.face, angle = y.angle,
-        hjust = y.hjust, vjust = y.vjust
-      ),
-      legend.title = ggplot2::element_text(size = l.size, face = l.face),
-      legend.text  = ggplot2::element_text(size = l.size, face = l.face),
-      legend.key.height = legend.key.height,
-      legend.key.width = legend.key.width,
-      legend.position = legend.position,
-      legend.justification = legend.justification,
-      panel.border = ggplot2::element_rect(
-        colour = "black", fill = "transparent"
-      ),
-      panel.background = ggplot2::element_rect(fill = "transparent"),
-      strip.background = ggplot2::element_rect(colour = "black")
-    )
+  ggplot2::theme(
+    text  = ggplot2::element_text(family = family),
+    title = ggplot2::element_text(
+      family = family, size = t.size, face = t.face
+    ),
+    strip.text.x = ggplot2::element_text(size = s.size, face = s.face),
+    axis.text.x  = ggplot2::element_text(
+      size = x.size, face = x.face, angle = x.angle,
+      hjust = x.hjust, vjust = x.vjust
+    ),
+    axis.text.y  = ggplot2::element_text(
+      size = y.size, face = y.face, angle = y.angle,
+      hjust = y.hjust, vjust = y.vjust
+    ),
+    legend.title = ggplot2::element_text(size = l.size, face = l.face),
+    legend.text  = ggplot2::element_text(size = l.size, face = l.face),
+    legend.key.height = legend.key.height,
+    legend.key.width = legend.key.width,
+    legend.position = legend.position,
+    legend.justification = legend.justification,
+    panel.border = ggplot2::element_rect(
+      colour = "black", fill = "transparent"
+    ),
+    panel.background = ggplot2::element_rect(fill = "transparent"),
+    strip.background = ggplot2::element_rect(colour = "black")
   )
 }
 
@@ -136,36 +132,34 @@ theme_shiny <- function(family = getOption("ggshort.font"),
   ticks_y <- if (!is.null(y.size) && identical(y.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
 
-  list(
-    theme(
-      text  = ggplot2::element_text(family = family),
-      title = ggplot2::element_text(
-        family = family, size = t.size, face = t.face
-      ),
-      strip.text.x = ggplot2::element_text(size = s.size, face = s.face),
-      axis.text.x  = ggplot2::element_text(
-        size = x.size, face = x.face, angle = x.angle,
-        hjust = x.hjust, vjust = x.vjust
-      ),
-      axis.text.y  = ggplot2::element_text(
-        size = y.size, face = y.face, angle = y.angle,
-        hjust = y.hjust, vjust = y.vjust
-      ),
-      legend.title = ggplot2::element_text(size = l.size, face = l.face),
-      legend.text  = ggplot2::element_text(size = l.size, face = l.face),
-      legend.key.height = legend.key.height,
-      legend.key.width  = legend.key.width,
-      legend.position   = legend.position,
-      legend.justification = legend.justification,
-      panel.border = ggplot2::element_rect(
-        colour = "black", fill = "transparent"
-      ),
-      panel.background = ggplot2::element_rect(fill = "transparent"),
-      strip.background = ggplot2::element_rect(colour = "black"),
-      plot.background = ggplot2::element_rect(
-        fill = plot.background.fill,
-        colour = plot.background.fill
-      )
+  ggplot2::theme(
+    text  = ggplot2::element_text(family = family),
+    title = ggplot2::element_text(
+      family = family, size = t.size, face = t.face
+    ),
+    strip.text.x = ggplot2::element_text(size = s.size, face = s.face),
+    axis.text.x  = ggplot2::element_text(
+      size = x.size, face = x.face, angle = x.angle,
+      hjust = x.hjust, vjust = x.vjust
+    ),
+    axis.text.y  = ggplot2::element_text(
+      size = y.size, face = y.face, angle = y.angle,
+      hjust = y.hjust, vjust = y.vjust
+    ),
+    legend.title = ggplot2::element_text(size = l.size, face = l.face),
+    legend.text  = ggplot2::element_text(size = l.size, face = l.face),
+    legend.key.height = legend.key.height,
+    legend.key.width  = legend.key.width,
+    legend.position   = legend.position,
+    legend.justification = legend.justification,
+    panel.border = ggplot2::element_rect(
+      colour = "black", fill = "transparent"
+    ),
+    panel.background = ggplot2::element_rect(fill = "transparent"),
+    strip.background = ggplot2::element_rect(colour = "black"),
+    plot.background = ggplot2::element_rect(
+      fill = plot.background.fill,
+      colour = plot.background.fill
     )
   )
 }

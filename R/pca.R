@@ -120,6 +120,9 @@ pca_plot <- function(data, measure_vars, color_var,
     stop("`data` must be a data.frame.", call. = FALSE)
   theme <- match.arg(theme)
 
+  if (inherits(data, "data.table"))
+    data <- as.data.frame(data)
+
   # resolve measure_vars: handle missing first, then resolve
   if (missing(measure_vars)) {
     measure_vars <- names(data)[vapply(data, is.numeric, logical(1L))]
@@ -147,7 +150,7 @@ pca_plot <- function(data, measure_vars, color_var,
   }
 
   # principal components
-  pc <- stats::prcomp(as.data.frame(data)[, measure_vars, drop = FALSE])
+  pc <- stats::prcomp(data[, measure_vars, drop = FALSE])
   scaled <- as.data.frame(pc$x)
   pc_names <- names(scaled)
   pc_xy <- paste0("PC", c(x, y))

@@ -46,7 +46,7 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
                   )) {
   quos_map <- .valid_enquos(rlang::enquos(
     x = x, y = y, ymin = ymin, ymax = ymax,
-    color = color, group = group, fill = fill,
+    color = color, fill = fill, group = group,
     text = text
   ))
 

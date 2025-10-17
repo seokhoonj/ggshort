@@ -7,10 +7,12 @@
 meta_plot(
   x,
   widths = c(5, 5),
+  text_width = 14,
   title = NULL,
   subtitle = NULL,
   caption = NULL,
   theme = c("view", "save", "shiny"),
+  y.size = 0,
   ...
 )
 }
@@ -20,10 +22,14 @@ meta_plot(
 \item{widths}{Numeric vector of length 2 giving relative widths of the
 left (table) and right (bars) panels. Default: \code{c(5, 5)}.}
 
+\item{text_width}{Integer, maximum number of display characters. Default: \code{14}}
+
 \item{title, subtitle, caption}{Plot title, subtitle, and caption. Passed to
 \code{\link[ggplot2:labs]{ggplot2::labs()}}.}
 
 \item{theme}{One of \code{"view"}, \code{"save"}, or \code{"shiny"}; passed to \code{\link[=switch_theme]{switch_theme()}}.}
+
+\item{y.size}{Font sizes for an y-axis. Defaults: \code{0}.}
 
 \item{...}{Additional arguments forwarded to \code{\link[=switch_theme]{switch_theme()}} for both panels.}
 }

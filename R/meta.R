@@ -7,9 +7,11 @@
 #' @param x A meta object created by [instead::meta()].
 #' @param widths Numeric vector of length 2 giving relative widths of the
 #'   left (table) and right (bars) panels. Default: `c(5, 5)`.
+#' @param text_width Integer, maximum number of display characters. Default: `14`
 #' @param title,subtitle,caption Plot title, subtitle, and caption. Passed to
 #'   [ggplot2::labs()].
 #' @param theme One of `"view"`, `"save"`, or `"shiny"`; passed to [switch_theme()].
+#' @param y.size Font sizes for an y-axis. Defaults: `0`.
 #' @param ... Additional arguments forwarded to [switch_theme()] for both panels.
 #'
 #' @return A ggplot object that wraps the combined gtable.
@@ -23,66 +25,75 @@
 #' }
 #'
 #' @export
-meta_plot <- function(x, widths = c(5, 5),
+meta_plot <- function(x, widths = c(5, 5), text_width = 14,
                       title = NULL, subtitle = NULL, caption = NULL,
                       theme = c("view", "save", "shiny"),
-                      ...) {
+                      y.size = 0, ...) {
   if (!inherits(x, "meta"))
     stop("`x` must be a meta object.")
 
   theme <- match.arg(theme)
 
-  column <- value <- variable <- NULL
+  number <- value <- variable <- NULL
 
-  x$column <- sprintf("%d.%s", seq_along(x$column), x$column)
-  x$distinct <- as.character(x$distinct)
-  x$mode <- as.character(x$mode)
+  if (inherits(x, "data.table")) {
+    dt <- data.table::copy(x)
+  } else {
+    dt <- data.table::as.data.table(x)
+  }
 
-  dt <- data.table::melt(
-    data.table::as.data.table(x),
-    id.vars = c("column"),
+  data.table::set(dt, j = "number"  , value = seq_along(dt$column))
+  data.table::set(dt, j = "distinct", value = instead::as_comma(dt$distinct))
+  data.table::set(dt, j = "mode"    , value = as.character(dt$mode))
+  data.table::set(dt, j = "column"  , value = factor(dt$column, levels = dt$column))
+
+  # Left panel data
+  d1 <- data.table::melt(
+    dt,
+    id.vars = c("number"),
+    measure.vars = c("column", "class", "distinct", "mode")
+  )
+
+  data.table::set(
+    d1, j = "value",
+    value = instead::truncate_text(d1$value, width = text_width)
+  )
+  data.table::set(
+    d1, j = "info" ,
+    value = sprintf(
+      "NC: %s, NR: %s, NU: %s",
+      instead::as_comma(attr(x, "ncol")),
+      instead::as_comma(attr(x, "nrow")),
+      instead::as_comma(attr(x, "nunique")))
+  )
+
+  # Right panel data
+  d2 <- data.table::melt(
+    dt,
+    id.vars = c("number"),
     measure.vars = c("prop", "nzprop")
   )
-  dt$column <- factor(dt$column, levels = unique(dt$column))
-  xlvl <- levels(dt$column)
-  dt$column <- as.numeric(dt$column)
 
-  ds <- data.table::melt(
-    data.table::as.data.table(x),
-    id.vars = c("column"),
-    measure.vars = c("class", "distinct", "mode")
-  )
-  ds$column <- factor(ds$column, levels = xlvl)
-  ds$info <- sprintf(
-    "NR: %s, NU: %s",
-    scales::comma(attr(x, "nrow")),
-    scales::comma(attr(x, "nunique"))
-  )
-
-  # left panel
-  p1 <-
-    ggtable(
-      ds, x = variable, y = column, label = value,
-      xlab_position = "bottom", linetype = "solid"
-    ) +
+  # Left panel plot
+  p1 <- ggtable(d1, x = variable, y = number, label = value,
+                xlab_position = "bottom", linetype = "solid") +
     ggplot2::facet_wrap(~ info) +
     ggplot2::xlab("") + ggplot2::ylab("") +
-    switch_theme(theme = "view", ...) +
+    switch_theme(theme = theme, y.size = y.size, ...) +
     ggplot2::theme(axis.ticks.y = ggplot2::element_blank()) # last for ovelay
 
-  # right panel
-  p2 <-
-    ggbar(
-      dt, x = column, y = value, ymax = 1.5,
-      label = sprintf("%.1f", value * 100),
-      label_args = list(hjust = -.1)
-    ) +
+  # Right panel plot
+  n <- nrow(dt)
+
+  p2 <- ggbar(d2, x = number, y = value, ymax = 1.5,
+              label = sprintf("%.1f", value * 100),
+              label_args = list(hjust = -.1)) +
     ggplot2::geom_vline(
-      xintercept = seq(1, 1 + length(xlvl)) - .5,
+      xintercept = seq(1, 1 + n) - .5,
       linetype = "solid"
     ) +
     ggplot2::scale_x_reverse(
-      breaks = seq_along(xlvl), labels = xlvl,
+      breaks = seq_len(n), labels = seq_len(n),
       expand = c(0, 0)
     ) +
     ggplot2::scale_y_continuous(
@@ -92,9 +103,10 @@ meta_plot <- function(x, widths = c(5, 5),
     ggplot2::coord_flip() +
     ggplot2::facet_wrap(~ variable) +
     ggplot2::xlab("") + ggplot2::ylab("") +
-    ggplot2::theme(axis.ticks.y = ggplot2::element_blank()) +
-    switch_theme(theme = theme, y.size = 0, ...)
+    switch_theme(theme = theme, y.size = y.size, ...) +
+    ggplot2::theme(axis.ticks.y = ggplot2::element_blank())
 
+  # Add title, subtitle, and caption
   if (!is.null(title)) {
     p1 <- p1 + ggplot2::labs(title = title)
     p2 <- p2 + ggplot2::labs(title = "")
@@ -109,6 +121,7 @@ meta_plot <- function(x, widths = c(5, 5),
   }
 
   p <- hstack_plots(p1, p2, widths = widths)
+
   grob_to_ggplot(p)
 }
 
@@ -132,7 +145,10 @@ meta_plot <- function(x, widths = c(5, 5),
 #'
 #' @method plot meta
 #' @export
-plot.meta <- function(x, widths = c(5, 5), theme = c("view", "save", "shiny"), ...) {
+plot.meta <- function(x, widths = c(5, 5), text_width = 10,
+                      theme = c("view", "save", "shiny"),
+                      y.size = 0, ...) {
   theme <- match.arg(theme)
-  meta_plot(x = x, widths = widths, theme = theme)
+  meta_plot(x = x, widths = widths, text_width = text_width,
+            theme = theme, y.size = y.size, ...)
 }

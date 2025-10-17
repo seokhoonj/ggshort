@@ -96,16 +96,16 @@ meta_plot <- function(x, widths = c(5, 5),
     switch_theme(theme = theme, y.size = 0, ...)
 
   if (!is.null(title)) {
-    p1 <- p1 + labs(title = title)
-    p2 <- p2 + labs(title = "")
+    p1 <- p1 + ggplot2::labs(title = title)
+    p2 <- p2 + ggplot2::labs(title = "")
   }
   if (!is.null(subtitle)) {
-    p1 <- p1 + labs(subtitle = subtitle)
-    p2 <- p2 + labs(subtitle = "")
+    p1 <- p1 + ggplot2::labs(subtitle = subtitle)
+    p2 <- p2 + ggplot2::labs(subtitle = "")
   }
   if (!is.null(caption)) {
-    p1 <- p1 + labs(caption = "")
-    p2 <- p2 + labs(caption = caption)
+    p1 <- p1 + ggplot2::labs(caption = "")
+    p2 <- p2 + ggplot2::labs(caption = caption)
   }
 
   p <- hstack_plots(p1, p2, widths = widths)

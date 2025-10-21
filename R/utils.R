@@ -469,6 +469,31 @@ scale_y_log <- function(base = exp(1), ...) {
   )
 }
 
+#' Log(1 + x) scale (safe logarithmic transform)
+#'
+#' Shortcut for applying a `log1p()` (i.e., `log(1 + x)`) transformation
+#' to the x- or y-axis. This is numerically stable for small or zero values.
+#'
+#' @inheritParams scale_x_log
+#'
+#' @examples
+#' \dontrun{
+#' ggpoint(mtcars, mpg, wt) +
+#'   scale_x_log1p() +
+#'   scale_y_log1p()
+#' }
+#'
+#' @export
+scale_x_log1p <- function(...) {
+  ggplot2::scale_x_continuous(..., transform = scales::log1p_trans())
+}
+
+#' @rdname scale_x_log1p
+#' @export
+scale_y_log1p <- function(...) {
+  ggplot2::scale_y_continuous(..., transform = scales::log1p_trans())
+}
+
 #' Stay-scale axis transformation (log1p with custom breaks)
 #'
 #' Convenience scales for plotting length-of-stay or similar count variables

@@ -61,11 +61,11 @@
 #' @examples
 #' \donttest{
 #' # Histogram by group with quantile labels
-#' histogram_plot(iris, x_var = "Sepal.Length", color_var = "Species",
+#' plot_histogram(iris, x_var = "Sepal.Length", color_var = "Species",
 #'                probs = 0.9, show_label = TRUE)
 #'
 #' # Using column indices and adding mean/median guides
-#' histogram_plot(iris, x_var = 1, color_var = 5,
+#' plot_histogram(iris, x_var = 1, color_var = 5,
 #'                show_mean = TRUE, show_median = TRUE,
 #'                show_density = TRUE)
 #' }
@@ -74,7 +74,7 @@
 #'   [stat_density_quantile_text()]
 #'
 #' @export
-histogram_plot <- function(data, x_var, color_var,
+plot_histogram <- function(data, x_var, color_var,
                            probs = .95, na.rm = TRUE, y = Inf,
                            bins = 30, binwidth = NULL,
                            show_mean = FALSE,

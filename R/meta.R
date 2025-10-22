@@ -21,11 +21,11 @@
 #' @examples
 #' \dontrun{
 #' mt <- instead::meta(mtcars)
-#' meta_plot(mt)  # draws and returns a gtable
+#' plot_meta(mt)  # draws and returns a gtable
 #' }
 #'
 #' @export
-meta_plot <- function(x, widths = c(5, 5), text_width = 14,
+plot_meta <- function(x, widths = c(5, 5), text_width = 14,
                       title = NULL, subtitle = NULL, caption = NULL,
                       theme = c("view", "save", "shiny"),
                       y.size = 0, ...) {
@@ -127,15 +127,15 @@ meta_plot <- function(x, widths = c(5, 5), text_width = 14,
 
 #' Plot method for meta objects
 #'
-#' S3 method for [plot()] that delegates to [meta_plot()] for objects of class
+#' S3 method for [plot()] that delegates to [plot_meta()] for objects of class
 #' `meta`.
 #'
-#' @inheritParams meta_plot
-#' @param ... Additional arguments forwarded to [meta_plot()].
+#' @inheritParams plot_meta
+#' @param ... Additional arguments forwarded to [plot_meta()].
 #'
-#' @return A ggplot object created by [meta_plot()].
+#' @return A ggplot object created by [plot_meta()].
 #'
-#' @seealso [meta_plot()]
+#' @seealso [plot_meta()]
 #'
 #' @examples
 #' \dontrun{
@@ -149,6 +149,6 @@ plot.meta <- function(x, widths = c(5, 5), text_width = 10,
                       theme = c("view", "save", "shiny"),
                       y.size = 0, ...) {
   theme <- match.arg(theme)
-  meta_plot(x = x, widths = widths, text_width = text_width,
+  plot_meta(x = x, widths = widths, text_width = text_width,
             theme = theme, y.size = y.size, ...)
 }

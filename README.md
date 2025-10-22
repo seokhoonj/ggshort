@@ -355,7 +355,7 @@ This section provides quick helper functions for common statistical plots. Unlik
 
 ------------------------------------------------------------------------
 
-### 1) `box_plot()`
+### 1) `plot_box()`
 
 Supports variable selection in three ways:
 
@@ -365,7 +365,7 @@ Supports variable selection in three ways:
 
 ``` r
 # Character vector selection
-box_plot(
+plot_box(
     iris, x_var = "Sepal.Length", color_var = "Species",  
     flip = TRUE, show_density = TRUE,
     palette = "Set1",
@@ -375,13 +375,13 @@ box_plot(
 
 <img src="man/figures/box-plot.png"/>
 
-### 2) `density_plot()`
+### 2) `plot_density()`
 
 Supports variable selection in three ways (character, NSE, numeric index). Useful for exploring distribution with optional quantile labels.
 
 ``` r
 # Basic density by species with quantile labels
-density_plot(iris, x_var = "Sepal.Length", color_var = "Species",
+plot_density(iris, x_var = "Sepal.Length", color_var = "Species",
              probs = 0.9, show_label = TRUE,
              palette = "Set1",
              title = "Density plot of Sepal.Length")
@@ -389,13 +389,13 @@ density_plot(iris, x_var = "Sepal.Length", color_var = "Species",
 
 <img src="man/figures/density-plot.png"/>
 
-### 3) `histogram_plot()`
+### 3) `plot_histogram()`
 
 Histograms of a continuous variable with optional grouping and quantile/mean/median guides. Can also show a small density panel (show_density = TRUE).
 
 ``` r
 # Basic histogram by species with quantile labels
-histogram_plot(iris, x_var = "Sepal.Length", color_var = "Species",
+plot_histogram(iris, x_var = "Sepal.Length", color_var = "Species",
                probs = 0.9, show_label = TRUE,
                palette = "Set1",
                title = "Histogram of Sepal.Length")
@@ -403,13 +403,13 @@ histogram_plot(iris, x_var = "Sepal.Length", color_var = "Species",
 
 <img src="man/figures/histogram-plot.png"/>
 
-### 4) `pca_plot()`
+### 4) `plot_pca()`
 
 Supports variable selection in three ways (character, NSE, numeric index). Accepts multiple measurement variables for PCA.
 
 ``` r
 # NSE selection (unquoted)
-pca_plot(
+plot_pca(
     iris,
     measure_vars = c(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width),
     color_var = Species, show_density = TRUE,
@@ -419,7 +419,7 @@ pca_plot(
 
 <img src="man/figures/pca-plot.png"/>
 
-### 5) `cor_plot()`
+### 5) `plot_cor()`
 
 Takes a **correlation matrix** (e.g., from `cor()`), and visualizes it with options to show the lower/upper triangle, diagonal, and value labels.
 
@@ -427,13 +427,13 @@ Takes a **correlation matrix** (e.g., from `cor()`), and visualizes it with opti
 x <- cor(mtcars)
 
 # Lower triangle with labels
-cor_plot(x, display = "lower",  show_diag = TRUE, show_label = TRUE,
+plot_cor(x, display = "lower",  show_diag = TRUE, show_label = TRUE,
          title = "Correlation of mtcars")
 ```
 
 <img src="man/figures/cor-plot.png"/>
 
-### 6) `meta_plot()`
+### 6) `plot_meta()`
 
 Takes a meta object created by instead::meta(). Summarizes metadata visually (variable class, distinct count, mode, etc.).
 
@@ -443,7 +443,7 @@ library(instead)
 
 x <- instead::meta(mtcars)
 
-meta_plot(instead::meta(mtcars))
+plot_meta(instead::meta(mtcars))
 plot(instead::meta(mtcars))  # alias for the same function
 ```
 

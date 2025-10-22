@@ -56,16 +56,16 @@
 #' @examples
 #' \donttest{
 #' # Basic density by species with quantile labels
-#' density_plot(iris, x_var = "Sepal.Length", color_var = "Species",
+#' plot_density(iris, x_var = "Sepal.Length", color_var = "Species",
 #'              probs = 0.9, show_label = TRUE)
 #'
 #' # Using column indices instead of names
-#' density_plot(iris, x_var = 1, color_var = 5,
+#' plot_density(iris, x_var = 1, color_var = 5,
 #'              show_mean = TRUE, show_median = TRUE)
 #' }
 #'
 #' @export
-density_plot <- function(data, x_var, color_var,
+plot_density <- function(data, x_var, color_var,
                          probs = .95, na.rm = TRUE, y = Inf,
                          show_mean = FALSE,
                          show_median = FALSE,

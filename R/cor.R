@@ -23,14 +23,14 @@
 #' \dontrun{
 #' x <- cor(mtcars)
 #' # lower triangle with labels
-#' cor_plot(x, display = "lower")
+#' plot_cor(x, display = "lower")
 #'
 #' # upper triangle without diagonal or labels
-#' cor_plot(x, display = "upper", show_diag = FALSE, show_label = FALSE)
+#' plot_cor(x, display = "upper", show_diag = FALSE, show_label = FALSE)
 #' }
 #'
 #' @export
-cor_plot <- function(x, display = c("lower", "upper"),
+plot_cor <- function(x, display = c("lower", "upper"),
                      show_diag = FALSE,
                      show_label = TRUE,
                      label_args = list(

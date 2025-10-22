@@ -25,13 +25,13 @@ left (table) and right (bars) panels. Default: \code{c(5, 5)}.}
 
 \item{y.size}{Font sizes for an y-axis. Defaults: \code{0}.}
 
-\item{...}{Additional arguments forwarded to \code{\link[=meta_plot]{meta_plot()}}.}
+\item{...}{Additional arguments forwarded to \code{\link[=plot_meta]{plot_meta()}}.}
 }
 \value{
-A ggplot object created by \code{\link[=meta_plot]{meta_plot()}}.
+A ggplot object created by \code{\link[=plot_meta]{plot_meta()}}.
 }
 \description{
-S3 method for \code{\link[=plot]{plot()}} that delegates to \code{\link[=meta_plot]{meta_plot()}} for objects of class
+S3 method for \code{\link[=plot]{plot()}} that delegates to \code{\link[=plot_meta]{plot_meta()}} for objects of class
 \code{meta}.
 }
 \examples{
@@ -42,5 +42,5 @@ plot(mt)  # equivalent to metaplot(mt)
 
 }
 \seealso{
-\code{\link[=meta_plot]{meta_plot()}}
+\code{\link[=plot_meta]{plot_meta()}}
 }

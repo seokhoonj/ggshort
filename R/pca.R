@@ -65,10 +65,10 @@
 #' @examples
 #' \donttest{
 #' # Quick start: use all numeric columns (Species excluded automatically)
-#' pca_plot(iris, x = 1, y = 2)
+#' plot_pca(iris, x = 1, y = 2)
 #'
 #' # Explicit variables (character) + categorical coloring with ellipses & means
-#' pca_plot(
+#' plot_pca(
 #'   iris,
 #'   measure_vars = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
 #'   color_var = "Species",
@@ -80,23 +80,23 @@
 #' )
 #'
 #' # NSE selection (unquoted)
-#' pca_plot(
+#' plot_pca(
 #'   iris,
 #'   measure_vars = c(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width),
 #'   color_var = Species
 #' )
 #'
 #' # Integer indices
-#' pca_plot(iris, measure_vars = 1:4, color_var = 5)
+#' plot_pca(iris, measure_vars = 1:4, color_var = 5)
 #'
 #' # Numeric color variable -> continuous gradient; ellipses/means/density off
 #' df <- iris
 #' df$num_group <- df$Sepal.Length
-#' pca_plot(df, measure_vars = 1:4, color_var = num_group)
+#' plot_pca(df, measure_vars = 1:4, color_var = num_group)
 #' }
 #'
 #' @export
-pca_plot <- function(data, measure_vars, color_var,
+plot_pca <- function(data, measure_vars, color_var,
                      x = 1, y = 2, scale = 1, alpha = .3,
                      show_arrow = TRUE,
                      show_label = TRUE,

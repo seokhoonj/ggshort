@@ -47,13 +47,13 @@
 #' @examples
 #' \donttest{
 #' # Basic grouped box plot with jittered points
-#' box_plot(
+#' plot_box(
 #'   iris, x_var = "Sepal.Length", color_var = "Species",
 #'   title = "Box plot example"
 #' )
 #'
 #' # Add labels at each box's median and hide mean markers
-#' box_plot(
+#' plot_box(
 #'   iris, x_var = "Sepal.Length", color_var = "Species",
 #'   show_mean = FALSE, show_label = TRUE,
 #'   label_args = list(vjust = -0.4),
@@ -61,7 +61,7 @@
 #' )
 #'
 #' # Horizontal box plot with density on top
-#' box_plot(
+#' plot_box(
 #'   iris, x_var = "Sepal.Length", color_var = "Species",
 #'   flip = TRUE, show_density = TRUE,
 #'   title = "Box plot example"
@@ -69,7 +69,7 @@
 #' }
 #'
 #' @export
-box_plot <- function(data, x_var, color_var,
+plot_box <- function(data, x_var, color_var,
                      alpha = 0.6,
                      width = 0.6,
                      varwidth = FALSE,

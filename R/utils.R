@@ -745,11 +745,11 @@ get_two_colors <- function(choice = c("base", "deep", "base_inv", "deep_inv")) {
                    deep = ".TWO_COLORS_DEEP",
                    base_inv = ".TWO_COLORS_BASE_INV",
                    deep_inv = ".TWO_COLORS_DEEP_INV")
-  return(get(colors, envir = .GGSHORT_COLORS_ENV))
+  return(get(colors, envir = .GGSHORT_ENV))
 }
 
 get_twelve_colors <- function() {
-  return(local(.TWELVE_COLORS, envir = .GGSHORT_COLORS_ENV))
+  return(local(.TWELVE_COLORS, envir = .GGSHORT_ENV))
 }
 
 

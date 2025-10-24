@@ -250,7 +250,7 @@ ggpoint <- function(data,
                     show_ellipse = FALSE,
                     show_chull = FALSE) {
   quos_map <- .valid_enquos(rlang::enquos(
-    x = x, y = y, ymin = ymin, ymax = ymax, text = text
+    x = x, y = y, xmin, xmax, ymin = ymin, ymax = ymax, text = text
   ))
   quos_map2 <- .valid_enquos(rlang::enquos(
     color = color, fill = fill, group = group,

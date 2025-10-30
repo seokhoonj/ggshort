@@ -10,6 +10,7 @@
 #' @param x.angle,y.angle Angle of axis text (in degrees).
 #' @param x.hjust,x.vjust,y.hjust,y.vjust Horizontal and vertical justification
 #'   of axis text.
+#' @param show_grid_major,show_grid_minor Logical; whether to draw major/minor grid lines.
 #' @param legend.key.height,legend.key.width Height/width of legend key boxes.
 #' @param legend.position Position of legend: `"none"`, `"left"`, `"right"`,
 #'   `"bottom"`, `"top"`, `"inside"`.
@@ -23,16 +24,32 @@ theme_view <- function(family = getOption("ggshort.font"),
                        x.size = NULL, y.size = NULL,
                        t.size = NULL, s.size = NULL, l.size = NULL,
                        x.face = "plain", y.face = "plain", t.face = "plain",
-                       s.face = "plain", l.face = "plain", x.angle = 0,
-                       y.angle = 0, x.hjust = .5, x.vjust = .5, y.hjust = NULL,
-                       y.vjust = NULL, legend.key.height = NULL,
-                       legend.key.width = NULL, legend.position = "right",
+                       s.face = "plain", l.face = "plain",
+                       x.angle = 0, y.angle = 0,
+                       x.hjust = .5, x.vjust = .5,
+                       y.hjust = NULL, y.vjust = NULL,
+                       show_grid_major = FALSE,
+                       show_grid_minor = FALSE,
+                       legend.key.height = NULL,
+                       legend.key.width  = NULL,
+                       legend.position = "right",
                        legend.justification = "center") {
 
   ticks_x <- if (!is.null(x.size) && identical(x.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
   ticks_y <- if (!is.null(y.size) && identical(y.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
+
+  grid_major <- if (show_grid_major) {
+    ggplot2::element_line(color = "gray80", linewidth = 0.5)
+  } else {
+    ggplot2::element_blank()
+  }
+  grid_minor <- if (show_grid_minor) {
+    ggplot2::element_line(color = "gray90", linewidth = 0.3)
+  } else {
+    ggplot2::element_blank()
+  }
 
   ggplot2::theme(
     text  = ggplot2::element_text(family = family),
@@ -53,6 +70,8 @@ theme_view <- function(family = getOption("ggshort.font"),
     panel.border = ggplot2::element_rect(
       colour = "black", fill = "transparent"
     ),
+    panel.grid.major = grid_major,
+    panel.grid.minor = grid_minor,
     panel.background = ggplot2::element_rect(fill = "transparent"),
     strip.background = ggplot2::element_rect(colour = "black")
   )
@@ -68,17 +87,33 @@ theme_view <- function(family = getOption("ggshort.font"),
 #' @export
 theme_save <- function(family = getOption("ggshort.font"),
                        x.size = 12, y.size = 12,
-                       t.size = 14, s.size = 14, l.size = 12, x.face = "plain",
-                       y.face = "plain", t.face = "plain", s.face = "plain",
-                       l.face = "plain", x.angle = 0, y.angle = 0, x.hjust = .5,
-                       x.vjust = .5, y.hjust = NULL, y.vjust = NULL,
-                       legend.key.height = NULL, legend.key.width = NULL,
+                       t.size = 14, s.size = 14, l.size = 12,
+                       x.face = "plain", y.face = "plain", t.face = "plain",
+                       s.face = "plain", l.face = "plain",
+                       x.angle = 0, y.angle = 0,
+                       x.hjust = .5, x.vjust = .5,
+                       y.hjust = NULL, y.vjust = NULL,
+                       show_grid_major = FALSE,
+                       show_grid_minor = FALSE,
+                       legend.key.height = NULL,
+                       legend.key.width = NULL,
                        legend.position = "right",
                        legend.justification = "center") {
   ticks_x <- if (!is.null(x.size) && identical(x.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
   ticks_y <- if (!is.null(y.size) && identical(y.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
+
+  grid_major <- if (show_grid_major) {
+    ggplot2::element_line(color = "gray80", linewidth = 0.5)
+  } else {
+    ggplot2::element_blank()
+  }
+  grid_minor <- if (show_grid_minor) {
+    ggplot2::element_line(color = "gray90", linewidth = 0.3)
+  } else {
+    ggplot2::element_blank()
+  }
 
   ggplot2::theme(
     text  = ggplot2::element_text(family = family),
@@ -103,6 +138,8 @@ theme_save <- function(family = getOption("ggshort.font"),
     panel.border = ggplot2::element_rect(
       colour = "black", fill = "transparent"
     ),
+    panel.grid.major = grid_major,
+    panel.grid.minor = grid_minor,
     panel.background = ggplot2::element_rect(fill = "transparent"),
     strip.background = ggplot2::element_rect(colour = "black")
   )
@@ -119,18 +156,34 @@ theme_save <- function(family = getOption("ggshort.font"),
 #' @export
 theme_shiny <- function(family = getOption("ggshort.font"),
                         x.size = 12, y.size = 12,
-                        t.size = 14, s.size = 14, l.size = 12, x.face = "plain",
-                        y.face = "plain", t.face = "plain", s.face = "plain",
-                        l.face = "plain", x.angle = 0, y.angle = 0,
-                        x.hjust = .5, x.vjust = .5, y.hjust = NULL,
-                        y.vjust = NULL, legend.key.height = NULL,
-                        legend.key.width = NULL, legend.position = "right",
+                        t.size = 14, s.size = 14, l.size = 12,
+                        x.face = "plain", y.face = "plain", t.face = "plain",
+                        s.face = "plain", l.face = "plain",
+                        x.angle = 0, y.angle = 0,
+                        x.hjust = .5, x.vjust = .5,
+                        y.hjust = NULL, y.vjust = NULL,
+                        show_grid_major = FALSE,
+                        show_grid_minor = FALSE,
+                        legend.key.height = NULL,
+                        legend.key.width = NULL,
+                        legend.position = "right",
                         legend.justification = "center",
                         plot.background.fill = "transparent") { # original default: panel.background = ggplot2::element_rect() #ECF0F5
   ticks_x <- if (!is.null(x.size) && identical(x.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
   ticks_y <- if (!is.null(y.size) && identical(y.size, 0))
     ggplot2::element_blank() else ggplot2::element_line()
+
+  grid_major <- if (show_grid_major) {
+    ggplot2::element_line(color = "gray80", linewidth = 0.5)
+  } else {
+    ggplot2::element_blank()
+  }
+  grid_minor <- if (show_grid_minor) {
+    ggplot2::element_line(color = "gray90", linewidth = 0.3)
+  } else {
+    ggplot2::element_blank()
+  }
 
   ggplot2::theme(
     text  = ggplot2::element_text(family = family),
@@ -155,6 +208,8 @@ theme_shiny <- function(family = getOption("ggshort.font"),
     panel.border = ggplot2::element_rect(
       colour = "black", fill = "transparent"
     ),
+    panel.grid.major = grid_major,
+    panel.grid.minor = grid_minor,
     panel.background = ggplot2::element_rect(fill = "transparent"),
     strip.background = ggplot2::element_rect(colour = "black"),
     plot.background = ggplot2::element_rect(

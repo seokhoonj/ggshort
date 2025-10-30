@@ -22,6 +22,8 @@ theme_shiny(
   x.vjust = 0.5,
   y.hjust = NULL,
   y.vjust = NULL,
+  show_grid_major = FALSE,
+  show_grid_minor = FALSE,
   legend.key.height = NULL,
   legend.key.width = NULL,
   legend.position = "right",
@@ -42,6 +44,8 @@ for x-axis, y-axis, title, strip, and legend text.}
 
 \item{x.hjust, x.vjust, y.hjust, y.vjust}{Horizontal and vertical justification
 of axis text.}
+
+\item{show_grid_major, show_grid_minor}{Logical; whether to draw major/minor grid lines.}
 
 \item{legend.key.height, legend.key.width}{Height/width of legend key boxes.}
 

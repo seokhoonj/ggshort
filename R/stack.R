@@ -45,6 +45,9 @@ vstack_plots <- function(top, bottom, heights = c(1, 1), draw = FALSE) {
   top    <- .as_gtable(top)
   bottom <- .as_gtable(bottom)
 
+  max_widths <- grid::unit.pmax(top$widths, bottom$widths)
+  top$widths <- bottom$widths <- max_widths
+
   combined <- gtable::gtable(
     widths  = grid::unit(1, "null"),
     heights = grid::unit(heights, "null")

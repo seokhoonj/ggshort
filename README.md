@@ -1,6 +1,6 @@
 # ggshort
 
-![](man/figures/ggshort-hex.png){width="30%"}
+<img src="man/figures/ggshort-hex.png" width="200"/>
 
 Shortly simplify the grammar of ggplot to the functions only with frequently used arguments.
 

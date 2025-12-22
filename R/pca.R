@@ -360,7 +360,8 @@ plot_pca <- function(data, measure_vars, color_var,
 #' - Because the return type is a **gtable**, you cannot add further ggplot layers
 #'   with `+`. Apply all ggplot styling before calling this function.
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 .add_plot_axis <- function(
     main_plot, sub_plot,
     position = c("top", "bottom", "right", "left"),

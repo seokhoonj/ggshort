@@ -248,7 +248,8 @@ switch_theme <- function(theme = c("view", "save", "shiny"), ...) {
 #'
 #' @inheritParams switch_theme
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 match_theme <- function(theme = c("view", "save", "shiny"), ...) {
   lifecycle::deprecate_warn("0.0.0.9001", "match_theme()", "switch_theme()")
   theme <- match.arg(theme)

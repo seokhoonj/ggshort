@@ -13,6 +13,7 @@
 *.pptx
 *.rds
 *.tar.gz
+*.tex
 *.xls
 *.xlsb
 *.xlsm

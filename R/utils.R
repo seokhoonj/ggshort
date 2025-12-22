@@ -137,7 +137,9 @@ add_title <- function(plot, title,
 #' @return A gtable object (same as [add_title()]).
 #'
 #' @seealso [add_title()]
-#' @export
+#'
+#' @keywords internal
+#' @noRd
 add_top <- function(plot, title,
                     heights = c(1, 9),
                     family = getOption("ggshort.font"),

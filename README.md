@@ -1,6 +1,6 @@
 # ggshort
 
-<img src="man/figures/ggshort-hex.png" width="200"/>
+![](man/figures/ggshort-hex.png){width="30%"}
 
 Shortly simplify the grammar of ggplot to the functions only with frequently used arguments.
 
@@ -45,7 +45,7 @@ ggbar(AutoCollision, x = Age, y = Claim_Count, fill = Vehicle_Use) +
   theme_view()
 ```
 
-<img src="man/figures/ggbar-auto-collision.png"/>
+![](man/figures/ggbar-auto-collision.png)
 
 ### 1-2) `ggbar()` with labels
 
@@ -58,7 +58,7 @@ ggbar(AutoCollision, x = Age, y = Claim_Count, fill = Vehicle_Use,
   theme_view()
 ```
 
-<img src="man/figures/ggbar-auto-collision-with-labels.png"/>
+![](man/figures/ggbar-auto-collision-with-labels.png)
 
 ### 2) `ggline()`
 
@@ -91,7 +91,7 @@ ggline(IndustryAuto, x = Development.Year, y = Claim, group = Incurral.Year,
   theme_view()
 ```
 
-<img src="man/figures/ggline-industry-auto-claims.png"/>
+![](man/figures/ggline-industry-auto-claims.png)
 
 ### 3) `ggpoint()`
 
@@ -124,7 +124,7 @@ ggpoint(AutoCollision, x = Age, y = Claim_Count, color = Vehicle_Use,
 # ggscatter()
 ```
 
-<img src="man/figures/ggpoint-auto-collision.png"/>
+![](man/figures/ggpoint-auto-collision.png)
 
 ### 4) `ggdensity()`
 
@@ -149,7 +149,7 @@ ggdensity(data = warpbreaks, x = breaks, fill = tension, prob = c(.975)) +
   theme_view()
 ```
 
-<img src="man/figures/ggdensity-warpbreaks.png"/>
+![](man/figures/ggdensity-warpbreaks.png)
 
 ### 5) `gghistogram()`
 
@@ -165,7 +165,7 @@ gghistogram(data = iris, x = Sepal.Length, color = Species, fill = Species,
   theme_view()
 ```
 
-<img src="man/figures/gghistogram-iris.png"/>
+![](man/figures/gghistogram-iris.png)
 
 ### 6) `ggbox()`
 
@@ -181,7 +181,7 @@ ggbox(data = iris, x = Species, y = Sepal.Length, fill = Species, alpha = 1,
   theme_view()
 ```
 
-<img src="man/figures/ggbox-iris-sepal-length.png"/>
+![](man/figures/ggbox-iris-sepal-length.png)
 
 ### 7) `ggpie()`
 
@@ -208,7 +208,7 @@ ggpie(data, group = Vehicle_Use, value = Claim_Count, label = Claim_Count) +
   ggplot2::labs(title = "Auto Collision", subtitle = "Age: H")
 ```
 
-<img src="man/figures/ggpie-auto-collision-age-h.png"/>
+![](man/figures/ggpie-auto-collision-age-h.png)
 
 ### 8) `ggmix()`
 
@@ -244,7 +244,7 @@ ggmix(IndustryAuto, x = Incurral.Year, y = Claim, fill = Development.Year,
   theme_view()
 ```
 
-<img src="man/figures/ggmix-industry-auto-claims.png"/>
+![](man/figures/ggmix-industry-auto-claims.png)
 
 ### 8-2) `ggmix()` with reveresed group order
 
@@ -276,7 +276,7 @@ ggmix(IndustryAuto, x = Incurral.Year, y = Claim, fill = Development.Year,
   theme_view()
 ```
 
-<img src="man/figures/ggmix-industry-auto-claims-reverse.png"/>
+![](man/figures/ggmix-industry-auto-claims-reverse.png)
 
 ### 9) `ggtable()`
 
@@ -310,7 +310,7 @@ ggtable(IndustryAuto, x = Development.Year, y = Incurral.Year,
   theme_view()
 ```
 
-<img src="man/figures/ggtable-industry-auto.png"/>
+![](man/figures/ggtable-industry-auto.png)
 
 ### 10) `theme_view()`, `theme_save()`, `theme_shiny()`, `switch_theme()`
 
@@ -373,7 +373,7 @@ plot_box(
 )
 ```
 
-<img src="man/figures/plot-box.png"/>
+![](man/figures/plot-box.png)
 
 ### 2) `plot_density()`
 
@@ -387,7 +387,7 @@ plot_density(iris, x_var = "Sepal.Length", color_var = "Species",
              title = "Density plot of Sepal.Length")
 ```
 
-<img src="man/figures/plot-density.png"/>
+![](man/figures/plot-density.png)
 
 ### 3) `plot_histogram()`
 
@@ -401,7 +401,7 @@ plot_histogram(iris, x_var = "Sepal.Length", color_var = "Species",
                title = "Histogram of Sepal.Length")
 ```
 
-<img src="man/figures/plot-histogram.png"/>
+![](man/figures/plot-histogram.png)
 
 ### 4) `plot_pca()`
 
@@ -417,7 +417,7 @@ plot_pca(
 )
 ```
 
-<img src="man/figures/plot-pca.png"/>
+![](man/figures/plot-pca.png)
 
 ### 5) `plot_cor()`
 
@@ -431,7 +431,7 @@ plot_cor(x, display = "lower",  show_diag = TRUE, show_label = TRUE,
          title = "Correlation of mtcars")
 ```
 
-<img src="man/figures/plot-cor.png"/>
+![](man/figures/plot-cor.png)
 
 ### 6) `plot_meta()`
 
@@ -447,7 +447,7 @@ plot_meta(instead::meta(mtcars))
 plot(instead::meta(mtcars))  # alias for the same function
 ```
 
-<img src="man/figures/plot-meta.png"/>
+![](man/figures/plot-meta.png)
 
 ### 7) `plot_sample_size()`
 
@@ -462,7 +462,7 @@ plot_sample_size(x)
 plot(x)  # alias for the same function
 ```
 
-<img src="man/figures/plot-sample-size.png"/>
+![](man/figures/plot-sample-size.png)
 
 ## 3. Statistical Layers
 
@@ -480,7 +480,7 @@ ggpoint(iris, x = Petal.Length, y = Petal.Width, color = Species) +
   theme_view()
 ```
 
-<img src="man/figures/stat-point.png"/>
+![](man/figures/stat-point.png)
 
 ``` r
 # Add both mean (red) and median (blue) points (by Species)
@@ -490,7 +490,7 @@ ggpoint(iris, x = Petal.Length, y = Petal.Width, color = Species) +
     theme_view()
 ```
 
-<img src="man/figures/stat-point-2.png"/>
+![](man/figures/stat-point-2.png)
 
 ### 2) `stat_mean_hline()`, `stat_median_hline()`
 
@@ -504,7 +504,7 @@ ggpoint(iris, x = Sepal.Length, y = Petal.Length, color = Species) +
   theme_view()
 ```
 
-<img src="man/figures/stat-hline.png"/>
+![](man/figures/stat-hline.png)
 
 ### 3) `stat_mean_vline()`, `stat_median_vline()`
 
@@ -518,7 +518,7 @@ ggpoint(iris, x = Sepal.Length, y = Petal.Length, color = Species) +
   theme_view()
 ```
 
-<img src="man/figures/stat-vline.png"/>
+![](man/figures/stat-vline.png)
 
 ### 4) `stat_mean_line()`, `stat_median_line()`
 
@@ -531,7 +531,7 @@ ggpoint(iris, x = Sepal.Length, y = Petal.Length, color = Species) +
   theme_view()
 ```
 
-<img src="man/figures/stat-line.png"/>
+![](man/figures/stat-line.png)
 
 ### 5) `stat_density_qunatile_vline()`, `stat_density_quantile_text()`
 
@@ -548,7 +548,7 @@ ggplot2::ggplot(iris, aes(x = Sepal.Length, fill = Species)) +
     theme_view()
 ```
 
-<img src="man/figures/stat-density-quantile.png"/>
+![](man/figures/stat-density-quantile.png)
 
 ### 6) `stat_chull()`
 
@@ -561,7 +561,7 @@ ggpoint(iris, x = Petal.Length, y = Petal.Width, color = Species) +
   theme_view()
 ```
 
-<img src="man/figures/stat-chull.png"/>
+![](man/figures/stat-chull.png)
 
 ## 4. Utilities
 
@@ -590,7 +590,7 @@ p2 <- ggdensity(iris, x = Sepal.Length, fill = Species,
 hstack_plots(p1, p2, widths = c(1, 1), draw = TRUE)
 ```
 
-<img src="man/figures/hstack-plots.png"/>
+![](man/figures/hstack-plots.png)
 
 ``` r
 library(ggshort)
@@ -605,7 +605,7 @@ p2 <- ggdensity(iris, x = Sepal.Length, fill = Species,
 vstack_plots(p1, p2, heights = c(1, 1), draw = TRUE)
 ```
 
-<img src="man/figures/vstack-plots.png"/>
+![](man/figures/vstack-plots.png)
 
 ### 2) `hstack_plots_with_legend()`, `vstack_plots_with_legend()`
 
@@ -646,7 +646,7 @@ hstack_plots_with_legend(
 )
 ```
 
-<img src="man/figures/hstack-plots-with-legend.png"/>
+![](man/figures/hstack-plots-with-legend.png)
 
 ``` r
 # Vertical arrangement with a shared legend on the right
@@ -660,7 +660,7 @@ vstack_plots_with_legend(
 )
 ```
 
-<img src="man/figures/vstack-plots-with-legend.png"/>
+![](man/figures/vstack-plots-with-legend.png)
 
 ### 3) `grob_to_ggplot()`
 
@@ -743,7 +743,7 @@ add_title(p, "IRIS Data Summary")
 p |> add_title(title = "IRIS Data Summary")
 ```
 
-<img src="man/figures/add-title.png"/>
+![](man/figures/add-title.png)
 
 ### 6) `set_ggshort_font()`, `get_ggshort_font()`
 
@@ -863,7 +863,7 @@ plotly_pie(data, labels = Vehicle_Use, values = Claim_Count) |>
   plotly::layout(title = "Auto Collision<br><sup>Age: H</sup>")
 ```
 
-<img src="man/figures/plotly-pie-auto-collision-age-h.png"/>
+![](man/figures/plotly-pie-auto-collision-age-h.png)
 
 ### 2) `plotly_treemap()`
 
@@ -887,4 +887,4 @@ head(AutoCollision)
 plotly_treemap(AutoCollision, groups = list(Age, Vehicle_Use), values = Claim_Count)
 ```
 
-<img src="man/figures/plotly-treemap-auto-collision.png"/>
+![](man/figures/plotly-treemap-auto-collision.png)

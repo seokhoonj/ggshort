@@ -37,7 +37,8 @@
 #' grid_left_to_right(g1, g2)
 #' }
 #'
-#' @export
+#' @keywords internal
+#' @noRd
 grid_top_bottom_right <- function(g1, g2, legend, heights = c(5, 5),
                                   widths = c(8.5, 1.5)) {
   lifecycle::deprecate_warn(
@@ -58,7 +59,8 @@ grid_top_bottom_right <- function(g1, g2, legend, heights = c(5, 5),
 }
 
 #' @rdname grid_top_bottom_right
-#' @export
+#' @keywords internal
+#' @noRd
 grid_left_to_right <- function (g1, g2, legend, widths = c(4, 4, 2)) {
   lifecycle::deprecate_warn(
     "0.0.0.9001", "grid_left_to_right()", "hstack_plots_with_legend()"

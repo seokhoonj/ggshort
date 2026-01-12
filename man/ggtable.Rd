@@ -13,6 +13,9 @@ ggtable(
   label,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
     vjust = 0.5, color = "black"),
+  fill = NULL,
+  fill_args = list(threshold = NULL, when = ">", high = "mistyrose", low = "white", na =
+    "white", border = NA, linewidth = 0.2, alpha = 1),
   xlab_position = c("bottom", "top"),
   ylab_position = c("left", "right")
 )
@@ -33,6 +36,27 @@ columns are automatically converted to factors.}
 
 \item{label_args}{A named list of \code{geom_text()} style options.
 Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
+
+\item{fill}{Optional numeric column used to determine cell background color.
+If supplied, each cell is filled according to \code{fill_args}.}
+
+\item{fill_args}{A named list controlling conditional cell background fill.
+Supported keys:
+\describe{
+\item{threshold}{Numeric threshold value (or length-2 vector for
+\code{"inside"} / \code{"outside"} conditions). Required when \code{fill} is used.}
+\item{when}{Condition to apply. One of \verb{"">"}, \code{">="}, \code{"<"}, \code{"<="},
+\code{"inside"}, or \code{"outside"}. Default is \code{"">""}.}
+\item{high}{Fill color for cells satisfying the condition.
+Default is \code{"mistyrose"}.}
+\item{low}{Fill color for cells not satisfying the condition.
+Default is \code{"white"}.}
+\item{na}{Fill color for \code{NA} values. Default is \code{"white"}.}
+\item{border}{Border color for table cells passed to \code{geom_tile()}.
+Default is \code{NA} (no border).}
+\item{linewidth}{Border line width for cells. Default is \code{0.2}.}
+\item{alpha}{Alpha transparency for cell fill. Default is \code{1}.}
+}}
 
 \item{xlab_position}{Position of x-axis labels, one of \code{"bottom"} (default)
 or \code{"top"}.}
@@ -57,6 +81,15 @@ df$label <- sample(1:10, size = 9, replace = TRUE)
 ggtable(df, x = x, y = y, label = label,
         label_args = list(size = 5, family = getOption("ggshort.font")),
         xlab_position = "top") +
+  theme_view()
+
+# conditional cell background fill
+ggtable(df, x = x, y = y, label = label,
+        fill = label,
+        fill_args = list(
+          threshold = 5,
+          high = "mistyrose"
+        )) +
   theme_view()
 }
 

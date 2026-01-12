@@ -926,6 +926,25 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' @param label Unquoted column/expression used as text labels inside cells.
 #' @param label_args A named list of `geom_text()` style options.
 #'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#' @param fill Optional numeric column used to determine cell background color.
+#'   If supplied, each cell is filled according to `fill_args`.
+#' @param fill_args A named list controlling conditional cell background fill.
+#'   Supported keys:
+#'   \describe{
+#'     \item{threshold}{Numeric threshold value (or length-2 vector for
+#'       `"inside"` / `"outside"` conditions). Required when `fill` is used.}
+#'     \item{when}{Condition to apply. One of `"">"`, `">="`, `"<"`, `"<="`,
+#'       `"inside"`, or `"outside"`. Default is `"">""`.}
+#'     \item{high}{Fill color for cells satisfying the condition.
+#'       Default is `"mistyrose"`.}
+#'     \item{low}{Fill color for cells not satisfying the condition.
+#'       Default is `"white"`.}
+#'     \item{na}{Fill color for `NA` values. Default is `"white"`.}
+#'     \item{border}{Border color for table cells passed to `geom_tile()`.
+#'       Default is `NA` (no border).}
+#'     \item{linewidth}{Border line width for cells. Default is `0.2`.}
+#'     \item{alpha}{Alpha transparency for cell fill. Default is `1`.}
+#'   }
 #' @param xlab_position Position of x-axis labels, one of `"bottom"` (default)
 #'   or `"top"`.
 #' @param ylab_position Position of x-axis labels, one of `"left"` (default)
@@ -946,6 +965,15 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #'         label_args = list(size = 5, family = getOption("ggshort.font")),
 #'         xlab_position = "top") +
 #'   theme_view()
+#'
+#' # conditional cell background fill
+#' ggtable(df, x = x, y = y, label = label,
+#'         fill = label,
+#'         fill_args = list(
+#'           threshold = 5,
+#'           high = "mistyrose"
+#'         )) +
+#'   theme_view()
 #' }
 #'
 #' @export
@@ -958,6 +986,17 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
                       hjust  = 0.5,
                       vjust  = 0.5,
                       color  = "black"
+                    ),
+                    fill = NULL,
+                    fill_args = list(
+                      threshold = NULL,
+                      when      = ">",
+                      high      = "mistyrose",
+                      low       = "white",
+                      na        = "white",
+                      border    = NA,
+                      linewidth = 0.2,
+                      alpha     = 1
                     ),
                     xlab_position = c("bottom", "top"),
                     ylab_position = c("left", "right")) {
@@ -978,19 +1017,92 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
   y_lvl <- levels(data[[dy]])
   x_len <- length(x_lvl)
   y_len <- length(y_lvl)
+
   data[[dx]] <- as.numeric(data[[dx]])
   data[[dy]] <- as.numeric(data[[dy]])
 
-  quos_map <- .valid_enquos(rlang::enquos(x = x, y = y, text = text))
+  quos_map   <- .valid_enquos(rlang::enquos(x = x, y = y, text = text))
   quos_label <- .valid_enquos(rlang::enquos(label = label))
-  args <- .modify_label_args(label_args)
+
+  la <- .modify_label_args(label_args)
   xlab_position <- match.arg(xlab_position)
   ylab_position <- match.arg(ylab_position)
-  ggplot2::ggplot(data, ggplot2::aes(!!!quos_map)) +
+
+  # fill handling (DON'T force-evaluate fill)
+  q_fill <- rlang::enquo(fill)
+  use_fill <- !(rlang::quo_is_null(q_fill) || rlang::quo_is_missing(q_fill))
+
+  fill_defaults <- list(
+    threshold = NULL,
+    when      = ">",
+    high      = "mistyrose",
+    low       = "white",
+    na        = "white",
+    border    = NA,
+    linewidth = 0.2,
+    alpha     = 1
+  )
+  fa <- utils::modifyList(fill_defaults, fill_args, keep.null = TRUE)
+
+  if (use_fill) {
+    if (is.null(fa$threshold))
+      stop("fill_args$threshold must be provided when `fill` is used.")
+
+    fby <- instead::capture_names(data, !!q_fill)
+    v <- data[[fby]]
+    if (!is.numeric(v))
+      stop("fill must refer to a numeric column. Got: ", class(v)[1])
+
+    threshold <- fa$threshold
+    when <- match.arg(fa$when, c(">", ">=", "<", "<=", "outside", "inside"))
+
+    flag <- switch(
+      when,
+      ">"  = v >  threshold,
+      ">=" = v >= threshold,
+      "<"  = v <  threshold,
+      "<=" = v <= threshold,
+      "outside" = {
+        if (length(threshold) != 2L)
+          stop("For when='outside', threshold must be c(lo, hi).")
+        v < min(threshold) | v > max(threshold)
+      },
+      "inside" = {
+        if (length(threshold) != 2L)
+          stop("For when='inside', threshold must be c(lo, hi).")
+        v >= min(threshold) & v <= max(threshold)
+      }
+    )
+
+    data[[".ggtable_fill"]] <- ifelse(
+      is.na(v), fa$na,
+      ifelse(flag, fa$high, fa$low)
+    )
+  } else {
+    data[[".ggtable_fill"]] <- fa$low
+  }
+
+  # plot
+  p <- ggplot2::ggplot(data, ggplot2::aes(!!!quos_map))
+
+  # draw tiles first
+  if (use_fill) {
+    p <- p +
+      ggplot2::geom_tile(
+        ggplot2::aes(fill = .data[[".ggtable_fill"]]),
+        width = 1, height = 1,
+        alpha = fa$alpha,
+        color = fa$border,
+        linewidth = fa$linewidth
+      ) +
+      ggplot2::scale_fill_identity()
+  }
+
+  p <- p +
     ggplot2::geom_text(
       ggplot2::aes(!!!quos_label),
-      family = args$family, size = args$size, angle = args$angle,
-      hjust  = args$hjust,  vjust = args$vjust, color = args$color
+      family = la$family, size  = la$size , angle = la$angle,
+      hjust  = la$hjust , vjust = la$vjust, color = la$color
     ) +
     ggplot2::geom_vline(
       xintercept = seq(1, 1 + x_len) - .5,
@@ -1010,6 +1122,8 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
       limits = c(y_len + 0.5, 0.5), expand = c(0, 0),
       position = ylab_position
     )
+
+  p
 }
 
 

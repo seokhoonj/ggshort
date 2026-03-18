@@ -3,9 +3,11 @@
 \name{scale_color_pair_manual}
 \alias{scale_color_pair_manual}
 \alias{scale_fill_pair_manual}
+\alias{scale_linetype_pair_manual}
 \alias{scale_color_gender}
 \alias{scale_fill_gender}
-\title{Pair color/fill scales for two-level groups}
+\alias{scale_linetype_gender}
+\title{Pair color/fill/linetype scales for two-level groups}
 \usage{
 scale_color_pair_manual(
   pair_levels = c("0", "1"),
@@ -23,6 +25,14 @@ scale_fill_pair_manual(
   na.value = "grey50"
 )
 
+scale_linetype_pair_manual(
+  pair_levels = c("0", "1"),
+  values = c("solid", "dashed"),
+  guide = "legend",
+  drop = TRUE,
+  na.value = "blank"
+)
+
 scale_color_gender(
   gender_levels = c("M", "F"),
   palette = c("base", "deep"),
@@ -38,6 +48,14 @@ scale_fill_gender(
   drop = TRUE,
   na.value = "grey50"
 )
+
+scale_linetype_gender(
+  gender_levels = c("M", "F"),
+  values = c("solid", "dashed"),
+  guide = "legend",
+  drop = TRUE,
+  na.value = "blank"
+)
 }
 \arguments{
 \item{pair_levels}{A length-2 character vector giving the expected level labels.
@@ -46,30 +64,33 @@ Default: \code{c("0","1")}.}
 \item{palette}{One of \code{"base"}, \code{"deep"}, \code{"base_inv"}, or \code{"deep_inv"},
 passed to \code{get_two_colors()} to choose the palette.}
 
-\item{guide}{A guide function or its name; passed to \code{\link[ggplot2:guides]{ggplot2::guides()}} via the scale.}
+\item{guide}{A guide function or its name; passed to the scale.}
 
 \item{drop}{Logical. If \code{TRUE} (default), unused levels are dropped from the legend.
 If \code{FALSE}, both levels are always shown even if only one is present.}
 
-\item{na.value}{Color used for missing values or values outside \code{pair_levels}.}
+\item{na.value}{Color or linetype used for missing values or values outside
+\code{pair_levels}.}
+
+\item{values}{A length-2 character vector of linetypes.
+Default: \code{c("solid", "dashed")}.}
 
 \item{gender_levels}{Length-2 character vector of expected gender labels
 (alias of \code{pair_levels}). Default: \code{c("M","F")}.}
 }
 \value{
-A \code{ScaleDiscrete} object from \code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}} or
-\code{\link[ggplot2:scale_manual]{ggplot2::scale_fill_manual()}}, suitable for use in ggplot.
+A \code{ScaleDiscrete} object suitable for use in ggplot.
 }
 \description{
-Create consistent two-color scales for variables that take \strong{exactly two levels}.
-These are convenience wrappers around \code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}} and
-\code{\link[ggplot2:scale_manual]{ggplot2::scale_fill_manual()}} with predefined palettes from \code{get_two_colors()}.
+Create consistent two-value scales for variables that take \strong{exactly two levels}.
+These are convenience wrappers around \code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}},
+\code{\link[ggplot2:scale_manual]{ggplot2::scale_fill_manual()}}, and \code{\link[ggplot2:scale_manual]{ggplot2::scale_linetype_manual()}}.
 }
 \examples{
 \donttest{
 data <- expand.grid(
   gender = c("M","F"),
-  age_band = seq(from = 10 , to = 100, by = 10)
+  age_band = seq(from = 10, to = 100, by = 10)
 )
 data$n <- c(1:10, 2:11)
 
@@ -80,9 +101,14 @@ ggline(data, x = age_band, y = n, color = gender) +
 ggbar(data, x = age_band, y = n, fill = gender) +
   scale_fill_pair_manual(pair_levels = c("M","F"), palette = "deep") +
   theme_view()
+
+ggline(data, x = age_band, y = n, linetype = gender, group = gender) +
+  scale_linetype_pair_manual(pair_levels = c("M","F")) +
+  theme_view()
 }
 
 }
 \seealso{
-\code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}}, \code{\link[ggplot2:scale_manual]{ggplot2::scale_fill_manual()}}
+\code{\link[ggplot2:scale_manual]{ggplot2::scale_color_manual()}}, \code{\link[ggplot2:scale_manual]{ggplot2::scale_fill_manual()}},
+\code{\link[ggplot2:scale_manual]{ggplot2::scale_linetype_manual()}}
 }

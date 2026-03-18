@@ -252,31 +252,34 @@ scale_y_limit_reverse <- function(x) {
   }
 }
 
-#' Pair color/fill scales for two-level groups
+#' Pair color/fill/linetype scales for two-level groups
 #'
-#' Create consistent two-color scales for variables that take **exactly two levels**.
-#' These are convenience wrappers around [ggplot2::scale_color_manual()] and
-#' [ggplot2::scale_fill_manual()] with predefined palettes from `get_two_colors()`.
+#' Create consistent two-value scales for variables that take **exactly two levels**.
+#' These are convenience wrappers around [ggplot2::scale_color_manual()],
+#' [ggplot2::scale_fill_manual()], and [ggplot2::scale_linetype_manual()].
 #'
 #' @param pair_levels A length-2 character vector giving the expected level labels.
 #'   Default: `c("0","1")`.
 #' @param palette One of `"base"`, `"deep"`, `"base_inv"`, or `"deep_inv"`,
 #'   passed to `get_two_colors()` to choose the palette.
-#' @param guide A guide function or its name; passed to [ggplot2::guides()] via the scale.
+#' @param values A length-2 character vector of linetypes.
+#'   Default: `c("solid", "dashed")`.
+#' @param guide A guide function or its name; passed to the scale.
 #' @param drop Logical. If `TRUE` (default), unused levels are dropped from the legend.
 #'   If `FALSE`, both levels are always shown even if only one is present.
-#' @param na.value Color used for missing values or values outside `pair_levels`.
+#' @param na.value Color or linetype used for missing values or values outside
+#'   `pair_levels`.
 #'
-#' @return A `ScaleDiscrete` object from [ggplot2::scale_color_manual()] or
-#'   [ggplot2::scale_fill_manual()], suitable for use in ggplot.
+#' @return A `ScaleDiscrete` object suitable for use in ggplot.
 #'
-#' @seealso [ggplot2::scale_color_manual()], [ggplot2::scale_fill_manual()]
+#' @seealso [ggplot2::scale_color_manual()], [ggplot2::scale_fill_manual()],
+#'   [ggplot2::scale_linetype_manual()]
 #'
 #' @examples
 #' \donttest{
 #' data <- expand.grid(
 #'   gender = c("M","F"),
-#'   age_band = seq(from = 10 , to = 100, by = 10)
+#'   age_band = seq(from = 10, to = 100, by = 10)
 #' )
 #' data$n <- c(1:10, 2:11)
 #'
@@ -287,6 +290,10 @@ scale_y_limit_reverse <- function(x) {
 #' ggbar(data, x = age_band, y = n, fill = gender) +
 #'   scale_fill_pair_manual(pair_levels = c("M","F"), palette = "deep") +
 #'   theme_view()
+#'
+#' ggline(data, x = age_band, y = n, linetype = gender, group = gender) +
+#'   scale_linetype_pair_manual(pair_levels = c("M","F")) +
+#'   theme_view()
 #' }
 #'
 #' @export
@@ -294,19 +301,19 @@ scale_color_pair_manual <- function(
     pair_levels = c("0", "1"),
     palette     = c("base", "deep", "base_inv", "deep_inv"),
     guide       = "legend",
-    drop        = TRUE,              # drop unused levels from legend
-    na.value    = "grey50"           # fallback color for missing/out-of-range values
+    drop        = TRUE,
+    na.value    = "grey50"
 ) {
   if (is.numeric(pair_levels))
     pair_levels <- as.character(pair_levels)
 
   choice <- match.arg(palette)
-  values <- get_two_colors(choice)              # returns a vector of two colors
-  named  <- stats::setNames(values, pair_levels)  # name colors according to pair_levels
+  values <- get_two_colors(choice)
+  named  <- stats::setNames(values, pair_levels)
 
   ggplot2::scale_color_manual(
-    values   = named,                # mapping: level -> color
-    limits   = pair_levels,          # define allowed levels and their order
+    values   = named,
+    limits   = pair_levels,
     guide    = guide,
     drop     = drop,
     na.value = na.value
@@ -339,20 +346,46 @@ scale_fill_pair_manual <- function(
 }
 
 #' @rdname scale_color_pair_manual
+#' @export
+scale_linetype_pair_manual <- function(
+    pair_levels = c("0", "1"),
+    values      = c("solid", "dashed"),
+    guide       = "legend",
+    drop        = TRUE,
+    na.value    = "blank"
+) {
+  if (is.numeric(pair_levels))
+    pair_levels <- as.character(pair_levels)
+
+  named <- stats::setNames(values, pair_levels)
+
+  ggplot2::scale_linetype_manual(
+    values   = named,
+    limits   = pair_levels,
+    guide    = guide,
+    drop     = drop,
+    na.value = na.value
+  )
+}
+
+#' @rdname scale_color_pair_manual
 #' @param gender_levels Length-2 character vector of expected gender labels
 #'   (alias of `pair_levels`). Default: `c("M","F")`.
 #' @export
 scale_color_gender <- function(
     gender_levels = c("M", "F"),
-    palette     = c("base", "deep"),
-    guide       = "legend",
-    drop        = TRUE,
-    na.value    = "grey50"
+    palette       = c("base", "deep"),
+    guide         = "legend",
+    drop          = TRUE,
+    na.value      = "grey50"
 ) {
   palette <- match.arg(palette)
   scale_color_pair_manual(
-    pair_levels = gender_levels, palette = palette,
-    guide = guide, drop = drop, na.value = na.value
+    pair_levels = gender_levels,
+    palette     = palette,
+    guide       = guide,
+    drop        = drop,
+    na.value    = na.value
   )
 }
 
@@ -362,15 +395,38 @@ scale_color_gender <- function(
 #' @export
 scale_fill_gender <- function(
     gender_levels = c("M", "F"),
-    palette     = c("base", "deep"),
-    guide       = "legend",
-    drop        = TRUE,
-    na.value    = "grey50"
+    palette       = c("base", "deep"),
+    guide         = "legend",
+    drop          = TRUE,
+    na.value      = "grey50"
 ) {
   palette <- match.arg(palette)
   scale_fill_pair_manual(
-    pair_levels = gender_levels, palette = palette,
-    guide = guide, drop = drop, na.value = na.value
+    pair_levels = gender_levels,
+    palette     = palette,
+    guide       = guide,
+    drop        = drop,
+    na.value    = na.value
+  )
+}
+
+#' @rdname scale_color_pair_manual
+#' @param gender_levels Length-2 character vector of expected gender labels
+#'   (alias of `pair_levels`). Default: `c("M","F")`.
+#' @export
+scale_linetype_gender <- function(
+    gender_levels = c("M", "F"),
+    values        = c("solid", "dashed"),
+    guide         = "legend",
+    drop          = TRUE,
+    na.value      = "blank"
+) {
+  scale_linetype_pair_manual(
+    pair_levels = gender_levels,
+    values      = values,
+    guide       = guide,
+    drop        = drop,
+    na.value    = na.value
   )
 }
 

@@ -2,7 +2,8 @@
 % Please edit documentation in R/short.R
 \name{ggtable}
 \alias{ggtable}
-\title{ggplot table helper (frequently used arguments)}
+\title{ggplot table helper (frequently used arguments)
+ggplot table helper}
 \usage{
 ggtable(
   data,
@@ -23,36 +24,36 @@ ggtable(
 \arguments{
 \item{data}{A data.frame.}
 
-\item{x, y}{Unquoted factor columns mapped to the table axes. Character
-columns are automatically converted to factors.}
+\item{x, y}{Unquoted columns or expressions mapped to the table axes.
+Character, numeric, and Date values are automatically converted to factors.}
 
-\item{linetype}{Line type for grid lines. One of:
-\code{"solid"}, \code{"dashed"}(default), \code{"dotted"}, \code{"dotdash"}, \code{"longdash"} or
-\code{"twodash"}.}
+\item{linetype}{Line type for table grid lines. One of \code{"solid"} (default),
+\code{"dashed"}, \code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, or \code{"twodash"}.}
 
-\item{text}{Optional column/expression for tooltip text (e.g., with plotly).}
+\item{text}{Optional column/expression for tooltip text (for example, when
+used with plotly).}
 
 \item{label}{Unquoted column/expression used as text labels inside cells.}
 
 \item{label_args}{A named list of \code{geom_text()} style options.
 Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vjust}, \code{color}.}
 
-\item{fill}{Optional numeric column used to determine cell background color.
-If supplied, each cell is filled according to \code{fill_args}.}
+\item{fill}{Optional numeric column/expression used to determine cell
+background color. If supplied, each cell is filled according to \code{fill_args}.}
 
 \item{fill_args}{A named list controlling conditional cell background fill.
 Supported keys:
 \describe{
-\item{threshold}{Numeric threshold value (or length-2 vector for
+\item{threshold}{Numeric threshold value (or a length-2 vector for
 \code{"inside"} / \code{"outside"} conditions). Required when \code{fill} is used.}
-\item{when}{Condition to apply. One of \verb{"">"}, \code{">="}, \code{"<"}, \code{"<="},
-\code{"inside"}, or \code{"outside"}. Default is \code{"">""}.}
+\item{when}{Condition to apply. One of \code{">"}, \code{">="}, \code{"<"}, \code{"<="},
+\code{"inside"}, or \code{"outside"}. Default is \code{">"}.}
 \item{high}{Fill color for cells satisfying the condition.
 Default is \code{"mistyrose"}.}
 \item{low}{Fill color for cells not satisfying the condition.
 Default is \code{"white"}.}
 \item{na}{Fill color for \code{NA} values. Default is \code{"white"}.}
-\item{border}{Border color for table cells passed to \code{geom_tile()}.
+\item{border}{Border color for cells passed to \code{geom_tile()}.
 Default is \code{NA} (no border).}
 \item{linewidth}{Border line width for cells. Default is \code{0.2}.}
 \item{alpha}{Alpha transparency for cell fill. Default is \code{1}.}
@@ -61,40 +62,76 @@ Default is \code{NA} (no border).}
 \item{xlab_position}{Position of x-axis labels, one of \code{"bottom"} (default)
 or \code{"top"}.}
 
-\item{ylab_position}{Position of x-axis labels, one of \code{"left"} (default)
+\item{ylab_position}{Position of y-axis labels, one of \code{"left"} (default)
 or \code{"right"}.}
 }
 \value{
-A ggplot object representing a table-like plot.
+A ggplot object representing a table-like layout.
 }
 \description{
-Create a text table layout using \code{ggplot2}. Categories on \code{x} and \code{y} must
-be factors or coercible to factors. Labels are placed inside each cell, and
-grid lines are drawn with \code{geom_vline()}/\code{geom_hline()}.
+Create a table-like plot using \code{ggplot2}. Values mapped to \code{x} and \code{y}
+are coerced to factors when possible, then converted to numeric positions
+so that each cell can be drawn on a regular grid. Labels are placed inside
+cells, optional background fill can be applied by a threshold rule, and
+table borders are drawn with vertical and horizontal grid lines.
+}
+\details{
+Unlike many other ggshort helpers, \code{x}, \code{y}, \code{label}, and \code{fill} are first
+evaluated and stored as temporary columns. This allows \code{ggtable()} to accept
+bare column names, quasiquoted symbols, \code{.data[[...]]} expressions, and
+other expressions that evaluate to vectors of the same length as \code{data}.
+
+\code{ggtable()} is designed for compact, matrix-like displays such as triangles,
+scorecards, and labeled heatmap tables.
+
+Axis values supplied to \code{x} and \code{y} are coerced to factors with sorted levels
+(if they are character, numeric, or Date), then drawn as equally spaced cells.
+
+When \code{fill} is supplied, background colors are assigned conditionally using
+\code{fill_args$threshold} and \code{fill_args$when}.
 }
 \examples{
 \donttest{
 set.seed(123)
-df <- expand.grid(x = c("A","B","C"), y = c("X","Y","Z"))
+df <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
 df$label <- sample(1:10, size = 9, replace = TRUE)
 
-ggtable(df, x = x, y = y, label = label,
-        label_args = list(size = 5, family = getOption("ggshort.font")),
-        xlab_position = "top") +
+ggtable(
+  df,
+  x = x,
+  y = y,
+  label = label,
+  label_args = list(size = 5, family = getOption("ggshort.font")),
+  xlab_position = "top"
+) +
   theme_view()
 
-# conditional cell background fill
-ggtable(df, x = x, y = y, label = label,
-        fill = label,
-        fill_args = list(
-          threshold = 5,
-          high = "mistyrose"
-        )) +
+ggtable(
+  df,
+  x = x,
+  y = y,
+  label = label,
+  fill = label,
+  fill_args = list(
+    threshold = 5,
+    high = "mistyrose"
+  )
+) +
+  theme_view()
+
+x_var <- "x"
+y_var <- "y"
+ggtable(
+  df,
+  x = .data[[x_var]],
+  y = .data[[y_var]],
+  label = label
+) +
   theme_view()
 }
 
 }
 \seealso{
 \code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
-\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=gghistogram]{gghistogram()}}, \link{ggbox}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}
+\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=gghistogram]{gghistogram()}}, \code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}
 }

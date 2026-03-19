@@ -911,68 +911,105 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 }
 
 #' ggplot table helper (frequently used arguments)
+#' ggplot table helper
 #'
-#' Create a text table layout using `ggplot2`. Categories on `x` and `y` must
-#' be factors or coercible to factors. Labels are placed inside each cell, and
-#' grid lines are drawn with `geom_vline()`/`geom_hline()`.
+#' Create a table-like plot using `ggplot2`. Values mapped to `x` and `y`
+#' are coerced to factors when possible, then converted to numeric positions
+#' so that each cell can be drawn on a regular grid. Labels are placed inside
+#' cells, optional background fill can be applied by a threshold rule, and
+#' table borders are drawn with vertical and horizontal grid lines.
+#'
+#' Unlike many other ggshort helpers, `x`, `y`, `label`, and `fill` are first
+#' evaluated and stored as temporary columns. This allows `ggtable()` to accept
+#' bare column names, quasiquoted symbols, `.data[[...]]` expressions, and
+#' other expressions that evaluate to vectors of the same length as `data`.
 #'
 #' @param data A data.frame.
-#' @param x,y Unquoted factor columns mapped to the table axes. Character
-#'   columns are automatically converted to factors.
-#' @param linetype Line type for grid lines. One of:
-#'   `"solid"`, `"dashed"`(default), `"dotted"`, `"dotdash"`, `"longdash"` or
-#'   `"twodash"`.
-#' @param text Optional column/expression for tooltip text (e.g., with plotly).
+#' @param x,y Unquoted columns or expressions mapped to the table axes.
+#'   Character, numeric, and Date values are automatically converted to factors.
+#' @param linetype Line type for table grid lines. One of `"solid"` (default),
+#'   `"dashed"`, `"dotted"`, `"dotdash"`, `"longdash"`, or `"twodash"`.
+#' @param text Optional column/expression for tooltip text (for example, when
+#'   used with plotly).
 #' @param label Unquoted column/expression used as text labels inside cells.
 #' @param label_args A named list of `geom_text()` style options.
 #'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
-#' @param fill Optional numeric column used to determine cell background color.
-#'   If supplied, each cell is filled according to `fill_args`.
+#' @param fill Optional numeric column/expression used to determine cell
+#'   background color. If supplied, each cell is filled according to `fill_args`.
 #' @param fill_args A named list controlling conditional cell background fill.
 #'   Supported keys:
 #'   \describe{
-#'     \item{threshold}{Numeric threshold value (or length-2 vector for
+#'     \item{threshold}{Numeric threshold value (or a length-2 vector for
 #'       `"inside"` / `"outside"` conditions). Required when `fill` is used.}
-#'     \item{when}{Condition to apply. One of `"">"`, `">="`, `"<"`, `"<="`,
-#'       `"inside"`, or `"outside"`. Default is `"">""`.}
+#'     \item{when}{Condition to apply. One of `">"`, `">="`, `"<"`, `"<="`,
+#'       `"inside"`, or `"outside"`. Default is `">"`.}
 #'     \item{high}{Fill color for cells satisfying the condition.
 #'       Default is `"mistyrose"`.}
 #'     \item{low}{Fill color for cells not satisfying the condition.
 #'       Default is `"white"`.}
 #'     \item{na}{Fill color for `NA` values. Default is `"white"`.}
-#'     \item{border}{Border color for table cells passed to `geom_tile()`.
+#'     \item{border}{Border color for cells passed to `geom_tile()`.
 #'       Default is `NA` (no border).}
 #'     \item{linewidth}{Border line width for cells. Default is `0.2`.}
 #'     \item{alpha}{Alpha transparency for cell fill. Default is `1`.}
 #'   }
 #' @param xlab_position Position of x-axis labels, one of `"bottom"` (default)
 #'   or `"top"`.
-#' @param ylab_position Position of x-axis labels, one of `"left"` (default)
+#' @param ylab_position Position of y-axis labels, one of `"left"` (default)
 #'   or `"right"`.
 #'
-#' @return A ggplot object representing a table-like plot.
+#' @details
+#' `ggtable()` is designed for compact, matrix-like displays such as triangles,
+#' scorecards, and labeled heatmap tables.
+#'
+#' Axis values supplied to `x` and `y` are coerced to factors with sorted levels
+#' (if they are character, numeric, or Date), then drawn as equally spaced cells.
+#'
+#' When `fill` is supplied, background colors are assigned conditionally using
+#' `fill_args$threshold` and `fill_args$when`.
+#'
+#' @return A ggplot object representing a table-like layout.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [gghistogram()], [ggbox], [ggpie()], [ggmix()]
+#'   [ggdensity()], [gghistogram()], [ggbox()], [ggpie()], [ggmix()]
 #'
 #' @examples
 #' \donttest{
 #' set.seed(123)
-#' df <- expand.grid(x = c("A","B","C"), y = c("X","Y","Z"))
+#' df <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
 #' df$label <- sample(1:10, size = 9, replace = TRUE)
 #'
-#' ggtable(df, x = x, y = y, label = label,
-#'         label_args = list(size = 5, family = getOption("ggshort.font")),
-#'         xlab_position = "top") +
+#' ggtable(
+#'   df,
+#'   x = x,
+#'   y = y,
+#'   label = label,
+#'   label_args = list(size = 5, family = getOption("ggshort.font")),
+#'   xlab_position = "top"
+#' ) +
 #'   theme_view()
 #'
-#' # conditional cell background fill
-#' ggtable(df, x = x, y = y, label = label,
-#'         fill = label,
-#'         fill_args = list(
-#'           threshold = 5,
-#'           high = "mistyrose"
-#'         )) +
+#' ggtable(
+#'   df,
+#'   x = x,
+#'   y = y,
+#'   label = label,
+#'   fill = label,
+#'   fill_args = list(
+#'     threshold = 5,
+#'     high = "mistyrose"
+#'   )
+#' ) +
+#'   theme_view()
+#'
+#' x_var <- "x"
+#' y_var <- "y"
+#' ggtable(
+#'   df,
+#'   x = .data[[x_var]],
+#'   y = .data[[y_var]],
+#'   label = label
+#' ) +
 #'   theme_view()
 #' }
 #'
@@ -1000,38 +1037,57 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
                     ),
                     xlab_position = c("bottom", "top"),
                     ylab_position = c("left", "right")) {
-  dx <- instead::capture_names(data, !!rlang::enquo(x))
-  dy <- instead::capture_names(data, !!rlang::enquo(y))
 
-  if (is.character(data[[dx]]) | is.numeric(data[[dx]]))
-    data[[dx]] <- factor(data[[dx]], levels = sort(unique(data[[dx]])))
-  if (is.character(data[[dy]]) | is.numeric(data[[dy]]))
-    data[[dy]] <- factor(data[[dy]], levels = sort(unique(data[[dy]])))
+  data <- data.table::as.data.table(data)
 
-  if (!is.factor(data[[dx]]))
-    stop(dx, " is not an object of type: factor")
-  if (!is.factor(data[[dy]]))
-    stop(dy, " is not an object of type: factor")
+  qx     <- rlang::enquo(x)
+  qy     <- rlang::enquo(y)
+  qtext  <- rlang::enquo(text)
+  qlabel <- rlang::enquo(label)
+  qfill  <- rlang::enquo(fill)
 
-  x_lvl <- levels(data[[dx]])
-  y_lvl <- levels(data[[dy]])
+  use_text <- !(rlang::quo_is_null(qtext) || rlang::quo_is_missing(qtext))
+  use_fill <- !(rlang::quo_is_null(qfill) || rlang::quo_is_missing(qfill))
+
+  # evaluate inputs
+  data[[".ggtable_x"]]     <- rlang::eval_tidy(qx, data = data)
+  data[[".ggtable_y"]]     <- rlang::eval_tidy(qy, data = data)
+  data[[".ggtable_label"]] <- rlang::eval_tidy(qlabel, data = data)
+
+  if (use_text) {
+    data[[".ggtable_text"]] <- rlang::eval_tidy(qtext, data = data)
+  }
+
+  if (use_fill) {
+    data[[".ggtable_fill_value"]] <- rlang::eval_tidy(qfill, data = data)
+  }
+
+  # axis labels
+  x_lab <- tryCatch(
+    instead::capture_names(data, !!qx),
+    error = function(e) rlang::as_label(qx)
+  )
+  y_lab <- tryCatch(
+    instead::capture_names(data, !!qy),
+    error = function(e) rlang::as_label(qy)
+  )
+
+  if (length(x_lab) != 1L) x_lab <- rlang::as_label(qx)
+  if (length(y_lab) != 1L) y_lab <- rlang::as_label(qy)
+
+  # coerce axes to factors
+  data[[".ggtable_x"]] <- .coerce_to_factor(data[[".ggtable_x"]], "x")
+  data[[".ggtable_y"]] <- .coerce_to_factor(data[[".ggtable_y"]], "y")
+
+  x_lvl <- levels(data[[".ggtable_x"]])
+  y_lvl <- levels(data[[".ggtable_y"]])
   x_len <- length(x_lvl)
   y_len <- length(y_lvl)
 
-  data[[dx]] <- as.numeric(data[[dx]])
-  data[[dy]] <- as.numeric(data[[dy]])
+  data[[".ggtable_x"]] <- as.numeric(data[[".ggtable_x"]])
+  data[[".ggtable_y"]] <- as.numeric(data[[".ggtable_y"]])
 
-  quos_map   <- .valid_enquos(rlang::enquos(x = x, y = y, text = text))
-  quos_label <- .valid_enquos(rlang::enquos(label = label))
-
-  la <- .modify_label_args(label_args)
-  xlab_position <- match.arg(xlab_position)
-  ylab_position <- match.arg(ylab_position)
-
-  # fill handling (DON'T force-evaluate fill)
-  q_fill <- rlang::enquo(fill)
-  use_fill <- !(rlang::quo_is_null(q_fill) || rlang::quo_is_missing(q_fill))
-
+  # fill handling
   fill_defaults <- list(
     threshold = NULL,
     when      = ">",
@@ -1045,31 +1101,34 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
   fa <- utils::modifyList(fill_defaults, fill_args, keep.null = TRUE)
 
   if (use_fill) {
-    if (is.null(fa$threshold))
-      stop("fill_args$threshold must be provided when `fill` is used.")
+    if (is.null(fa$threshold)) {
+      stop("fill_args$threshold must be provided when `fill` is used.", call. = FALSE)
+    }
 
-    fby <- instead::capture_names(data, !!q_fill)
-    v <- data[[fby]]
-    if (!is.numeric(v))
-      stop("fill must refer to a numeric column. Got: ", class(v)[1])
+    v <- data[[".ggtable_fill_value"]]
+    if (!is.numeric(v)) {
+      stop("`fill` must evaluate to a numeric vector.", call. = FALSE)
+    }
 
     threshold <- fa$threshold
     when <- match.arg(fa$when, c(">", ">=", "<", "<=", "outside", "inside"))
 
     flag <- switch(
       when,
-      ">"  = v >  threshold,
-      ">=" = v >= threshold,
-      "<"  = v <  threshold,
-      "<=" = v <= threshold,
-      "outside" = {
-        if (length(threshold) != 2L)
-          stop("For when='outside', threshold must be c(lo, hi).")
+      `>`  = v > threshold,
+      `>=` = v >= threshold,
+      `<`  = v < threshold,
+      `<=` = v <= threshold,
+      outside = {
+        if (length(threshold) != 2L) {
+          stop("For `when = 'outside'`, threshold must be c(lo, hi).", call. = FALSE)
+        }
         v < min(threshold) | v > max(threshold)
       },
-      "inside" = {
-        if (length(threshold) != 2L)
-          stop("For when='inside', threshold must be c(lo, hi).")
+      inside = {
+        if (length(threshold) != 2L) {
+          stop("For `when = 'inside'`, threshold must be c(lo, hi).", call. = FALSE)
+        }
         v >= min(threshold) & v <= max(threshold)
       }
     )
@@ -1082,15 +1141,25 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
     data[[".ggtable_fill"]] <- fa$low
   }
 
-  # plot
-  p <- ggplot2::ggplot(data, ggplot2::aes(!!!quos_map))
+  la <- .modify_label_args(label_args)
+  xlab_position <- match.arg(xlab_position)
+  ylab_position <- match.arg(ylab_position)
 
-  # draw tiles first
+  # plot
+  p <- ggplot2::ggplot(
+    data,
+    ggplot2::aes(
+      x = .data[[".ggtable_x"]],
+      y = .data[[".ggtable_y"]]
+    )
+  )
+
   if (use_fill) {
     p <- p +
       ggplot2::geom_tile(
         ggplot2::aes(fill = .data[[".ggtable_fill"]]),
-        width = 1, height = 1,
+        width = 1,
+        height = 1,
         alpha = fa$alpha,
         color = fa$border,
         linewidth = fa$linewidth
@@ -1100,31 +1169,44 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
 
   p <- p +
     ggplot2::geom_text(
-      ggplot2::aes(!!!quos_label),
-      family = la$family, size  = la$size , angle = la$angle,
-      hjust  = la$hjust , vjust = la$vjust, color = la$color
+      ggplot2::aes(label = .data[[".ggtable_label"]]),
+      family = la$family,
+      size   = la$size,
+      angle  = la$angle,
+      hjust  = la$hjust,
+      vjust  = la$vjust,
+      color  = la$color
     ) +
     ggplot2::geom_vline(
-      xintercept = seq(1, 1 + x_len) - .5,
+      xintercept = seq(1, x_len + 1) - 0.5,
       linetype = linetype
     ) +
     ggplot2::geom_hline(
-      yintercept = seq(1, 1 + y_len) - .5,
+      yintercept = seq(1, y_len + 1) - 0.5,
       linetype = linetype
     ) +
     ggplot2::scale_x_continuous(
-      breaks = seq(1, x_len), labels = x_lvl,
-      limits = c(0.5, x_len + 0.5), expand = c(0, 0),
+      breaks = seq_len(x_len),
+      labels = x_lvl,
+      limits = c(0.5, x_len + 0.5),
+      expand = c(0, 0),
       position = xlab_position
     ) +
     ggplot2::scale_y_reverse(
-      breaks = seq(1, y_len), labels = y_lvl,
-      limits = c(y_len + 0.5, 0.5), expand = c(0, 0),
+      breaks = seq_len(y_len),
+      labels = y_lvl,
+      limits = c(y_len + 0.5, 0.5),
+      expand = c(0, 0),
       position = ylab_position
+    ) +
+    ggplot2::labs(
+      x = x_lab,
+      y = y_lab
     )
 
   p
 }
+
 
 
 # Internal helper functions -----------------------------------------------
@@ -1166,4 +1248,48 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
     color  = "black"
   )
   utils::modifyList(defaults, label_args, keep.null = TRUE)
+}
+
+#' Coerce input to factor with stable ordering
+#'
+#' Internal helper to ensure that variables used in table-like plots
+#' (e.g., [ggtable()]) are treated as factors.
+#'
+#' The function converts character, numeric, and Date vectors into factors
+#' with levels sorted in ascending order. Existing factors are returned
+#' unchanged.
+#'
+#' @param x A vector to be coerced into a factor.
+#' @param var_name Optional string used in error messages to identify
+#'   the input variable (e.g., `"x"` or `"y"`). Defaults to `"input"`.
+#'
+#' @return A factor vector with sorted levels.
+#'
+#' @details
+#' Supported input types:
+#' \itemize{
+#'   \item factor (returned as-is)
+#'   \item character (converted to factor)
+#'   \item numeric (converted to factor)
+#'   \item Date (converted to factor with chronological ordering)
+#' }
+#'
+#' Unsupported types (e.g., list, POSIXct) will raise an error.
+#'
+#' @keywords internal
+#' @noRd
+.coerce_to_factor <- function(x, var_name = NULL) {
+  if (is.factor(x))
+    return(x)
+
+  if (is.character(x) || is.numeric(x) || inherits(x, "Date"))
+    return(factor(x, levels = sort(unique(x))))
+
+  if (is.null(var_name)) var_name <- "input"
+
+  stop(
+    sprintf("`%s` must be factor, character, numeric, or Date. Got: %s",
+            var_name, class(x)[1L]),
+    call. = FALSE
+  )
 }

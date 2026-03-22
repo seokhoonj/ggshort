@@ -17,7 +17,7 @@
 #' @return A ggplot object.
 #'
 #' @seealso [ggline()], [ggpoint()], [ggjitter()], [ggscatter()], [ggdensity()],
-#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()], [ggheatmap()]
 #'
 #' @examples
 #' \donttest{
@@ -103,7 +103,7 @@ ggbar <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggpoint()], [ggjitter()], [ggscatter()], [ggdensity()],
-#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()], [ggheatmap()]
 #'
 #' @examples
 #' \donttest{
@@ -204,7 +204,7 @@ ggline <- function(data, x, y, ymin = NULL, ymax = NULL, ymin_err, ymax_err,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggjitter()], [ggscatter()], [ggdensity()],
-#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'   [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()], [ggheatmap()]
 #'
 #' @examples
 #' \donttest{
@@ -507,7 +507,7 @@ ggscatter <- function(data,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()],
+#'   [ggbox()], [ggpie()], [ggmix()], [ggtable()], [ggheatmap()],
 #'   [stat_density_quantile_vline()], [stat_density_quantile()]
 #'
 #' @examples
@@ -598,7 +598,7 @@ ggdensity <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [ggbox()], [ggpie()], [ggmix()], [ggtable()],
+#'   [ggdensity()], [ggbox()], [ggpie()], [ggmix()], [ggtable()], [ggheatmap()],
 #'   [stat_density_quantile_vline()], [stat_density_quantile_text()]
 #'
 #' @examples
@@ -687,7 +687,7 @@ gghistogram <- function(data, x, color = NULL, fill = NULL, group = NULL,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [gghistogram()], [ggpie()], [ggmix()], [ggtable()]
+#'   [ggdensity()], [gghistogram()], [ggpie()], [ggmix()], [ggtable()], [ggheatmap()]
 #'
 #' @examples
 #' \donttest{
@@ -778,7 +778,7 @@ ggbox <- function(data, x, y,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [gghistogram()], [ggbox], [ggmix()], [ggtable()]
+#'   [ggdensity()], [gghistogram()], [ggbox], [ggmix()], [ggtable()], [ggheatmap()]
 #'
 #' @examples
 #' \donttest{
@@ -851,7 +851,7 @@ ggpie <- function(data, group, value, text,
 #' @return A ggplot object.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [gghistogram()], [ggpie()], [ggbox], [ggtable()]
+#'   [ggdensity()], [gghistogram()], [ggpie()], [ggbox], [ggtable()], [ggheatmap()]
 #'
 #' @examples
 #' \donttest{
@@ -913,11 +913,12 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' ggplot table helper (frequently used arguments)
 #' ggplot table helper
 #'
+#' @description
 #' Create a table-like plot using `ggplot2`. Values mapped to `x` and `y`
 #' are coerced to factors when possible, then converted to numeric positions
 #' so that each cell can be drawn on a regular grid. Labels are placed inside
 #' cells, optional background fill can be applied by a threshold rule, and
-#' table borders are drawn with vertical and horizontal grid lines.
+#' table borders can be drawn either as full panel grid lines or as tile borders.
 #'
 #' Unlike many other ggshort helpers, `x`, `y`, `label`, and `fill` are first
 #' evaluated and stored as temporary columns. This allows `ggtable()` to accept
@@ -927,8 +928,6 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' @param data A data.frame.
 #' @param x,y Unquoted columns or expressions mapped to the table axes.
 #'   Character, numeric, and Date values are automatically converted to factors.
-#' @param linetype Line type for table grid lines. One of `"solid"` (default),
-#'   `"dashed"`, `"dotted"`, `"dotdash"`, `"longdash"`, or `"twodash"`.
 #' @param text Optional column/expression for tooltip text (for example, when
 #'   used with plotly).
 #' @param label Unquoted column/expression used as text labels inside cells.
@@ -936,8 +935,8 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
 #' @param fill Optional numeric column/expression used to determine cell
 #'   background color. If supplied, each cell is filled according to `fill_args`.
-#' @param fill_args A named list controlling conditional cell background fill.
-#'   Supported keys:
+#' @param fill_args A named list controlling conditional cell background fill
+#'   and grid / border style. Supported keys:
 #'   \describe{
 #'     \item{threshold}{Numeric threshold value (or a length-2 vector for
 #'       `"inside"` / `"outside"` conditions). Required when `fill` is used.}
@@ -948,10 +947,24 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #'     \item{low}{Fill color for cells not satisfying the condition.
 #'       Default is `"white"`.}
 #'     \item{na}{Fill color for `NA` values. Default is `"white"`.}
-#'     \item{border}{Border color for cells passed to `geom_tile()`.
-#'       Default is `NA` (no border).}
-#'     \item{linewidth}{Border line width for cells. Default is `0.2`.}
+#'     \item{color}{Line color for tile borders and panel grid lines.
+#'       Default is `NA`. When `grid = "tile"` and `color` is `NA`,
+#'       `"black"` is used internally.}
+#'     \item{linetype}{Line type for tile borders and panel grid lines.
+#'       Default is `"solid"`.}
+#'     \item{linewidth}{Line width for tile borders and panel grid lines.
+#'       Default is `0.3`.}
 #'     \item{alpha}{Alpha transparency for cell fill. Default is `1`.}
+#'   }
+#' @param grid Grid drawing mode. One of:
+#'   \describe{
+#'     \item{"panel"}{Draw full table grid lines using `geom_vline()` and
+#'       `geom_hline()`.}
+#'     \item{"tile"}{Draw cell borders using `geom_tile()`. If `fill` is not
+#'       supplied, the panel background is preserved and only tile borders
+#'       are shown.}
+#'     \item{"none"}{Do not draw panel grid lines. If `fill` is supplied,
+#'       filled tiles are still drawn without borders by default.}
 #'   }
 #' @param xlab_position Position of x-axis labels, one of `"bottom"` (default)
 #'   or `"top"`.
@@ -960,7 +973,7 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #'
 #' @details
 #' `ggtable()` is designed for compact, matrix-like displays such as triangles,
-#' scorecards, and labeled heatmap tables.
+#' scorecards, and labelled summary tables.
 #'
 #' Axis values supplied to `x` and `y` are coerced to factors with sorted levels
 #' (if they are character, numeric, or Date), then drawn as equally spaced cells.
@@ -971,13 +984,18 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' @return A ggplot object representing a table-like layout.
 #'
 #' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
-#'   [ggdensity()], [gghistogram()], [ggbox()], [ggpie()], [ggmix()]
+#'   [ggdensity()], [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggheatmap()]
 #'
 #' @examples
 #' \donttest{
 #' set.seed(123)
-#' df <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
-#' df$label <- sample(1:10, size = 9, replace = TRUE)
+#'
+#' df <- expand.grid(
+#'   x = paste0("C", 1:5),
+#'   y = paste0("R", 1:5)
+#' )
+#' df$label <- sample(1:99, size = 25, replace = TRUE)
+#' df$value <- rnorm(25)
 #'
 #' ggtable(
 #'   df,
@@ -993,11 +1011,26 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #'   df,
 #'   x = x,
 #'   y = y,
-#'   label = label,
-#'   fill = label,
+#'   label = sprintf("%.1f", value),
+#'   fill = value,
 #'   fill_args = list(
-#'     threshold = 5,
-#'     high = "mistyrose"
+#'     threshold = 0,
+#'     when = ">",
+#'     high = "mistyrose",
+#'     low = "white"
+#'   )
+#' ) +
+#'   theme_view()
+#'
+#' ggtable(
+#'   df,
+#'   x = x,
+#'   y = y,
+#'   label = label,
+#'   grid = "tile",
+#'   fill_args = list(
+#'     color = "black",
+#'     linewidth = 0.2
 #'   )
 #' ) +
 #'   theme_view()
@@ -1014,30 +1047,36 @@ ggmix <- function(data, x, y, ymin = NULL, ymax = NULL,
 #' }
 #'
 #' @export
-ggtable <- function(data, x, y, linetype = "solid", text = NULL,
-                    label,
-                    label_args = list(
-                      family = getOption("ggshort.font"),
-                      size   = 4,
-                      angle  = 0,
-                      hjust  = 0.5,
-                      vjust  = 0.5,
-                      color  = "black"
-                    ),
-                    fill = NULL,
-                    fill_args = list(
-                      threshold = NULL,
-                      when      = ">",
-                      high      = "mistyrose",
-                      low       = "white",
-                      na        = "white",
-                      border    = NA,
-                      linewidth = 0.2,
-                      alpha     = 1
-                    ),
-                    xlab_position = c("bottom", "top"),
-                    ylab_position = c("left", "right")) {
-
+ggtable <- function(
+    data,
+    x,
+    y,
+    text = NULL,
+    label,
+    label_args = list(
+      family = getOption("ggshort.font"),
+      size   = 4,
+      angle  = 0,
+      hjust  = 0.5,
+      vjust  = 0.5,
+      color  = "black"
+    ),
+    fill = NULL,
+    fill_args = list(
+      threshold = NULL,
+      when      = ">",
+      high      = "mistyrose",
+      low       = "white",
+      na        = "white",
+      color     = NA,
+      linetype  = "solid",
+      linewidth = 0.3,
+      alpha     = 1
+    ),
+    grid = c("panel", "tile", "none"),
+    xlab_position = c("bottom", "top"),
+    ylab_position = c("left", "right")
+) {
   data <- data.table::as.data.table(data)
 
   qx     <- rlang::enquo(x)
@@ -1049,9 +1088,12 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
   use_text <- !(rlang::quo_is_null(qtext) || rlang::quo_is_missing(qtext))
   use_fill <- !(rlang::quo_is_null(qfill) || rlang::quo_is_missing(qfill))
 
-  # evaluate inputs
-  data[[".ggtable_x"]]     <- rlang::eval_tidy(qx, data = data)
-  data[[".ggtable_y"]]     <- rlang::eval_tidy(qy, data = data)
+  grid          <- match.arg(grid)
+  xlab_position <- match.arg(xlab_position)
+  ylab_position <- match.arg(ylab_position)
+
+  data[[".ggtable_x"]]     <- rlang::eval_tidy(qx,     data = data)
+  data[[".ggtable_y"]]     <- rlang::eval_tidy(qy,     data = data)
   data[[".ggtable_label"]] <- rlang::eval_tidy(qlabel, data = data)
 
   if (use_text) {
@@ -1062,7 +1104,6 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
     data[[".ggtable_fill_value"]] <- rlang::eval_tidy(qfill, data = data)
   }
 
-  # axis labels
   x_lab <- tryCatch(
     instead::capture_names(data, !!qx),
     error = function(e) rlang::as_label(qx)
@@ -1075,27 +1116,27 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
   if (length(x_lab) != 1L) x_lab <- rlang::as_label(qx)
   if (length(y_lab) != 1L) y_lab <- rlang::as_label(qy)
 
-  # coerce axes to factors
   data[[".ggtable_x"]] <- .coerce_to_factor(data[[".ggtable_x"]], "x")
   data[[".ggtable_y"]] <- .coerce_to_factor(data[[".ggtable_y"]], "y")
 
   x_lvl <- levels(data[[".ggtable_x"]])
   y_lvl <- levels(data[[".ggtable_y"]])
+
   x_len <- length(x_lvl)
   y_len <- length(y_lvl)
 
   data[[".ggtable_x"]] <- as.numeric(data[[".ggtable_x"]])
   data[[".ggtable_y"]] <- as.numeric(data[[".ggtable_y"]])
 
-  # fill handling
   fill_defaults <- list(
     threshold = NULL,
     when      = ">",
     high      = "mistyrose",
     low       = "white",
     na        = "white",
-    border    = NA,
-    linewidth = 0.2,
+    color     = "black",
+    linetype  = "solid",
+    linewidth = 0.3,
     alpha     = 1
   )
   fa <- utils::modifyList(fill_defaults, fill_args, keep.null = TRUE)
@@ -1106,6 +1147,7 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
     }
 
     v <- data[[".ggtable_fill_value"]]
+
     if (!is.numeric(v)) {
       stop("`fill` must evaluate to a numeric vector.", call. = FALSE)
     }
@@ -1115,9 +1157,9 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
 
     flag <- switch(
       when,
-      `>`  = v > threshold,
+      `>`  = v >  threshold,
       `>=` = v >= threshold,
-      `<`  = v < threshold,
+      `<`  = v <  threshold,
       `<=` = v <= threshold,
       outside = {
         if (length(threshold) != 2L) {
@@ -1134,18 +1176,20 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
     )
 
     data[[".ggtable_fill"]] <- ifelse(
-      is.na(v), fa$na,
+      is.na(v),
+      fa$na,
       ifelse(flag, fa$high, fa$low)
     )
   } else {
-    data[[".ggtable_fill"]] <- fa$low
+    if (grid == "tile") {
+      data[[".ggtable_fill"]] <- rep(NA_character_, nrow(data))
+    } else {
+      data[[".ggtable_fill"]] <- fa$low
+    }
   }
 
   la <- .modify_label_args(label_args)
-  xlab_position <- match.arg(xlab_position)
-  ylab_position <- match.arg(ylab_position)
 
-  # plot
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(
@@ -1154,17 +1198,26 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
     )
   )
 
-  if (use_fill) {
+  use_tile <- use_fill || grid == "tile"
+
+  if (use_tile) {
+    tile_color <- if (grid == "tile") {
+      if (is.na(fa$color)) "black" else fa$color
+    } else {
+      NA
+    }
+
     p <- p +
       ggplot2::geom_tile(
         ggplot2::aes(fill = .data[[".ggtable_fill"]]),
-        width = 1,
-        height = 1,
-        alpha = fa$alpha,
-        color = fa$border,
-        linewidth = fa$linewidth
+        width     = 1,
+        height    = 1,
+        alpha     = fa$alpha,
+        color     = tile_color,
+        linewidth = fa$linewidth,
+        linetype  = fa$linetype
       ) +
-      ggplot2::scale_fill_identity()
+      ggplot2::scale_fill_identity(na.value = NA)
   }
 
   p <- p +
@@ -1176,38 +1229,334 @@ ggtable <- function(data, x, y, linetype = "solid", text = NULL,
       hjust  = la$hjust,
       vjust  = la$vjust,
       color  = la$color
-    ) +
-    ggplot2::geom_vline(
-      xintercept = seq(1, x_len + 1) - 0.5,
-      linetype = linetype
-    ) +
-    ggplot2::geom_hline(
-      yintercept = seq(1, y_len + 1) - 0.5,
-      linetype = linetype
-    ) +
+    )
+
+  if (grid == "panel") {
+    panel_color <- if (is.na(fa$color)) "black" else fa$color
+
+    p <- p +
+      ggplot2::geom_vline(
+        xintercept = seq(1, x_len + 1) - 0.5,
+        color      = panel_color,
+        linewidth  = fa$linewidth,
+        linetype   = fa$linetype
+      ) +
+      ggplot2::geom_hline(
+        yintercept = seq(1, y_len + 1) - 0.5,
+        color      = panel_color,
+        linewidth  = fa$linewidth,
+        linetype   = fa$linetype
+      )
+  }
+
+  p +
     ggplot2::scale_x_continuous(
-      breaks = seq_len(x_len),
-      labels = x_lvl,
-      limits = c(0.5, x_len + 0.5),
-      expand = c(0, 0),
+      breaks   = seq_len(x_len),
+      labels   = x_lvl,
+      limits   = c(0.5, x_len + 0.5),
+      expand   = c(0, 0),
       position = xlab_position
     ) +
     ggplot2::scale_y_reverse(
-      breaks = seq_len(y_len),
-      labels = y_lvl,
-      limits = c(y_len + 0.5, 0.5),
-      expand = c(0, 0),
+      breaks   = seq_len(y_len),
+      labels   = y_lvl,
+      limits   = c(y_len + 0.5, 0.5),
+      expand   = c(0, 0),
       position = ylab_position
     ) +
     ggplot2::labs(
       x = x_lab,
       y = y_lab
     )
-
-  p
 }
 
+#' ggplot heatmap helper
+#'
+#' @description
+#' Create a heatmap-like plot using `ggplot2`. Values mapped to `x` and `y`
+#' are coerced to factors when possible, then converted to numeric positions
+#' so that each cell can be drawn on a regular grid. Optional labels are placed
+#' inside cells, and fill colours are mapped continuously from a numeric variable.
+#'
+#' Unlike many other ggshort helpers, `x`, `y`, `label`, and `fill` are first
+#' evaluated and stored as temporary columns. This allows `ggheatmap()` to accept
+#' bare column names, quasiquoted symbols, `.data[[...]]` expressions, and
+#' other expressions that evaluate to vectors of the same length as `data`.
+#'
+#' @param data A data.frame.
+#' @param x,y Unquoted columns or expressions mapped to the heatmap axes.
+#'   Character, numeric, and Date values are automatically converted to factors.
+#' @param text Optional column/expression for tooltip text (for example, when
+#'   used with plotly).
+#' @param label Optional unquoted column/expression used as text labels inside cells.
+#' @param label_args A named list of `geom_text()` style options.
+#'   Supported keys: `family`, `size`, `angle`, `hjust`, `vjust`, `color`.
+#' @param fill A required numeric column/expression used for continuous cell fill.
+#' @param fill_args A named list controlling continuous fill and cell border style.
+#'   Supported keys:
+#'   \describe{
+#'     \item{low}{Low-end fill colour. Default is `"white"`.}
+#'     \item{high}{High-end fill colour. Default is `"mistyrose"`.}
+#'     \item{mid}{Midpoint fill colour used only when `midpoint` is not `NULL`.
+#'       Default is `"white"`.}
+#'     \item{midpoint}{Optional numeric midpoint for diverging fill. If `NULL`
+#'       (default), a sequential gradient is used.}
+#'     \item{na}{Fill colour for `NA` values. Default is `"white"`.}
+#'     \item{color}{Border colour for heatmap cells. Default is `NA`.}
+#'     \item{linetype}{Line type for cell borders. Default is `"solid"`.}
+#'     \item{linewidth}{Line width for cell borders. Default is `0.3`.}
+#'     \item{alpha}{Alpha transparency for cell fill. Default is `1`.}
+#'     \item{guide}{Legend guide. Default is `"colourbar"`. Use `"none"` to hide.}
+#'   }
+#' @param xlab_position Position of x-axis labels, one of `"bottom"` (default)
+#'   or `"top"`.
+#' @param ylab_position Position of y-axis labels, one of `"left"` (default)
+#'   or `"right"`.
+#'
+#' @details
+#' `ggheatmap()` is designed for compact, matrix-like displays where continuous
+#' fill is more important than table-style grid lines. It is especially useful
+#' for heatmaps, development diagnostics, and triangle-style colour displays.
+#'
+#' Axis values supplied to `x` and `y` are coerced to factors with sorted levels
+#' (if they are character, numeric, or Date), then drawn as equally spaced cells.
+#'
+#' If `fill_args$midpoint` is `NULL`, a sequential gradient is used via
+#' [ggplot2::scale_fill_gradient()]. Otherwise, a diverging gradient is used via
+#' [ggplot2::scale_fill_gradient2()].
+#'
+#' The y-axis is reversed so that table-like and triangle-like displays read from
+#' top to bottom in the same way as [ggtable()].
+#'
+#' @return A ggplot object representing a heatmap-like layout.
+#'
+#' @seealso [ggbar()], [ggline()], [ggpoint()], [ggjitter()], [ggscatter()],
+#'   [ggdensity()], [gghistogram()], [ggbox()], [ggpie()], [ggmix()], [ggtable()]
+#'
+#' @examples
+#' \donttest{
+#' set.seed(123)
+#'
+#' df <- expand.grid(
+#'   x = paste0("C", 1:5),
+#'   y = paste0("R", 1:5)
+#' )
+#' df$value <- rnorm(25)
+#'
+#' ggheatmap(
+#'   df,
+#'   x = x,
+#'   y = y,
+#'   fill = value
+#' ) +
+#'   theme_view()
+#'
+#' ggheatmap(
+#'   df,
+#'   x = x,
+#'   y = y,
+#'   label = sprintf("%.2f", value),
+#'   fill = value,
+#'   fill_args = list(
+#'     low = "#d9ecff",
+#'     mid = "white",
+#'     high = "#f8d7da",
+#'     midpoint = 0,
+#'     color = "grey80",
+#'     guide = "none"
+#'   )
+#' ) +
+#'   theme_view()
+#'
+#' x_var <- "x"
+#' y_var <- "y"
+#' ggheatmap(
+#'   df,
+#'   x = .data[[x_var]],
+#'   y = .data[[y_var]],
+#'   fill = value
+#' ) +
+#'   theme_view()
+#' }
+#'
+#' @export
+ggheatmap <- function(
+    data,
+    x,
+    y,
+    text = NULL,
+    label = NULL,
+    label_args = list(
+      family = getOption("ggshort.font"),
+      size   = 4,
+      angle  = 0,
+      hjust  = 0.5,
+      vjust  = 0.5,
+      color  = "black"
+    ),
+    fill,
+    fill_args = list(
+      low       = "white",
+      high      = "mistyrose",
+      mid       = "white",
+      midpoint  = NULL,
+      na        = "white",
+      color     = NA,
+      linetype  = "solid",
+      linewidth = 0.3,
+      alpha     = 1,
+      guide     = "colourbar"
+    ),
+    xlab_position = c("bottom", "top"),
+    ylab_position = c("left", "right")
+) {
+  data <- data.table::as.data.table(data)
 
+  qx     <- rlang::enquo(x)
+  qy     <- rlang::enquo(y)
+  qtext  <- rlang::enquo(text)
+  qlabel <- rlang::enquo(label)
+  qfill  <- rlang::enquo(fill)
+
+  use_text  <- !(rlang::quo_is_null(qtext)  || rlang::quo_is_missing(qtext))
+  use_label <- !(rlang::quo_is_null(qlabel) || rlang::quo_is_missing(qlabel))
+
+  xlab_position <- match.arg(xlab_position)
+  ylab_position <- match.arg(ylab_position)
+
+  data[[".ggheatmap_x"]]    <- rlang::eval_tidy(qx, data = data)
+  data[[".ggheatmap_y"]]    <- rlang::eval_tidy(qy, data = data)
+  data[[".ggheatmap_fill"]] <- rlang::eval_tidy(qfill, data = data)
+
+  if (use_label) {
+    data[[".ggheatmap_label"]] <- rlang::eval_tidy(qlabel, data = data)
+  }
+
+  if (use_text) {
+    data[[".ggheatmap_text"]] <- rlang::eval_tidy(qtext, data = data)
+  }
+
+  if (!is.numeric(data[[".ggheatmap_fill"]])) {
+    stop("`fill` must evaluate to a numeric vector.", call. = FALSE)
+  }
+
+  x_lab <- tryCatch(
+    instead::capture_names(data, !!qx),
+    error = function(e) rlang::as_label(qx)
+  )
+  y_lab <- tryCatch(
+    instead::capture_names(data, !!qy),
+    error = function(e) rlang::as_label(qy)
+  )
+  fill_lab <- tryCatch(
+    instead::capture_names(data, !!qfill),
+    error = function(e) rlang::as_label(qfill)
+  )
+
+  if (length(x_lab) != 1L) x_lab <- rlang::as_label(qx)
+  if (length(y_lab) != 1L) y_lab <- rlang::as_label(qy)
+  if (length(fill_lab) != 1L) fill_lab <- rlang::as_label(qfill)
+
+  data[[".ggheatmap_x"]] <- .coerce_to_factor(data[[".ggheatmap_x"]], "x")
+  data[[".ggheatmap_y"]] <- .coerce_to_factor(data[[".ggheatmap_y"]], "y")
+
+  x_lvl <- levels(data[[".ggheatmap_x"]])
+  y_lvl <- levels(data[[".ggheatmap_y"]])
+
+  x_len <- length(x_lvl)
+  y_len <- length(y_lvl)
+
+  data[[".ggheatmap_x"]] <- as.numeric(data[[".ggheatmap_x"]])
+  data[[".ggheatmap_y"]] <- as.numeric(data[[".ggheatmap_y"]])
+
+  fill_defaults <- list(
+    low       = "white",
+    high      = "mistyrose",
+    mid       = "white",
+    midpoint  = NULL,
+    na        = "white",
+    color     = NA,
+    linetype  = "solid",
+    linewidth = 0.3,
+    alpha     = 1,
+    guide     = "colourbar"
+  )
+  fa <- utils::modifyList(fill_defaults, fill_args, keep.null = TRUE)
+
+  la <- .modify_label_args(label_args)
+
+  p <- ggplot2::ggplot(
+    data,
+    ggplot2::aes(
+      x    = .data[[".ggheatmap_x"]],
+      y    = .data[[".ggheatmap_y"]],
+      fill = .data[[".ggheatmap_fill"]]
+    )
+  ) +
+    ggplot2::geom_tile(
+      width     = 1,
+      height    = 1,
+      alpha     = fa$alpha,
+      color     = fa$color,
+      linewidth = fa$linewidth,
+      linetype  = fa$linetype
+    )
+
+  if (is.null(fa$midpoint)) {
+    p <- p +
+      ggplot2::scale_fill_gradient(
+        name     = fill_lab,
+        low      = fa$low,
+        high     = fa$high,
+        na.value = fa$na,
+        guide    = fa$guide
+      )
+  } else {
+    p <- p +
+      ggplot2::scale_fill_gradient2(
+        name     = fill_lab,
+        low      = fa$low,
+        mid      = fa$mid,
+        high     = fa$high,
+        midpoint = fa$midpoint,
+        na.value = fa$na,
+        guide    = fa$guide
+      )
+  }
+
+  if (use_label) {
+    p <- p +
+      ggplot2::geom_text(
+        ggplot2::aes(label = .data[[".ggheatmap_label"]]),
+        family = la$family,
+        size   = la$size,
+        angle  = la$angle,
+        hjust  = la$hjust,
+        vjust  = la$vjust,
+        color  = la$color
+      )
+  }
+
+  p +
+    ggplot2::scale_x_continuous(
+      breaks   = seq_len(x_len),
+      labels   = x_lvl,
+      limits   = c(0.5, x_len + 0.5),
+      expand   = c(0, 0),
+      position = xlab_position
+    ) +
+    ggplot2::scale_y_reverse(
+      breaks   = seq_len(y_len),
+      labels   = y_lvl,
+      limits   = c(y_len + 0.5, 0.5),
+      expand   = c(0, 0),
+      position = ylab_position
+    ) +
+    ggplot2::labs(
+      x = x_lab,
+      y = y_lab
+    )
+}
 
 # Internal helper functions -----------------------------------------------
 

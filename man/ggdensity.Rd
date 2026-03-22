@@ -76,6 +76,6 @@ ggdensity(iris, x = Sepal.Length, color = Species, fill = Species,
 }
 \seealso{
 \code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
-\code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}},
+\code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggtable]{ggtable()}}, \code{\link[=ggheatmap]{ggheatmap()}},
 \code{\link[=stat_density_quantile_vline]{stat_density_quantile_vline()}}, \code{\link[=stat_density_quantile]{stat_density_quantile()}}
 }

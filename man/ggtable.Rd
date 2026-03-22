@@ -9,14 +9,14 @@ ggtable(
   data,
   x,
   y,
-  linetype = "solid",
   text = NULL,
   label,
   label_args = list(family = getOption("ggshort.font"), size = 4, angle = 0, hjust = 0.5,
     vjust = 0.5, color = "black"),
   fill = NULL,
   fill_args = list(threshold = NULL, when = ">", high = "mistyrose", low = "white", na =
-    "white", border = NA, linewidth = 0.2, alpha = 1),
+    "white", color = NA, linetype = "solid", linewidth = 0.3, alpha = 1),
+  grid = c("panel", "tile", "none"),
   xlab_position = c("bottom", "top"),
   ylab_position = c("left", "right")
 )
@@ -26,9 +26,6 @@ ggtable(
 
 \item{x, y}{Unquoted columns or expressions mapped to the table axes.
 Character, numeric, and Date values are automatically converted to factors.}
-
-\item{linetype}{Line type for table grid lines. One of \code{"solid"} (default),
-\code{"dashed"}, \code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, or \code{"twodash"}.}
 
 \item{text}{Optional column/expression for tooltip text (for example, when
 used with plotly).}
@@ -41,8 +38,8 @@ Supported keys: \code{family}, \code{size}, \code{angle}, \code{hjust}, \code{vj
 \item{fill}{Optional numeric column/expression used to determine cell
 background color. If supplied, each cell is filled according to \code{fill_args}.}
 
-\item{fill_args}{A named list controlling conditional cell background fill.
-Supported keys:
+\item{fill_args}{A named list controlling conditional cell background fill
+and grid / border style. Supported keys:
 \describe{
 \item{threshold}{Numeric threshold value (or a length-2 vector for
 \code{"inside"} / \code{"outside"} conditions). Required when \code{fill} is used.}
@@ -53,10 +50,25 @@ Default is \code{"mistyrose"}.}
 \item{low}{Fill color for cells not satisfying the condition.
 Default is \code{"white"}.}
 \item{na}{Fill color for \code{NA} values. Default is \code{"white"}.}
-\item{border}{Border color for cells passed to \code{geom_tile()}.
-Default is \code{NA} (no border).}
-\item{linewidth}{Border line width for cells. Default is \code{0.2}.}
+\item{color}{Line color for tile borders and panel grid lines.
+Default is \code{NA}. When \code{grid = "tile"} and \code{color} is \code{NA},
+\code{"black"} is used internally.}
+\item{linetype}{Line type for tile borders and panel grid lines.
+Default is \code{"solid"}.}
+\item{linewidth}{Line width for tile borders and panel grid lines.
+Default is \code{0.3}.}
 \item{alpha}{Alpha transparency for cell fill. Default is \code{1}.}
+}}
+
+\item{grid}{Grid drawing mode. One of:
+\describe{
+\item{"panel"}{Draw full table grid lines using \code{geom_vline()} and
+\code{geom_hline()}.}
+\item{"tile"}{Draw cell borders using \code{geom_tile()}. If \code{fill} is not
+supplied, the panel background is preserved and only tile borders
+are shown.}
+\item{"none"}{Do not draw panel grid lines. If \code{fill} is supplied,
+filled tiles are still drawn without borders by default.}
 }}
 
 \item{xlab_position}{Position of x-axis labels, one of \code{"bottom"} (default)
@@ -73,16 +85,16 @@ Create a table-like plot using \code{ggplot2}. Values mapped to \code{x} and \co
 are coerced to factors when possible, then converted to numeric positions
 so that each cell can be drawn on a regular grid. Labels are placed inside
 cells, optional background fill can be applied by a threshold rule, and
-table borders are drawn with vertical and horizontal grid lines.
-}
-\details{
+table borders can be drawn either as full panel grid lines or as tile borders.
+
 Unlike many other ggshort helpers, \code{x}, \code{y}, \code{label}, and \code{fill} are first
 evaluated and stored as temporary columns. This allows \code{ggtable()} to accept
 bare column names, quasiquoted symbols, \code{.data[[...]]} expressions, and
 other expressions that evaluate to vectors of the same length as \code{data}.
-
+}
+\details{
 \code{ggtable()} is designed for compact, matrix-like displays such as triangles,
-scorecards, and labeled heatmap tables.
+scorecards, and labelled summary tables.
 
 Axis values supplied to \code{x} and \code{y} are coerced to factors with sorted levels
 (if they are character, numeric, or Date), then drawn as equally spaced cells.
@@ -93,8 +105,13 @@ When \code{fill} is supplied, background colors are assigned conditionally using
 \examples{
 \donttest{
 set.seed(123)
-df <- expand.grid(x = c("A", "B", "C"), y = c("X", "Y", "Z"))
-df$label <- sample(1:10, size = 9, replace = TRUE)
+
+df <- expand.grid(
+  x = paste0("C", 1:5),
+  y = paste0("R", 1:5)
+)
+df$label <- sample(1:99, size = 25, replace = TRUE)
+df$value <- rnorm(25)
 
 ggtable(
   df,
@@ -110,11 +127,26 @@ ggtable(
   df,
   x = x,
   y = y,
-  label = label,
-  fill = label,
+  label = sprintf("\%.1f", value),
+  fill = value,
   fill_args = list(
-    threshold = 5,
-    high = "mistyrose"
+    threshold = 0,
+    when = ">",
+    high = "mistyrose",
+    low = "white"
+  )
+) +
+  theme_view()
+
+ggtable(
+  df,
+  x = x,
+  y = y,
+  label = label,
+  grid = "tile",
+  fill_args = list(
+    color = "black",
+    linewidth = 0.2
   )
 ) +
   theme_view()
@@ -133,5 +165,5 @@ ggtable(
 }
 \seealso{
 \code{\link[=ggbar]{ggbar()}}, \code{\link[=ggline]{ggline()}}, \code{\link[=ggpoint]{ggpoint()}}, \code{\link[=ggjitter]{ggjitter()}}, \code{\link[=ggscatter]{ggscatter()}},
-\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=gghistogram]{gghistogram()}}, \code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}
+\code{\link[=ggdensity]{ggdensity()}}, \code{\link[=gghistogram]{gghistogram()}}, \code{\link[=ggbox]{ggbox()}}, \code{\link[=ggpie]{ggpie()}}, \code{\link[=ggmix]{ggmix()}}, \code{\link[=ggheatmap]{ggheatmap()}}
 }

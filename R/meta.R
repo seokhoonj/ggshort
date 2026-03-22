@@ -76,7 +76,7 @@ plot_meta <- function(x, widths = c(5, 5), text_width = 14,
 
   # Left panel plot
   p1 <- ggtable(d1, x = variable, y = number, label = value,
-                xlab_position = "bottom", linetype = "solid") +
+                xlab_position = "bottom") +
     ggplot2::facet_wrap(~ info) +
     ggplot2::xlab("") + ggplot2::ylab("") +
     switch_theme(theme = theme, y.size = y.size, ...) +
@@ -88,10 +88,7 @@ plot_meta <- function(x, widths = c(5, 5), text_width = 14,
   p2 <- ggbar(d2, x = number, y = value, ymax = 1.5,
               label = sprintf("%.1f", value * 100),
               label_args = list(hjust = -.1)) +
-    ggplot2::geom_vline(
-      xintercept = seq(1, 1 + n) - .5,
-      linetype = "solid"
-    ) +
+    ggplot2::geom_vline(xintercept = seq(1, 1 + n) - .5) +
     ggplot2::scale_x_reverse(
       breaks = seq_len(n), labels = seq_len(n),
       expand = c(0, 0)
